@@ -44,3 +44,4 @@ modules:
   - name: usdy
     config:
       "@type": ondo.usdy.module.v1.Module
+      denom: ausdy

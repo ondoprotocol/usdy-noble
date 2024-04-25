@@ -7,4 +7,7 @@ import "cosmos/app/v1alpha1/module.proto";
 // Module is the config object of the Ondo USDY module.
 message Module {
   option (cosmos.app.v1alpha1.module) = {go_import: "github.com/noble-assets/ondo/x/usdy"};
+
+  // denom is the USDY denom that this module is allowed to burn / mint / etc.
+  string denom = 1;
 }

@@ -1,6 +1,7 @@
 package usdy
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -51,7 +52,11 @@ func (AppModuleBasic) RegisterInterfaces(reg codectypes.InterfaceRegistry) {
 	types.RegisterInterfaces(reg)
 }
 
-func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {}
+func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
+	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
+		panic(err)
+	}
+}
 
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 	return cdc.MustMarshalJSON(types.DefaultGenesisState())
@@ -101,7 +106,7 @@ func (m AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawM
 
 func (m AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), m.keeper)
-	types.RegisterQueryServer(cfg.QueryServer(), m.keeper)
+	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServer(m.keeper))
 }
 
 //
@@ -113,8 +118,14 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 			RpcCommandOptions: []*autocliv1.RpcCommandOptions{},
 		},
 		Query: &autocliv1.ServiceCommandDescriptor{
-			Service:           usdyv1.Query_ServiceDesc.ServiceName,
-			RpcCommandOptions: []*autocliv1.RpcCommandOptions{},
+			Service: usdyv1.Query_ServiceDesc.ServiceName,
+			RpcCommandOptions: []*autocliv1.RpcCommandOptions{
+				{
+					RpcMethod: "Denom",
+					Use:       "denom",
+					Short:     "Query the module's denom",
+				},
+			},
 		},
 	}
 }
@@ -144,10 +155,15 @@ type ModuleOutputs struct {
 }
 
 func ProvideModule(in ModuleInputs) ModuleOutputs {
+	if in.Config.Denom == "" {
+		panic("denom for x/usdy module must be set")
+	}
+
 	k := keeper.NewKeeper(
 		in.Cdc,
 		in.Logger,
 		in.StoreService,
+		in.Config.Denom,
 	)
 	m := NewAppModule(k)
 

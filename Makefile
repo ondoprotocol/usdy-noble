@@ -1,5 +1,5 @@
-.PHONY: proto-format proto-lint proto-gen format lint build
-all: proto-all format lint build
+.PHONY: proto-format proto-lint proto-gen format lint build test-unit
+all: proto-all format lint build test
 
 ###############################################################################
 ###                                  Build                                  ###
@@ -53,3 +53,14 @@ proto-lint:
 	@docker run --rm --volume "$(PWD)":/workspace --workdir /workspace \
 		bufbuild/buf:$(BUF_VERSION) lint
 	@echo "✅ Completed protobuf linting!"
+
+###############################################################################
+###                                 Testing                                 ###
+###############################################################################
+
+test: test-unit
+
+test-unit:
+	@echo "🤖 Running unit tests..."
+	@go test -cover -coverprofile=coverage.out -race -v ./x/usdy/keeper/...
+	@echo "✅ Completed unit tests!"

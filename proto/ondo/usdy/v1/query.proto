@@ -2,6 +2,22 @@ syntax = "proto3";
 
 package ondo.usdy.v1;
 
+import "cosmos/query/v1/query.proto";
+import "google/api/annotations.proto";
+
 option go_package = "github.com/noble-assets/ondo/x/usdy/types";
 
-service Query {}
+service Query {
+  rpc Denom(ondo.usdy.v1.QueryDenom) returns (ondo.usdy.v1.QueryDenomResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/ondo/usdy/v1/denom";
+  }
+}
+
+//
+
+message QueryDenom {}
+
+message QueryDenomResponse {
+  string denom = 1;
+}

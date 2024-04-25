@@ -12,6 +12,8 @@ type Keeper struct {
 	logger       log.Logger
 	storeService store.KVStoreService
 
+	Denom string
+
 	Schema collections.Schema
 }
 
@@ -19,6 +21,7 @@ func NewKeeper(
 	cdc codec.Codec,
 	logger log.Logger,
 	storeService store.KVStoreService,
+	denom string,
 ) *Keeper {
 	builder := collections.NewSchemaBuilder(storeService)
 
@@ -26,6 +29,8 @@ func NewKeeper(
 		cdc:          cdc,
 		logger:       logger,
 		storeService: storeService,
+
+		Denom: denom,
 	}
 
 	schema, err := builder.Build()
