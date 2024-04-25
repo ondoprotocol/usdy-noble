@@ -19,7 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Query_Denom_FullMethodName = "/ondo.usdy.v1.Query/Denom"
+	Query_Denom_FullMethodName  = "/ondo.usdy.v1.Query/Denom"
+	Query_Paused_FullMethodName = "/ondo.usdy.v1.Query/Paused"
+	Query_Pauser_FullMethodName = "/ondo.usdy.v1.Query/Pauser"
 )
 
 // QueryClient is the client API for Query service.
@@ -27,6 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QueryClient interface {
 	Denom(ctx context.Context, in *QueryDenom, opts ...grpc.CallOption) (*QueryDenomResponse, error)
+	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
+	Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.CallOption) (*QueryPauserResponse, error)
 }
 
 type queryClient struct {
@@ -46,11 +50,31 @@ func (c *queryClient) Denom(ctx context.Context, in *QueryDenom, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *queryClient) Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error) {
+	out := new(QueryPausedResponse)
+	err := c.cc.Invoke(ctx, Query_Paused_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.CallOption) (*QueryPauserResponse, error) {
+	out := new(QueryPauserResponse)
+	err := c.cc.Invoke(ctx, Query_Pauser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility
 type QueryServer interface {
 	Denom(context.Context, *QueryDenom) (*QueryDenomResponse, error)
+	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
+	Pauser(context.Context, *QueryPauser) (*QueryPauserResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -60,6 +84,12 @@ type UnimplementedQueryServer struct {
 
 func (UnimplementedQueryServer) Denom(context.Context, *QueryDenom) (*QueryDenomResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Denom not implemented")
+}
+func (UnimplementedQueryServer) Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Paused not implemented")
+}
+func (UnimplementedQueryServer) Pauser(context.Context, *QueryPauser) (*QueryPauserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Pauser not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 
@@ -92,6 +122,42 @@ func _Query_Denom_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Paused_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPaused)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Paused(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Paused_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Paused(ctx, req.(*QueryPaused))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_Pauser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPauser)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Pauser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Pauser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Pauser(ctx, req.(*QueryPauser))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +168,14 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Denom",
 			Handler:    _Query_Denom_Handler,
+		},
+		{
+			MethodName: "Paused",
+			Handler:    _Query_Paused_Handler,
+		},
+		{
+			MethodName: "Pauser",
+			Handler:    _Query_Pauser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

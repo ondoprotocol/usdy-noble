@@ -2,10 +2,42 @@ syntax = "proto3";
 
 package ondo.usdy.v1;
 
+import "amino/amino.proto";
 import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 
 option go_package = "github.com/noble-assets/ondo/x/usdy/types";
 
 service Msg {
   option (cosmos.msg.v1.service) = true;
+
+  rpc Pause(ondo.usdy.v1.MsgPause) returns (ondo.usdy.v1.MsgPauseResponse);
+  rpc Unpause(ondo.usdy.v1.MsgUnpause) returns (ondo.usdy.v1.MsgUnpauseResponse);
 }
+
+//
+
+message MsgPause {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "ondo/usdy/Pause";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message MsgPauseResponse {}
+
+message MsgUnpause {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "ondo/usdy/Unpause";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message MsgUnpauseResponse {}

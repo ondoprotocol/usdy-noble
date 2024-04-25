@@ -7,6 +7,7 @@ import (
 
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
 	"cosmossdk.io/core/appmodule"
+	"cosmossdk.io/core/event"
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/depinject"
 	"cosmossdk.io/log"
@@ -16,6 +17,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	modulev1 "github.com/noble-assets/ondo/api/ondo/usdy/module/v1"
 	usdyv1 "github.com/noble-assets/ondo/api/ondo/usdy/v1"
@@ -105,7 +107,7 @@ func (m AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawM
 }
 
 func (m AppModule) RegisterServices(cfg module.Configurator) {
-	types.RegisterMsgServer(cfg.MsgServer(), m.keeper)
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServer(m.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServer(m.keeper))
 }
 
@@ -114,8 +116,19 @@ func (m AppModule) RegisterServices(cfg module.Configurator) {
 func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 	return &autocliv1.ModuleOptions{
 		Tx: &autocliv1.ServiceCommandDescriptor{
-			Service:           usdyv1.Msg_ServiceDesc.ServiceName,
-			RpcCommandOptions: []*autocliv1.RpcCommandOptions{},
+			Service: usdyv1.Msg_ServiceDesc.ServiceName,
+			RpcCommandOptions: []*autocliv1.RpcCommandOptions{
+				{
+					RpcMethod: "Pause",
+					Use:       "pause",
+					Short:     "Transaction that pauses the module",
+				},
+				{
+					RpcMethod: "Unpause",
+					Use:       "unpause",
+					Short:     "Transaction that unpauses the module",
+				},
+			},
 		},
 		Query: &autocliv1.ServiceCommandDescriptor{
 			Service: usdyv1.Query_ServiceDesc.ServiceName,
@@ -124,6 +137,16 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					RpcMethod: "Denom",
 					Use:       "denom",
 					Short:     "Query the module's denom",
+				},
+				{
+					RpcMethod: "Paused",
+					Use:       "paused",
+					Short:     "Query the module's paused",
+				},
+				{
+					RpcMethod: "Pauser",
+					Use:       "pauser",
+					Short:     "Query the module's pauser",
 				},
 			},
 		},
@@ -145,13 +168,15 @@ type ModuleInputs struct {
 	Cdc          codec.Codec
 	Logger       log.Logger
 	StoreService store.KVStoreService
+	EventService event.Service
 }
 
 type ModuleOutputs struct {
 	depinject.Out
 
-	Keeper *keeper.Keeper
-	Module appmodule.AppModule
+	Keeper      *keeper.Keeper
+	Module      appmodule.AppModule
+	Restriction banktypes.SendRestrictionFn
 }
 
 func ProvideModule(in ModuleInputs) ModuleOutputs {
@@ -163,9 +188,10 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.Cdc,
 		in.Logger,
 		in.StoreService,
+		in.EventService,
 		in.Config.Denom,
 	)
 	m := NewAppModule(k)
 
-	return ModuleOutputs{Keeper: k, Module: m}
+	return ModuleOutputs{Keeper: k, Module: m, Restriction: k.SendRestrictionFn}
 }

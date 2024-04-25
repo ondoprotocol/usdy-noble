@@ -2,6 +2,13 @@ syntax = "proto3";
 
 package ondo.usdy.v1;
 
+import "cosmos_proto/cosmos.proto";
+
 option go_package = "github.com/noble-assets/ondo/x/usdy/types";
 
-message GenesisState {}
+message GenesisState {
+  // paused is the paused state of the Ondo USDY module.
+  bool paused = 1;
+  // pauser is the address that can control the paused state.
+  string pauser = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}

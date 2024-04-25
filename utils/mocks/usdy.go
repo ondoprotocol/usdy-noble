@@ -25,6 +25,7 @@ func USDYKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		codec.NewProtoCodec(codectypes.NewInterfaceRegistry()),
 		logger,
 		runtime.NewKVStoreService(key),
+		runtime.ProvideEventService(),
 		"ausdy",
 	), wrapper.Ctx
 }
