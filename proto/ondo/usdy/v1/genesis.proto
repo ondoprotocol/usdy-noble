@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package ondo.usdy.v1;
+
+option go_package = "github.com/noble-assets/ondo/x/usdy/types";
+
+message GenesisState {}
