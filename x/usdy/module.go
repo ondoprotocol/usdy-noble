@@ -130,6 +130,18 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 			Service: usdyv1.Msg_ServiceDesc.ServiceName,
 			RpcCommandOptions: []*autocliv1.RpcCommandOptions{
 				{
+					RpcMethod:      "Burn",
+					Use:            "burn [from] [amount]",
+					Short:          "Transaction that burns tokens",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "from"}, {ProtoField: "amount"}},
+				},
+				{
+					RpcMethod:      "Mint",
+					Use:            "mint [to] [amount]",
+					Short:          "Transaction that mints tokens",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "to"}, {ProtoField: "amount"}},
+				},
+				{
 					RpcMethod: "Pause",
 					Use:       "pause",
 					Short:     "Transaction that pauses the module",
@@ -182,6 +194,7 @@ type ModuleInputs struct {
 	EventService event.Service
 
 	AccountKeeper types.AccountKeeper
+	BankKeeper    types.BankKeeper
 }
 
 type ModuleOutputs struct {
@@ -204,6 +217,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.EventService,
 		in.Config.Denom,
 		in.AccountKeeper,
+		in.BankKeeper,
 	)
 	m := NewAppModule(k, in.AccountKeeper)
 

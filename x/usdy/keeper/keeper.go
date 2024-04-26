@@ -25,6 +25,8 @@ type Keeper struct {
 	Schema collections.Schema
 
 	Paused collections.Item[bool]
+	Burner collections.Item[string]
+	Minter collections.Item[string]
 	Pauser collections.Item[string]
 
 	Owner            collections.Item[string]
@@ -32,6 +34,7 @@ type Keeper struct {
 	BlockedAddresses collections.Map[[]byte, bool]
 
 	accountKeeper types.AccountKeeper
+	bankKeeper    types.BankKeeper
 }
 
 func NewKeeper(
@@ -41,6 +44,7 @@ func NewKeeper(
 	eventService event.Service,
 	denom string,
 	accountKeeper types.AccountKeeper,
+	bankKeeper types.BankKeeper,
 ) *Keeper {
 	builder := collections.NewSchemaBuilder(storeService)
 
@@ -52,8 +56,11 @@ func NewKeeper(
 
 		Denom:         denom,
 		accountKeeper: accountKeeper,
+		bankKeeper:    bankKeeper,
 
 		Paused: collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
+		Burner: collections.NewItem(builder, types.BurnerKey, "burner", collections.StringValue),
+		Minter: collections.NewItem(builder, types.MinterKey, "minter", collections.StringValue),
 		Pauser: collections.NewItem(builder, types.PauserKey, "pauser", collections.StringValue),
 
 		Owner:            collections.NewItem(builder, blocklist.OwnerKey, "owner", collections.StringValue),
@@ -79,7 +86,7 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, fromAddr, toAddr sdk.Acc
 			return toAddr, fmt.Errorf("%s transfers are paused", k.Denom)
 		}
 
-		// TODO(@john): Implement blocklist checks.
+		// TODO(@john): Discuss with Ondo the checks needed here.
 	}
 
 	return toAddr, nil

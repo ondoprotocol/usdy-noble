@@ -28,5 +28,6 @@ func USDYKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		runtime.ProvideEventService(),
 		"ausdy",
 		AccountKeeper{},
+		BankKeeper{},
 	), wrapper.Ctx
 }

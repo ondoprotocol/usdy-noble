@@ -11,6 +11,8 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	blocklist.RegisterLegacyAminoCodec(cdc)
 
+	cdc.RegisterConcrete(&MsgBurn{}, "ondo/usdy/Burn", nil)
+	cdc.RegisterConcrete(&MsgMint{}, "ondo/usdy/Mint", nil)
 	cdc.RegisterConcrete(&MsgPause{}, "ondo/usdy/Pause", nil)
 	cdc.RegisterConcrete(&MsgUnpause{}, "ondo/usdy/Unpause", nil)
 }
@@ -18,6 +20,8 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	blocklist.RegisterInterfaces(registry)
 
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgBurn{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgMint{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgPause{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgUnpause{})
 

@@ -20,6 +20,8 @@ modules:
           permissions: [ burner, staking ]
         - account: not_bonded_tokens_pool
           permissions: [ burner, staking ]
+        - account: usdy
+          permissions: [ burner, minter ]
   - name: bank
     config:
       "@type": cosmos.bank.module.v1.Module

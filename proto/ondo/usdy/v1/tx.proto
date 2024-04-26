@@ -12,11 +12,48 @@ option go_package = "github.com/noble-assets/ondo/x/usdy/types";
 service Msg {
   option (cosmos.msg.v1.service) = true;
 
+  rpc Burn(ondo.usdy.v1.MsgBurn) returns (ondo.usdy.v1.MsgBurnResponse);
+  rpc Mint(ondo.usdy.v1.MsgMint) returns (ondo.usdy.v1.MsgMintResponse);
+
   rpc Pause(ondo.usdy.v1.MsgPause) returns (ondo.usdy.v1.MsgPauseResponse);
   rpc Unpause(ondo.usdy.v1.MsgUnpause) returns (ondo.usdy.v1.MsgUnpauseResponse);
 }
 
 //
+
+message MsgBurn {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "ondo/usdy/Burn";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string from = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgBurnResponse {}
+
+message MsgMint {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "ondo/usdy/Mint";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string to = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgMintResponse {}
 
 message MsgPause {
   option (cosmos.msg.v1.signer) = "signer";

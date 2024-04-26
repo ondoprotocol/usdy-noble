@@ -10,6 +10,8 @@ import (
 
 func InitGenesis(ctx context.Context, k *keeper.Keeper, accountKeeper types.AccountKeeper, genesis types.GenesisState) {
 	_ = k.Paused.Set(ctx, genesis.Paused)
+	_ = k.Burner.Set(ctx, genesis.Burner)
+	_ = k.Minter.Set(ctx, genesis.Minter)
 	_ = k.Pauser.Set(ctx, genesis.Pauser)
 
 	_ = k.Owner.Set(ctx, genesis.BlocklistState.Owner)
@@ -25,6 +27,8 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, accountKeeper types.Acco
 
 func ExportGenesis(ctx context.Context, k *keeper.Keeper, accountKeeper types.AccountKeeper) *types.GenesisState {
 	paused, _ := k.Paused.Get(ctx)
+	burner, _ := k.Burner.Get(ctx)
+	minter, _ := k.Minter.Get(ctx)
 	pauser, _ := k.Pauser.Get(ctx)
 
 	owner, _ := k.Owner.Get(ctx)
@@ -45,6 +49,8 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper, accountKeeper types.Ac
 			BlockedAddresses: blockedAddresses,
 		},
 		Paused: paused,
+		Burner: burner,
+		Minter: minter,
 		Pauser: pauser,
 	}
 }
