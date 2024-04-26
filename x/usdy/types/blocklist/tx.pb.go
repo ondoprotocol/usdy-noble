@@ -6,11 +6,18 @@ package blocklist
 import (
 	context "context"
 	fmt "fmt"
+	_ "github.com/cosmos/cosmos-proto"
 	_ "github.com/cosmos/cosmos-sdk/types/msgservice"
+	_ "github.com/cosmos/cosmos-sdk/types/tx/amino"
+	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/cosmos/gogoproto/grpc"
 	proto "github.com/cosmos/gogoproto/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -24,21 +31,358 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// MsgTransferOwnership implements the transferOwnership (0xf2fde38b) method.
+type MsgTransferOwnership struct {
+	Signer   string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
+	NewOwner string `protobuf:"bytes,2,opt,name=new_owner,json=newOwner,proto3" json:"new_owner,omitempty"`
+}
+
+func (m *MsgTransferOwnership) Reset()         { *m = MsgTransferOwnership{} }
+func (m *MsgTransferOwnership) String() string { return proto.CompactTextString(m) }
+func (*MsgTransferOwnership) ProtoMessage()    {}
+func (*MsgTransferOwnership) Descriptor() ([]byte, []int) {
+	return fileDescriptor_76edb01ad13ba82d, []int{0}
+}
+func (m *MsgTransferOwnership) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgTransferOwnership) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgTransferOwnership.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgTransferOwnership) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgTransferOwnership.Merge(m, src)
+}
+func (m *MsgTransferOwnership) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgTransferOwnership) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgTransferOwnership.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgTransferOwnership proto.InternalMessageInfo
+
+// MsgTransferOwnershipResponse is the response of the TransferOwnership action.
+type MsgTransferOwnershipResponse struct {
+}
+
+func (m *MsgTransferOwnershipResponse) Reset()         { *m = MsgTransferOwnershipResponse{} }
+func (m *MsgTransferOwnershipResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgTransferOwnershipResponse) ProtoMessage()    {}
+func (*MsgTransferOwnershipResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_76edb01ad13ba82d, []int{1}
+}
+func (m *MsgTransferOwnershipResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgTransferOwnershipResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgTransferOwnershipResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgTransferOwnershipResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgTransferOwnershipResponse.Merge(m, src)
+}
+func (m *MsgTransferOwnershipResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgTransferOwnershipResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgTransferOwnershipResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgTransferOwnershipResponse proto.InternalMessageInfo
+
+// MsgAcceptOwnership implements the acceptOwnership (0x79ba5097) method.
+type MsgAcceptOwnership struct {
+	Signer string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
+}
+
+func (m *MsgAcceptOwnership) Reset()         { *m = MsgAcceptOwnership{} }
+func (m *MsgAcceptOwnership) String() string { return proto.CompactTextString(m) }
+func (*MsgAcceptOwnership) ProtoMessage()    {}
+func (*MsgAcceptOwnership) Descriptor() ([]byte, []int) {
+	return fileDescriptor_76edb01ad13ba82d, []int{2}
+}
+func (m *MsgAcceptOwnership) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAcceptOwnership) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAcceptOwnership.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAcceptOwnership) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAcceptOwnership.Merge(m, src)
+}
+func (m *MsgAcceptOwnership) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAcceptOwnership) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAcceptOwnership.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAcceptOwnership proto.InternalMessageInfo
+
+// MsgAcceptOwnershipResponse is the response of the AcceptOwnership action.
+type MsgAcceptOwnershipResponse struct {
+}
+
+func (m *MsgAcceptOwnershipResponse) Reset()         { *m = MsgAcceptOwnershipResponse{} }
+func (m *MsgAcceptOwnershipResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAcceptOwnershipResponse) ProtoMessage()    {}
+func (*MsgAcceptOwnershipResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_76edb01ad13ba82d, []int{3}
+}
+func (m *MsgAcceptOwnershipResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAcceptOwnershipResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAcceptOwnershipResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAcceptOwnershipResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAcceptOwnershipResponse.Merge(m, src)
+}
+func (m *MsgAcceptOwnershipResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAcceptOwnershipResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAcceptOwnershipResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAcceptOwnershipResponse proto.InternalMessageInfo
+
+// MsgAddToBlocklist implements the addToBlocklist (0xf71a55f8) method.
+type MsgAddToBlocklist struct {
+	Signer   string   `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
+	Accounts []string `protobuf:"bytes,2,rep,name=accounts,proto3" json:"accounts,omitempty"`
+}
+
+func (m *MsgAddToBlocklist) Reset()         { *m = MsgAddToBlocklist{} }
+func (m *MsgAddToBlocklist) String() string { return proto.CompactTextString(m) }
+func (*MsgAddToBlocklist) ProtoMessage()    {}
+func (*MsgAddToBlocklist) Descriptor() ([]byte, []int) {
+	return fileDescriptor_76edb01ad13ba82d, []int{4}
+}
+func (m *MsgAddToBlocklist) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddToBlocklist) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddToBlocklist.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddToBlocklist) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddToBlocklist.Merge(m, src)
+}
+func (m *MsgAddToBlocklist) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddToBlocklist) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddToBlocklist.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddToBlocklist proto.InternalMessageInfo
+
+// MsgAddToBlocklistResponse is the response of the AddToBlocklist action.
+type MsgAddToBlocklistResponse struct {
+}
+
+func (m *MsgAddToBlocklistResponse) Reset()         { *m = MsgAddToBlocklistResponse{} }
+func (m *MsgAddToBlocklistResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAddToBlocklistResponse) ProtoMessage()    {}
+func (*MsgAddToBlocklistResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_76edb01ad13ba82d, []int{5}
+}
+func (m *MsgAddToBlocklistResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddToBlocklistResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddToBlocklistResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddToBlocklistResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddToBlocklistResponse.Merge(m, src)
+}
+func (m *MsgAddToBlocklistResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddToBlocklistResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddToBlocklistResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddToBlocklistResponse proto.InternalMessageInfo
+
+// MsgRemoveFromBlocklist implements the removeFromBlocklist (0xab63e69c) method.
+type MsgRemoveFromBlocklist struct {
+	Signer   string   `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
+	Accounts []string `protobuf:"bytes,2,rep,name=accounts,proto3" json:"accounts,omitempty"`
+}
+
+func (m *MsgRemoveFromBlocklist) Reset()         { *m = MsgRemoveFromBlocklist{} }
+func (m *MsgRemoveFromBlocklist) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveFromBlocklist) ProtoMessage()    {}
+func (*MsgRemoveFromBlocklist) Descriptor() ([]byte, []int) {
+	return fileDescriptor_76edb01ad13ba82d, []int{6}
+}
+func (m *MsgRemoveFromBlocklist) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveFromBlocklist) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveFromBlocklist.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveFromBlocklist) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveFromBlocklist.Merge(m, src)
+}
+func (m *MsgRemoveFromBlocklist) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveFromBlocklist) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveFromBlocklist.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveFromBlocklist proto.InternalMessageInfo
+
+// MsgRemoveFromBlocklistResponse is the response of the RemoveFromBlocklist action.
+type MsgRemoveFromBlocklistResponse struct {
+}
+
+func (m *MsgRemoveFromBlocklistResponse) Reset()         { *m = MsgRemoveFromBlocklistResponse{} }
+func (m *MsgRemoveFromBlocklistResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveFromBlocklistResponse) ProtoMessage()    {}
+func (*MsgRemoveFromBlocklistResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_76edb01ad13ba82d, []int{7}
+}
+func (m *MsgRemoveFromBlocklistResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveFromBlocklistResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveFromBlocklistResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveFromBlocklistResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveFromBlocklistResponse.Merge(m, src)
+}
+func (m *MsgRemoveFromBlocklistResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveFromBlocklistResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveFromBlocklistResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveFromBlocklistResponse proto.InternalMessageInfo
+
+func init() {
+	proto.RegisterType((*MsgTransferOwnership)(nil), "ondo.usdy.blocklist.v1.MsgTransferOwnership")
+	proto.RegisterType((*MsgTransferOwnershipResponse)(nil), "ondo.usdy.blocklist.v1.MsgTransferOwnershipResponse")
+	proto.RegisterType((*MsgAcceptOwnership)(nil), "ondo.usdy.blocklist.v1.MsgAcceptOwnership")
+	proto.RegisterType((*MsgAcceptOwnershipResponse)(nil), "ondo.usdy.blocklist.v1.MsgAcceptOwnershipResponse")
+	proto.RegisterType((*MsgAddToBlocklist)(nil), "ondo.usdy.blocklist.v1.MsgAddToBlocklist")
+	proto.RegisterType((*MsgAddToBlocklistResponse)(nil), "ondo.usdy.blocklist.v1.MsgAddToBlocklistResponse")
+	proto.RegisterType((*MsgRemoveFromBlocklist)(nil), "ondo.usdy.blocklist.v1.MsgRemoveFromBlocklist")
+	proto.RegisterType((*MsgRemoveFromBlocklistResponse)(nil), "ondo.usdy.blocklist.v1.MsgRemoveFromBlocklistResponse")
+}
+
 func init() { proto.RegisterFile("ondo/usdy/blocklist/v1/tx.proto", fileDescriptor_76edb01ad13ba82d) }
 
 var fileDescriptor_76edb01ad13ba82d = []byte{
-	// 175 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0xcf, 0xcf, 0x4b, 0xc9,
-	0xd7, 0x2f, 0x2d, 0x4e, 0xa9, 0xd4, 0x4f, 0xca, 0xc9, 0x4f, 0xce, 0xce, 0xc9, 0x2c, 0x2e, 0xd1,
-	0x2f, 0x33, 0xd4, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x03, 0x29, 0xd0,
-	0x03, 0x29, 0xd0, 0x83, 0x2b, 0xd0, 0x2b, 0x33, 0x94, 0x12, 0x4f, 0xce, 0x2f, 0xce, 0xcd, 0x2f,
-	0xd6, 0xcf, 0x2d, 0x4e, 0x07, 0xa9, 0xcf, 0x2d, 0x4e, 0x87, 0x68, 0x30, 0xe2, 0xe1, 0x62, 0xf6,
-	0x2d, 0x4e, 0x97, 0x62, 0x6d, 0x78, 0xbe, 0x41, 0x8b, 0xd1, 0xc9, 0xf7, 0xc4, 0x23, 0x39, 0xc6,
-	0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0xe1, 0xc2, 0x63, 0x39,
-	0x86, 0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0x8c, 0xd3, 0x33, 0x4b, 0x32, 0x4a, 0x93, 0xf4, 0x92, 0xf3,
-	0x73, 0xf5, 0xf3, 0xf2, 0x93, 0x72, 0x52, 0x75, 0x13, 0x8b, 0x8b, 0x53, 0x4b, 0x8a, 0xf5, 0xc1,
-	0x2e, 0xaa, 0x80, 0xb8, 0xa9, 0xa4, 0xb2, 0x20, 0xb5, 0x18, 0xe1, 0xb2, 0x24, 0x36, 0xb0, 0x1d,
-	0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x9a, 0x7f, 0x1f, 0x79, 0xb7, 0x00, 0x00, 0x00,
+	// 535 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x94, 0x3f, 0x6f, 0xd3, 0x40,
+	0x18, 0xc6, 0x7d, 0x8d, 0xa8, 0x9a, 0x1b, 0x40, 0x31, 0x51, 0x49, 0x4d, 0xe5, 0x44, 0x46, 0x88,
+	0x12, 0x51, 0x9b, 0xb4, 0xc0, 0x10, 0x84, 0x50, 0x33, 0xb0, 0x59, 0x48, 0xa1, 0x13, 0x4b, 0x95,
+	0xd8, 0xc7, 0xd5, 0x22, 0xbe, 0x33, 0x7e, 0x2f, 0x49, 0x3b, 0x20, 0x21, 0x58, 0x10, 0x13, 0x5f,
+	0x00, 0xa9, 0x1b, 0x6b, 0x06, 0x66, 0x66, 0xc6, 0x8a, 0x89, 0x11, 0x25, 0x43, 0xf8, 0x18, 0xc8,
+	0x7f, 0x62, 0xd4, 0xe4, 0x12, 0x1a, 0x50, 0x17, 0xcb, 0x77, 0xef, 0xe3, 0xe7, 0xfd, 0xbd, 0xf6,
+	0x73, 0xc6, 0x65, 0xce, 0x5c, 0x6e, 0x75, 0xc1, 0x3d, 0xb6, 0xda, 0x1d, 0xee, 0xbc, 0xec, 0x78,
+	0x20, 0xac, 0x5e, 0xcd, 0x12, 0x47, 0x66, 0x10, 0x72, 0xc1, 0xd5, 0xf5, 0x48, 0x60, 0x46, 0x02,
+	0x33, 0x13, 0x98, 0xbd, 0x9a, 0x56, 0x68, 0xf9, 0x1e, 0xe3, 0x56, 0x7c, 0x4d, 0xa4, 0xda, 0x35,
+	0x87, 0x83, 0xcf, 0xc1, 0xf2, 0x81, 0x46, 0x16, 0x3e, 0xd0, 0xb4, 0xb0, 0x91, 0x14, 0x0e, 0xe2,
+	0x95, 0x95, 0x2c, 0xd2, 0x52, 0x91, 0x72, 0xca, 0x93, 0xfd, 0xe8, 0x2e, 0xd9, 0x35, 0xbe, 0x22,
+	0x5c, 0xb4, 0x81, 0xee, 0x87, 0x2d, 0x06, 0x2f, 0x48, 0xf8, 0xb4, 0xcf, 0x48, 0x08, 0x87, 0x5e,
+	0xa0, 0xde, 0xc5, 0xab, 0xe0, 0x51, 0x46, 0xc2, 0x12, 0xaa, 0xa0, 0xad, 0x7c, 0xa3, 0xf4, 0xfd,
+	0xcb, 0x76, 0x31, 0x35, 0xdc, 0x73, 0xdd, 0x90, 0x00, 0x3c, 0x13, 0xa1, 0xc7, 0x68, 0x33, 0xd5,
+	0xa9, 0xf7, 0x71, 0x9e, 0x91, 0xfe, 0x01, 0x8f, 0x2c, 0x4a, 0x2b, 0x7f, 0x79, 0x68, 0x8d, 0x91,
+	0x7e, 0xdc, 0xac, 0xfe, 0xe8, 0xfd, 0x49, 0x59, 0xf9, 0x75, 0x52, 0x56, 0xde, 0x8e, 0x07, 0xd5,
+	0xd4, 0xeb, 0xc3, 0x78, 0x50, 0xbd, 0x29, 0x7b, 0x5f, 0x33, 0x9c, 0x86, 0x8e, 0x37, 0x65, 0xfc,
+	0x4d, 0x02, 0x01, 0x67, 0x40, 0x8c, 0x77, 0x08, 0xab, 0x36, 0xd0, 0x3d, 0xc7, 0x21, 0x81, 0xf8,
+	0x8f, 0xf1, 0xea, 0x0f, 0xe7, 0x70, 0xde, 0x90, 0x71, 0x4e, 0xb5, 0x33, 0x36, 0xb1, 0x36, 0x0b,
+	0x91, 0x31, 0x7e, 0x42, 0xb8, 0x10, 0x95, 0x5d, 0x77, 0x9f, 0x37, 0x26, 0x1e, 0xff, 0xf0, 0x05,
+	0x34, 0xbc, 0xd6, 0x72, 0x1c, 0xde, 0x65, 0x02, 0x4a, 0x2b, 0x95, 0xdc, 0x56, 0xbe, 0x99, 0xad,
+	0xeb, 0xf5, 0x39, 0xf8, 0x86, 0x14, 0xff, 0x0c, 0x89, 0x71, 0x1d, 0x6f, 0xcc, 0xe0, 0x65, 0xf0,
+	0x9f, 0x11, 0x5e, 0xb7, 0x81, 0x36, 0x89, 0xcf, 0x7b, 0xe4, 0x49, 0xc8, 0xfd, 0x8b, 0x9a, 0xe0,
+	0xf1, 0x9c, 0x09, 0x6e, 0xc9, 0x26, 0x90, 0xe0, 0x18, 0x15, 0xac, 0xcb, 0x41, 0x27, 0xb3, 0xec,
+	0x8c, 0x73, 0x38, 0x67, 0x03, 0x55, 0xfb, 0xb8, 0x30, 0x7b, 0x22, 0xee, 0x98, 0xf2, 0x03, 0x6a,
+	0xca, 0xf2, 0xa7, 0xdd, 0x5b, 0x46, 0x3d, 0x01, 0x50, 0x5f, 0xe1, 0x2b, 0xd3, 0x49, 0xad, 0x2e,
+	0x30, 0x9a, 0xd2, 0x6a, 0x3b, 0xe7, 0xd7, 0x66, 0x2d, 0x19, 0xbe, 0x3c, 0x15, 0xbc, 0xdb, 0x8b,
+	0x5c, 0xce, 0x48, 0xb5, 0xda, 0xb9, 0xa5, 0x59, 0xbf, 0xd7, 0xf8, 0xaa, 0x2c, 0x2b, 0xe6, 0x02,
+	0x27, 0x89, 0x5e, 0x7b, 0xb0, 0x9c, 0x7e, 0xd2, 0x5e, 0xbb, 0xf4, 0x66, 0x3c, 0xa8, 0xa2, 0x86,
+	0xfd, 0x6d, 0xa8, 0xa3, 0xd3, 0xa1, 0x8e, 0x7e, 0x0e, 0x75, 0xf4, 0x71, 0xa4, 0x2b, 0xa7, 0x23,
+	0x5d, 0xf9, 0x31, 0xd2, 0x95, 0xe7, 0xbb, 0xd4, 0x13, 0x87, 0xdd, 0xb6, 0xe9, 0x70, 0xdf, 0x62,
+	0xbc, 0xdd, 0x21, 0xdb, 0x2d, 0x00, 0x22, 0xc0, 0x8a, 0x63, 0x76, 0x94, 0x04, 0x4d, 0x1c, 0x07,
+	0x04, 0xfe, 0xc4, 0xad, 0xbd, 0x1a, 0xff, 0x4d, 0x77, 0x7f, 0x07, 0x00, 0x00, 0xff, 0xff, 0xff,
+	0x05, 0x64, 0x2f, 0xe5, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -53,6 +397,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	TransferOwnership(ctx context.Context, in *MsgTransferOwnership, opts ...grpc.CallOption) (*MsgTransferOwnershipResponse, error)
+	AcceptOwnership(ctx context.Context, in *MsgAcceptOwnership, opts ...grpc.CallOption) (*MsgAcceptOwnershipResponse, error)
+	AddToBlocklist(ctx context.Context, in *MsgAddToBlocklist, opts ...grpc.CallOption) (*MsgAddToBlocklistResponse, error)
+	RemoveFromBlocklist(ctx context.Context, in *MsgRemoveFromBlocklist, opts ...grpc.CallOption) (*MsgRemoveFromBlocklistResponse, error)
 }
 
 type msgClient struct {
@@ -63,22 +411,1231 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
+func (c *msgClient) TransferOwnership(ctx context.Context, in *MsgTransferOwnership, opts ...grpc.CallOption) (*MsgTransferOwnershipResponse, error) {
+	out := new(MsgTransferOwnershipResponse)
+	err := c.cc.Invoke(ctx, "/ondo.usdy.blocklist.v1.Msg/TransferOwnership", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) AcceptOwnership(ctx context.Context, in *MsgAcceptOwnership, opts ...grpc.CallOption) (*MsgAcceptOwnershipResponse, error) {
+	out := new(MsgAcceptOwnershipResponse)
+	err := c.cc.Invoke(ctx, "/ondo.usdy.blocklist.v1.Msg/AcceptOwnership", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) AddToBlocklist(ctx context.Context, in *MsgAddToBlocklist, opts ...grpc.CallOption) (*MsgAddToBlocklistResponse, error) {
+	out := new(MsgAddToBlocklistResponse)
+	err := c.cc.Invoke(ctx, "/ondo.usdy.blocklist.v1.Msg/AddToBlocklist", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RemoveFromBlocklist(ctx context.Context, in *MsgRemoveFromBlocklist, opts ...grpc.CallOption) (*MsgRemoveFromBlocklistResponse, error) {
+	out := new(MsgRemoveFromBlocklistResponse)
+	err := c.cc.Invoke(ctx, "/ondo.usdy.blocklist.v1.Msg/RemoveFromBlocklist", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	TransferOwnership(context.Context, *MsgTransferOwnership) (*MsgTransferOwnershipResponse, error)
+	AcceptOwnership(context.Context, *MsgAcceptOwnership) (*MsgAcceptOwnershipResponse, error)
+	AddToBlocklist(context.Context, *MsgAddToBlocklist) (*MsgAddToBlocklistResponse, error)
+	RemoveFromBlocklist(context.Context, *MsgRemoveFromBlocklist) (*MsgRemoveFromBlocklistResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) TransferOwnership(ctx context.Context, req *MsgTransferOwnership) (*MsgTransferOwnershipResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransferOwnership not implemented")
+}
+func (*UnimplementedMsgServer) AcceptOwnership(ctx context.Context, req *MsgAcceptOwnership) (*MsgAcceptOwnershipResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AcceptOwnership not implemented")
+}
+func (*UnimplementedMsgServer) AddToBlocklist(ctx context.Context, req *MsgAddToBlocklist) (*MsgAddToBlocklistResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddToBlocklist not implemented")
+}
+func (*UnimplementedMsgServer) RemoveFromBlocklist(ctx context.Context, req *MsgRemoveFromBlocklist) (*MsgRemoveFromBlocklistResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveFromBlocklist not implemented")
+}
+
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_TransferOwnership_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgTransferOwnership)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).TransferOwnership(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ondo.usdy.blocklist.v1.Msg/TransferOwnership",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).TransferOwnership(ctx, req.(*MsgTransferOwnership))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_AcceptOwnership_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAcceptOwnership)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).AcceptOwnership(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ondo.usdy.blocklist.v1.Msg/AcceptOwnership",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).AcceptOwnership(ctx, req.(*MsgAcceptOwnership))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_AddToBlocklist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAddToBlocklist)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).AddToBlocklist(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ondo.usdy.blocklist.v1.Msg/AddToBlocklist",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).AddToBlocklist(ctx, req.(*MsgAddToBlocklist))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RemoveFromBlocklist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoveFromBlocklist)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RemoveFromBlocklist(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ondo.usdy.blocklist.v1.Msg/RemoveFromBlocklist",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RemoveFromBlocklist(ctx, req.(*MsgRemoveFromBlocklist))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "ondo.usdy.blocklist.v1.Msg",
 	HandlerType: (*MsgServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "ondo/usdy/blocklist/v1/tx.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "TransferOwnership",
+			Handler:    _Msg_TransferOwnership_Handler,
+		},
+		{
+			MethodName: "AcceptOwnership",
+			Handler:    _Msg_AcceptOwnership_Handler,
+		},
+		{
+			MethodName: "AddToBlocklist",
+			Handler:    _Msg_AddToBlocklist_Handler,
+		},
+		{
+			MethodName: "RemoveFromBlocklist",
+			Handler:    _Msg_RemoveFromBlocklist_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "ondo/usdy/blocklist/v1/tx.proto",
 }
+
+func (m *MsgTransferOwnership) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgTransferOwnership) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgTransferOwnership) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.NewOwner) > 0 {
+		i -= len(m.NewOwner)
+		copy(dAtA[i:], m.NewOwner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.NewOwner)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Signer) > 0 {
+		i -= len(m.Signer)
+		copy(dAtA[i:], m.Signer)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Signer)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgTransferOwnershipResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgTransferOwnershipResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgTransferOwnershipResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAcceptOwnership) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAcceptOwnership) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAcceptOwnership) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Signer) > 0 {
+		i -= len(m.Signer)
+		copy(dAtA[i:], m.Signer)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Signer)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAcceptOwnershipResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAcceptOwnershipResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAcceptOwnershipResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAddToBlocklist) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddToBlocklist) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddToBlocklist) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Accounts) > 0 {
+		for iNdEx := len(m.Accounts) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Accounts[iNdEx])
+			copy(dAtA[i:], m.Accounts[iNdEx])
+			i = encodeVarintTx(dAtA, i, uint64(len(m.Accounts[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.Signer) > 0 {
+		i -= len(m.Signer)
+		copy(dAtA[i:], m.Signer)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Signer)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAddToBlocklistResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddToBlocklistResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddToBlocklistResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveFromBlocklist) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveFromBlocklist) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveFromBlocklist) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Accounts) > 0 {
+		for iNdEx := len(m.Accounts) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Accounts[iNdEx])
+			copy(dAtA[i:], m.Accounts[iNdEx])
+			i = encodeVarintTx(dAtA, i, uint64(len(m.Accounts[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.Signer) > 0 {
+		i -= len(m.Signer)
+		copy(dAtA[i:], m.Signer)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Signer)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveFromBlocklistResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveFromBlocklistResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveFromBlocklistResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
+	offset -= sovTx(v)
+	base := offset
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return base
+}
+func (m *MsgTransferOwnership) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Signer)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.NewOwner)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgTransferOwnershipResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgAcceptOwnership) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Signer)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgAcceptOwnershipResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgAddToBlocklist) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Signer)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if len(m.Accounts) > 0 {
+		for _, s := range m.Accounts {
+			l = len(s)
+			n += 1 + l + sovTx(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *MsgAddToBlocklistResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgRemoveFromBlocklist) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Signer)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if len(m.Accounts) > 0 {
+		for _, s := range m.Accounts {
+			l = len(s)
+			n += 1 + l + sovTx(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *MsgRemoveFromBlocklistResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func sovTx(x uint64) (n int) {
+	return (math_bits.Len64(x|1) + 6) / 7
+}
+func sozTx(x uint64) (n int) {
+	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgTransferOwnership) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgTransferOwnership: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgTransferOwnership: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Signer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Signer = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewOwner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NewOwner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgTransferOwnershipResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgTransferOwnershipResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgTransferOwnershipResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAcceptOwnership) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAcceptOwnership: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAcceptOwnership: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Signer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Signer = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAcceptOwnershipResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAcceptOwnershipResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAcceptOwnershipResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddToBlocklist) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddToBlocklist: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddToBlocklist: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Signer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Signer = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Accounts", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Accounts = append(m.Accounts, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddToBlocklistResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddToBlocklistResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddToBlocklistResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveFromBlocklist) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveFromBlocklist: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveFromBlocklist: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Signer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Signer = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Accounts", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Accounts = append(m.Accounts, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveFromBlocklistResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveFromBlocklistResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveFromBlocklistResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipTx(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	depth := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+		case 1:
+			iNdEx += 8
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if length < 0 {
+				return 0, ErrInvalidLengthTx
+			}
+			iNdEx += length
+		case 3:
+			depth++
+		case 4:
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupTx
+			}
+			depth--
+		case 5:
+			iNdEx += 4
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthTx
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
+	}
+	return 0, io.ErrUnexpectedEOF
+}
+
+var (
+	ErrInvalidLengthTx        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowTx          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupTx = fmt.Errorf("proto: unexpected end of group")
+)

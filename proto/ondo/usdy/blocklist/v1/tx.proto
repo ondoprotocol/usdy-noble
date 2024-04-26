@@ -2,10 +2,80 @@ syntax = "proto3";
 
 package ondo.usdy.blocklist.v1;
 
+import "amino/amino.proto";
 import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 
 option go_package = "github.com/noble-assets/ondo/x/usdy/types/blocklist";
 
 service Msg {
   option (cosmos.msg.v1.service) = true;
+
+  rpc TransferOwnership(MsgTransferOwnership) returns (MsgTransferOwnershipResponse);
+  rpc AcceptOwnership(MsgAcceptOwnership) returns (MsgAcceptOwnershipResponse);
+
+  rpc AddToBlocklist(MsgAddToBlocklist) returns (MsgAddToBlocklistResponse);
+  rpc RemoveFromBlocklist(MsgRemoveFromBlocklist) returns (MsgRemoveFromBlocklistResponse);
 }
+
+//
+
+// MsgTransferOwnership implements the transferOwnership (0xf2fde38b) method.
+message MsgTransferOwnership {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "ondo/usdy/blocklist/TransferOwnership";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string new_owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgTransferOwnershipResponse is the response of the TransferOwnership action.
+message MsgTransferOwnershipResponse {}
+
+// MsgAcceptOwnership implements the acceptOwnership (0x79ba5097) method.
+message MsgAcceptOwnership {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "ondo/usdy/blocklist/AcceptOwnership";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgAcceptOwnershipResponse is the response of the AcceptOwnership action.
+message MsgAcceptOwnershipResponse {}
+
+// MsgAddToBlocklist implements the addToBlocklist (0xf71a55f8) method.
+message MsgAddToBlocklist {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "ondo/usdy/blocklist/AddToBlocklist";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  repeated string accounts = 2;
+}
+
+// MsgAddToBlocklistResponse is the response of the AddToBlocklist action.
+message MsgAddToBlocklistResponse {}
+
+// MsgRemoveFromBlocklist implements the removeFromBlocklist (0xab63e69c) method.
+message MsgRemoveFromBlocklist {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "ondo/usdy/blocklist/RemoveFromBlocklist";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  repeated string accounts = 2;
+}
+
+// MsgRemoveFromBlocklistResponse is the response of the RemoveFromBlocklist action.
+message MsgRemoveFromBlocklistResponse {}

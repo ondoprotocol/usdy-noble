@@ -5,14 +5,19 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
+	"github.com/noble-assets/ondo/x/usdy/types/blocklist"
 )
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	blocklist.RegisterLegacyAminoCodec(cdc)
+
 	cdc.RegisterConcrete(&MsgPause{}, "ondo/usdy/Pause", nil)
 	cdc.RegisterConcrete(&MsgUnpause{}, "ondo/usdy/Unpause", nil)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
+	blocklist.RegisterInterfaces(registry)
+
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgPause{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgUnpause{})
 

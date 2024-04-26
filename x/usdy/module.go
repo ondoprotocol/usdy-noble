@@ -203,6 +203,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.StoreService,
 		in.EventService,
 		in.Config.Denom,
+		in.AccountKeeper,
 	)
 	m := NewAppModule(k, in.AccountKeeper)
 

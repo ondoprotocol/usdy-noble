@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package ondo.usdy.blocklist.v1;
+
+option go_package = "github.com/noble-assets/ondo/x/usdy/types/blocklist";
+
+// OwnershipTransferStarted is emitted whenever an ownership transfer is started.
+message OwnershipTransferStarted {
+  // old_owner is the address of the old owner account.
+  string old_owner = 1;
+  // new_owner is the address of the new owner account.
+  string new_owner = 2;
+}
+
+// BlockedAddressesAdded is emitted whenever addresses are added to the blocklist.
+message BlockedAddressesAdded {
+  // accounts is the list of addresses that were added to the blocklist.
+  repeated string accounts = 1;
+}
+
+// BlockedAddressesRemoved is emitted whenever addresses are removed from the blocklist.
+message BlockedAddressesRemoved {
+  // accounts is the list of addresses that were removed from the blocklist.
+  repeated string accounts = 1;
+}

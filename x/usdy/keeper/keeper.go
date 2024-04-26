@@ -30,6 +30,8 @@ type Keeper struct {
 	Owner            collections.Item[string]
 	PendingOwner     collections.Item[string]
 	BlockedAddresses collections.Map[[]byte, bool]
+
+	accountKeeper types.AccountKeeper
 }
 
 func NewKeeper(
@@ -38,6 +40,7 @@ func NewKeeper(
 	storeService store.KVStoreService,
 	eventService event.Service,
 	denom string,
+	accountKeeper types.AccountKeeper,
 ) *Keeper {
 	builder := collections.NewSchemaBuilder(storeService)
 
@@ -47,7 +50,8 @@ func NewKeeper(
 		storeService: storeService,
 		eventService: eventService,
 
-		Denom: denom,
+		Denom:         denom,
+		accountKeeper: accountKeeper,
 
 		Paused: collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
 		Pauser: collections.NewItem(builder, types.PauserKey, "pauser", collections.StringValue),

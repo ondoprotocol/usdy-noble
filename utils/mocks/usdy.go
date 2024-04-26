@@ -27,5 +27,6 @@ func USDYKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		runtime.NewKVStoreService(key),
 		runtime.ProvideEventService(),
 		"ausdy",
+		AccountKeeper{},
 	), wrapper.Ctx
 }
