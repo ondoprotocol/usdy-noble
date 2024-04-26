@@ -1,44 +1,44 @@
-alias ondod=./simapp/build/simd
+alias aurad=./simapp/build/simd
 
 for arg in "$@"
 do
     case $arg in
         -r|--reset)
-        rm -rf .ondo
+        rm -rf .aura
         shift
         ;;
     esac
 done
 
-if ! [ -f .ondo/data/priv_validator_state.json ]; then
-  ondod init validator --chain-id "ondo-1" --home .ondo &> /dev/null
+if ! [ -f .aura/data/priv_validator_state.json ]; then
+  aurad init validator --chain-id "aura-1" --home .aura &> /dev/null
 
-  ondod keys add validator --home .ondo --keyring-backend test &> /dev/null
-  ondod genesis add-genesis-account validator 1000000ustake --home .ondo --keyring-backend test
-  BURNER=$(ondod keys add burner --home .ondo --keyring-backend test --output json | jq .address)
-  ondod genesis add-genesis-account burner 10000000uusdc --home .ondo --keyring-backend test
-  MINTER=$(ondod keys add minter --home .ondo --keyring-backend test --output json | jq .address)
-  ondod genesis add-genesis-account minter 10000000uusdc --home .ondo --keyring-backend test
-  PAUSER=$(ondod keys add pauser --home .ondo --keyring-backend test --output json | jq .address)
-  ondod genesis add-genesis-account pauser 10000000uusdc --home .ondo --keyring-backend test
-  BLOCKLIST_OWNER=$(ondod keys add blocklist-owner --home .ondo --keyring-backend test --output json | jq .address)
-  ondod genesis add-genesis-account blocklist-owner 10000000uusdc --home .ondo --keyring-backend test
-  BLOCKLIST_PENDING_OWNER=$(ondod keys add blocklist-pending-owner --home .ondo --keyring-backend test --output json | jq .address)
-  ondod genesis add-genesis-account blocklist-pending-owner 10000000uusdc --home .ondo --keyring-backend test
-  ondod keys add user --home .ondo --keyring-backend test &> /dev/null
-  ondod genesis add-genesis-account user 10000000uusdc --home .ondo --keyring-backend test
+  aurad keys add validator --home .aura --keyring-backend test &> /dev/null
+  aurad genesis add-genesis-account validator 1000000ustake --home .aura --keyring-backend test
+  BURNER=$(aurad keys add burner --home .aura --keyring-backend test --output json | jq .address)
+  aurad genesis add-genesis-account burner 10000000uusdc --home .aura --keyring-backend test
+  MINTER=$(aurad keys add minter --home .aura --keyring-backend test --output json | jq .address)
+  aurad genesis add-genesis-account minter 10000000uusdc --home .aura --keyring-backend test
+  PAUSER=$(aurad keys add pauser --home .aura --keyring-backend test --output json | jq .address)
+  aurad genesis add-genesis-account pauser 10000000uusdc --home .aura --keyring-backend test
+  BLOCKLIST_OWNER=$(aurad keys add blocklist-owner --home .aura --keyring-backend test --output json | jq .address)
+  aurad genesis add-genesis-account blocklist-owner 10000000uusdc --home .aura --keyring-backend test
+  BLOCKLIST_PENDING_OWNER=$(aurad keys add blocklist-pending-owner --home .aura --keyring-backend test --output json | jq .address)
+  aurad genesis add-genesis-account blocklist-pending-owner 10000000uusdc --home .aura --keyring-backend test
+  aurad keys add user --home .aura --keyring-backend test &> /dev/null
+  aurad genesis add-genesis-account user 10000000uusdc --home .aura --keyring-backend test
 
-  TEMP=.ondo/genesis.json
-  touch $TEMP && jq '.app_state.staking.params.bond_denom = "ustake"' .ondo/config/genesis.json > $TEMP && mv $TEMP .ondo/config/genesis.json
-  touch $TEMP && jq '.app_state.usdy.blocklist_state.owner = '$BLOCKLIST_OWNER'' .ondo/config/genesis.json > $TEMP && mv $TEMP .ondo/config/genesis.json
-  touch $TEMP && jq '.app_state.usdy.burner = '$BURNER'' .ondo/config/genesis.json > $TEMP && mv $TEMP .ondo/config/genesis.json
-  touch $TEMP && jq '.app_state.usdy.minter = '$MINTER'' .ondo/config/genesis.json > $TEMP && mv $TEMP .ondo/config/genesis.json
-  touch $TEMP && jq '.app_state.usdy.pauser = '$PAUSER'' .ondo/config/genesis.json > $TEMP && mv $TEMP .ondo/config/genesis.json
+  TEMP=.aura/genesis.json
+  touch $TEMP && jq '.app_state.staking.params.bond_denom = "ustake"' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
+  touch $TEMP && jq '.app_state.aura.blocklist_state.owner = '$BLOCKLIST_OWNER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
+  touch $TEMP && jq '.app_state.aura.burner = '$BURNER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
+  touch $TEMP && jq '.app_state.aura.minter = '$MINTER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
+  touch $TEMP && jq '.app_state.aura.pauser = '$PAUSER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
 
-  ondod genesis gentx validator 1000000ustake --chain-id "ondo-1" --home .ondo --keyring-backend test &> /dev/null
-  ondod genesis collect-gentxs --home .ondo &> /dev/null
+  aurad genesis gentx validator 1000000ustake --chain-id "aura-1" --home .aura --keyring-backend test &> /dev/null
+  aurad genesis collect-gentxs --home .aura &> /dev/null
 
-  sed -i '' 's/timeout_commit = "5s"/timeout_commit = "1s"/g' .ondo/config/config.toml
+  sed -i '' 's/timeout_commit = "5s"/timeout_commit = "1s"/g' .aura/config/config.toml
 fi
 
-ondod start --home .ondo
+aurad start --home .aura

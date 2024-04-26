@@ -1,4 +1,4 @@
-module github.com/noble-assets/ondo
+module github.com/noble-assets/aura
 
 go 1.22
 

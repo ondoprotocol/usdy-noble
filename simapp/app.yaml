@@ -5,7 +5,7 @@ modules:
       app_name: SimApp
       begin_blockers: [ distribution, staking ]
       end_blockers: [ staking ]
-      init_genesis: [ auth, bank, distribution, staking, genutil, usdy ]
+      init_genesis: [ auth, bank, distribution, staking, genutil, aura ]
       override_store_keys:
         - module_name: auth
           kv_store_key: acc
@@ -20,13 +20,13 @@ modules:
           permissions: [ burner, staking ]
         - account: not_bonded_tokens_pool
           permissions: [ burner, staking ]
-        - account: usdy
+        - account: aura
           permissions: [ burner, minter ]
   - name: bank
     config:
       "@type": cosmos.bank.module.v1.Module
       blocked_module_accounts_override:
-        [ auth, distribution, bonded_tokens_pool, not_bonded_tokens_pool ]
+        [ auth, distribution, bonded_tokens_pool, not_bonded_tokens_pool, aura ]
   - name: consensus
     config:
       "@type": cosmos.consensus.module.v1.Module
@@ -43,7 +43,7 @@ modules:
     config:
       "@type": cosmos.tx.config.v1.Config
 
-  - name: usdy
+  - name: aura
     config:
-      "@type": ondo.usdy.module.v1.Module
+      "@type": aura.module.v1.Module
       denom: ausdy

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package aura.module.v1;
+
+import "cosmos/app/v1alpha1/module.proto";
+
+// Module is the config object of the Aura module.
+message Module {
+  option (cosmos.app.v1alpha1.module) = {go_import: "github.com/noble-assets/aura/x/aura"};
+
+  // denom is the USDY denom that this module is allowed to burn / mint / etc.
+  string denom = 1;
+}

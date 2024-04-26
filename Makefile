@@ -62,5 +62,5 @@ test: test-unit
 
 test-unit:
 	@echo "🤖 Running unit tests..."
-	@go test -cover -coverprofile=coverage.out -race -v ./x/usdy/keeper/...
+	@go test -cover -coverprofile=coverage.out -race -v ./x/aura/keeper/...
 	@echo "✅ Completed unit tests!"

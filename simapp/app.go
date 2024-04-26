@@ -25,7 +25,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	usdykeeper "github.com/noble-assets/ondo/x/usdy/keeper"
+	aurakeeper "github.com/noble-assets/aura/x/aura/keeper"
 
 	_ "github.com/cosmos/cosmos-sdk/x/auth"           // import for side effects
 	_ "github.com/cosmos/cosmos-sdk/x/auth/tx/config" // import for side effects
@@ -33,7 +33,7 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/x/consensus"      // import for side effects
 	_ "github.com/cosmos/cosmos-sdk/x/distribution"   // import for side effects
 	_ "github.com/cosmos/cosmos-sdk/x/staking"        // import for side effects
-	_ "github.com/noble-assets/ondo/x/usdy"           // import for side effects
+	_ "github.com/noble-assets/aura/x/aura"           // import for side effects
 )
 
 // DefaultNodeHome default home directories for the application daemon
@@ -64,7 +64,7 @@ type SimApp struct {
 	DistributionKeeper distributionkeeper.Keeper
 	StakingKeeper      *stakingkeeper.Keeper
 	// Custom Modules
-	USDYKeeper *usdykeeper.Keeper
+	AuraKeeper *aurakeeper.Keeper
 }
 
 func init() {
@@ -123,7 +123,7 @@ func NewSimApp(
 		&app.DistributionKeeper,
 		&app.StakingKeeper,
 		// Custom Modules
-		&app.USDYKeeper,
+		&app.AuraKeeper,
 	); err != nil {
 		return nil, err
 	}

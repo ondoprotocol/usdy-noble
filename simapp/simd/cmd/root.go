@@ -21,7 +21,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 	txmodule "github.com/cosmos/cosmos-sdk/x/auth/tx/config"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
-	"github.com/noble-assets/ondo/simapp"
+	"github.com/noble-assets/aura/simapp"
 	"github.com/spf13/cobra"
 )
 

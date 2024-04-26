@@ -2,7 +2,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/noble-assets/ondo/api
+    default: github.com/noble-assets/aura/api
     except:
       - buf.build/cosmos/cosmos-proto
       - buf.build/cosmos/gogo-proto

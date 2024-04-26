@@ -1,4 +1,4 @@
-module github.com/noble-assets/ondo/simapp
+module github.com/noble-assets/aura/simapp
 
 go 1.22
 
@@ -12,7 +12,7 @@ require (
 	github.com/cometbft/cometbft v0.38.6
 	github.com/cosmos/cosmos-db v1.0.2
 	github.com/cosmos/cosmos-sdk v0.50.6
-	github.com/noble-assets/ondo v1.0.0
+	github.com/noble-assets/aura v1.0.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
 )
@@ -161,5 +161,5 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
-// use local noble-assets/ondo
-replace github.com/noble-assets/ondo => ../
+// use local noble-assets/aura
+replace github.com/noble-assets/aura => ../

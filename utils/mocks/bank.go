@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/noble-assets/ondo/x/usdy/types"
+	"github.com/noble-assets/aura/x/aura/types"
 )
 
 var _ types.BankKeeper = BankKeeper{}

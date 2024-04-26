@@ -21,7 +21,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
-	"github.com/noble-assets/ondo/simapp"
+	"github.com/noble-assets/aura/simapp"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

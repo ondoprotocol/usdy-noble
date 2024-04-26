@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package aura.v1;
+
+option go_package = "github.com/noble-assets/aura/x/aura/types";
+
+// Paused is emitted whenever the module is paused.
+message Paused {
+  // account is the address of the account that paused the module.
+  string account = 1;
+}
+
+// Unpaused is emitted whenever the module is unpaused.
+message Unpaused {
+  // account is the address of the account that unpaused the module.
+  string account = 1;
+}
