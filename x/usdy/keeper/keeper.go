@@ -8,9 +8,11 @@ import (
 	"cosmossdk.io/core/event"
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/log"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/noble-assets/ondo/x/usdy/types"
+	"github.com/noble-assets/ondo/x/usdy/types/blocklist"
 )
 
 type Keeper struct {
@@ -19,11 +21,15 @@ type Keeper struct {
 	storeService store.KVStoreService
 	eventService event.Service
 
-	Denom string
-
+	Denom  string
 	Schema collections.Schema
+
 	Paused collections.Item[bool]
 	Pauser collections.Item[string]
+
+	Owner            collections.Item[string]
+	PendingOwner     collections.Item[string]
+	BlockedAddresses collections.Map[[]byte, bool]
 }
 
 func NewKeeper(
@@ -45,6 +51,10 @@ func NewKeeper(
 
 		Paused: collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
 		Pauser: collections.NewItem(builder, types.PauserKey, "pauser", collections.StringValue),
+
+		Owner:            collections.NewItem(builder, blocklist.OwnerKey, "owner", collections.StringValue),
+		PendingOwner:     collections.NewItem(builder, blocklist.PendingOwnerKey, "pending_owner", collections.StringValue),
+		BlockedAddresses: collections.NewMap(builder, blocklist.BlockedAddressPrefix, "blocked_addresses", collections.BytesKey, collections.BoolValue),
 	}
 
 	schema, err := builder.Build()
@@ -64,6 +74,8 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, fromAddr, toAddr sdk.Acc
 		if paused {
 			return toAddr, fmt.Errorf("%s transfers are paused", k.Denom)
 		}
+
+		// TODO(@john): Implement blocklist checks.
 	}
 
 	return toAddr, nil

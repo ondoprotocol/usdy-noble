@@ -23,6 +23,7 @@ import (
 	usdyv1 "github.com/noble-assets/ondo/api/ondo/usdy/v1"
 	"github.com/noble-assets/ondo/x/usdy/keeper"
 	"github.com/noble-assets/ondo/x/usdy/types"
+	"github.com/noble-assets/ondo/x/usdy/types/blocklist"
 )
 
 // ConsensusVersion defines the current x/usdy module consensus version.
@@ -58,6 +59,10 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
+
+	if err := blocklist.RegisterQueryHandlerClient(context.Background(), mux, blocklist.NewQueryClient(clientCtx)); err != nil {
+		panic(err)
+	}
 }
 
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
@@ -78,13 +83,15 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, cfg client.TxEncoding
 type AppModule struct {
 	AppModuleBasic
 
-	keeper *keeper.Keeper
+	keeper        *keeper.Keeper
+	accountKeeper types.AccountKeeper
 }
 
-func NewAppModule(keeper *keeper.Keeper) AppModule {
+func NewAppModule(keeper *keeper.Keeper, accountKeeper types.AccountKeeper) AppModule {
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(),
 		keeper:         keeper,
+		accountKeeper:  accountKeeper,
 	}
 }
 
@@ -98,22 +105,26 @@ func (m AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, bz json.Raw
 	var genesis types.GenesisState
 	cdc.MustUnmarshalJSON(bz, &genesis)
 
-	InitGenesis(ctx, m.keeper, genesis)
+	InitGenesis(ctx, m.keeper, m.accountKeeper, genesis)
 }
 
 func (m AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	genesis := ExportGenesis(ctx, m.keeper)
+	genesis := ExportGenesis(ctx, m.keeper, m.accountKeeper)
 	return cdc.MustMarshalJSON(genesis)
 }
 
 func (m AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServer(m.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServer(m.keeper))
+
+	blocklist.RegisterMsgServer(cfg.MsgServer(), keeper.NewBlocklistMsgServer(m.keeper))
+	blocklist.RegisterQueryServer(cfg.QueryServer(), keeper.NewBlocklistQueryServer(m.keeper))
 }
 
 //
 
 func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
+	// TODO(@john): Figure out how to register submodule msgs + queries.
 	return &autocliv1.ModuleOptions{
 		Tx: &autocliv1.ServiceCommandDescriptor{
 			Service: usdyv1.Msg_ServiceDesc.ServiceName,
@@ -169,6 +180,8 @@ type ModuleInputs struct {
 	Logger       log.Logger
 	StoreService store.KVStoreService
 	EventService event.Service
+
+	AccountKeeper types.AccountKeeper
 }
 
 type ModuleOutputs struct {
@@ -191,7 +204,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.EventService,
 		in.Config.Denom,
 	)
-	m := NewAppModule(k)
+	m := NewAppModule(k, in.AccountKeeper)
 
 	return ModuleOutputs{Keeper: k, Module: m, Restriction: k.SendRestrictionFn}
 }

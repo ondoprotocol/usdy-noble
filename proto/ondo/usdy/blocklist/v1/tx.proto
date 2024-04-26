@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package ondo.usdy.blocklist.v1;
+
+import "cosmos/msg/v1/msg.proto";
+
+option go_package = "github.com/noble-assets/ondo/x/usdy/types/blocklist";
+
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+}

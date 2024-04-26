@@ -5,6 +5,8 @@ import (
 	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
+	_ "github.com/cosmos/gogoproto/gogoproto"
+	v1 "github.com/noble-assets/ondo/api/ondo/usdy/blocklist/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -14,14 +16,16 @@ import (
 )
 
 var (
-	md_GenesisState        protoreflect.MessageDescriptor
-	fd_GenesisState_paused protoreflect.FieldDescriptor
-	fd_GenesisState_pauser protoreflect.FieldDescriptor
+	md_GenesisState                 protoreflect.MessageDescriptor
+	fd_GenesisState_blocklist_state protoreflect.FieldDescriptor
+	fd_GenesisState_paused          protoreflect.FieldDescriptor
+	fd_GenesisState_pauser          protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_ondo_usdy_v1_genesis_proto_init()
 	md_GenesisState = File_ondo_usdy_v1_genesis_proto.Messages().ByName("GenesisState")
+	fd_GenesisState_blocklist_state = md_GenesisState.Fields().ByName("blocklist_state")
 	fd_GenesisState_paused = md_GenesisState.Fields().ByName("paused")
 	fd_GenesisState_pauser = md_GenesisState.Fields().ByName("pauser")
 }
@@ -91,6 +95,12 @@ func (x *fastReflection_GenesisState) Interface() protoreflect.ProtoMessage {
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.BlocklistState != nil {
+		value := protoreflect.ValueOfMessage(x.BlocklistState.ProtoReflect())
+		if !f(fd_GenesisState_blocklist_state, value) {
+			return
+		}
+	}
 	if x.Paused != false {
 		value := protoreflect.ValueOfBool(x.Paused)
 		if !f(fd_GenesisState_paused, value) {
@@ -118,6 +128,8 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
+	case "ondo.usdy.v1.GenesisState.blocklist_state":
+		return x.BlocklistState != nil
 	case "ondo.usdy.v1.GenesisState.paused":
 		return x.Paused != false
 	case "ondo.usdy.v1.GenesisState.pauser":
@@ -138,6 +150,8 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
+	case "ondo.usdy.v1.GenesisState.blocklist_state":
+		x.BlocklistState = nil
 	case "ondo.usdy.v1.GenesisState.paused":
 		x.Paused = false
 	case "ondo.usdy.v1.GenesisState.pauser":
@@ -158,6 +172,9 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
+	case "ondo.usdy.v1.GenesisState.blocklist_state":
+		value := x.BlocklistState
+		return protoreflect.ValueOfMessage(value.ProtoReflect())
 	case "ondo.usdy.v1.GenesisState.paused":
 		value := x.Paused
 		return protoreflect.ValueOfBool(value)
@@ -184,6 +201,8 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
+	case "ondo.usdy.v1.GenesisState.blocklist_state":
+		x.BlocklistState = value.Message().Interface().(*v1.GenesisState)
 	case "ondo.usdy.v1.GenesisState.paused":
 		x.Paused = value.Bool()
 	case "ondo.usdy.v1.GenesisState.pauser":
@@ -208,6 +227,11 @@ func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
+	case "ondo.usdy.v1.GenesisState.blocklist_state":
+		if x.BlocklistState == nil {
+			x.BlocklistState = new(v1.GenesisState)
+		}
+		return protoreflect.ValueOfMessage(x.BlocklistState.ProtoReflect())
 	case "ondo.usdy.v1.GenesisState.paused":
 		panic(fmt.Errorf("field paused of message ondo.usdy.v1.GenesisState is not mutable"))
 	case "ondo.usdy.v1.GenesisState.pauser":
@@ -225,6 +249,9 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
+	case "ondo.usdy.v1.GenesisState.blocklist_state":
+		m := new(v1.GenesisState)
+		return protoreflect.ValueOfMessage(m.ProtoReflect())
 	case "ondo.usdy.v1.GenesisState.paused":
 		return protoreflect.ValueOfBool(false)
 	case "ondo.usdy.v1.GenesisState.pauser":
@@ -298,6 +325,10 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
+		if x.BlocklistState != nil {
+			l = options.Size(x.BlocklistState)
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
 		if x.Paused {
 			n += 2
 		}
@@ -339,7 +370,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			copy(dAtA[i:], x.Pauser)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Pauser)))
 			i--
-			dAtA[i] = 0x12
+			dAtA[i] = 0x1a
 		}
 		if x.Paused {
 			i--
@@ -349,7 +380,21 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				dAtA[i] = 0
 			}
 			i--
-			dAtA[i] = 0x8
+			dAtA[i] = 0x10
+		}
+		if x.BlocklistState != nil {
+			encoded, err := options.Marshal(x.BlocklistState)
+			if err != nil {
+				return protoiface.MarshalOutput{
+					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+					Buf:               input.Buf,
+				}, err
+			}
+			i -= len(encoded)
+			copy(dAtA[i:], encoded)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+			i--
+			dAtA[i] = 0xa
 		}
 		if input.Buf != nil {
 			input.Buf = append(input.Buf, dAtA...)
@@ -401,6 +446,42 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			}
 			switch fieldNum {
 			case 1:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field BlocklistState", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if x.BlocklistState == nil {
+					x.BlocklistState = &v1.GenesisState{}
+				}
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.BlocklistState); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 2:
 				if wireType != 0 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Paused", wireType)
 				}
@@ -420,7 +501,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 					}
 				}
 				x.Paused = bool(v != 0)
-			case 2:
+			case 3:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Pauser", wireType)
 				}
@@ -505,10 +586,12 @@ type GenesisState struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// blocklist_state is the genesis state of the blocklist submodule.
+	BlocklistState *v1.GenesisState `protobuf:"bytes,1,opt,name=blocklist_state,json=blocklistState,proto3" json:"blocklist_state,omitempty"`
 	// paused is the paused state of the Ondo USDY module.
-	Paused bool `protobuf:"varint,1,opt,name=paused,proto3" json:"paused,omitempty"`
+	Paused bool `protobuf:"varint,2,opt,name=paused,proto3" json:"paused,omitempty"`
 	// pauser is the address that can control the paused state.
-	Pauser string `protobuf:"bytes,2,opt,name=pauser,proto3" json:"pauser,omitempty"`
+	Pauser string `protobuf:"bytes,3,opt,name=pauser,proto3" json:"pauser,omitempty"`
 }
 
 func (x *GenesisState) Reset() {
@@ -529,6 +612,13 @@ func (*GenesisState) ProtoMessage() {}
 // Deprecated: Use GenesisState.ProtoReflect.Descriptor instead.
 func (*GenesisState) Descriptor() ([]byte, []int) {
 	return file_ondo_usdy_v1_genesis_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *GenesisState) GetBlocklistState() *v1.GenesisState {
+	if x != nil {
+		return x.BlocklistState
+	}
+	return nil
 }
 
 func (x *GenesisState) GetPaused() bool {
@@ -552,24 +642,33 @@ var file_ondo_usdy_v1_genesis_proto_rawDesc = []byte{
 	0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0c, 0x6f, 0x6e,
 	0x64, 0x6f, 0x2e, 0x75, 0x73, 0x64, 0x79, 0x2e, 0x76, 0x31, 0x1a, 0x19, 0x63, 0x6f, 0x73, 0x6d,
 	0x6f, 0x73, 0x5f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x58, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73,
-	0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x12, 0x30, 0x0a,
-	0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2,
-	0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73,
-	0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x72, 0x42,
-	0xa8, 0x01, 0x0a, 0x10, 0x63, 0x6f, 0x6d, 0x2e, 0x6f, 0x6e, 0x64, 0x6f, 0x2e, 0x75, 0x73, 0x64,
-	0x79, 0x2e, 0x76, 0x31, 0x42, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f,
-	0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
-	0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2d, 0x61, 0x73, 0x73, 0x65, 0x74, 0x73, 0x2f, 0x6f, 0x6e,
-	0x64, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6f, 0x6e, 0x64, 0x6f, 0x2f, 0x75, 0x73, 0x64, 0x79,
-	0x2f, 0x76, 0x31, 0x3b, 0x75, 0x73, 0x64, 0x79, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4f, 0x55, 0x58,
-	0xaa, 0x02, 0x0c, 0x4f, 0x6e, 0x64, 0x6f, 0x2e, 0x55, 0x73, 0x64, 0x79, 0x2e, 0x56, 0x31, 0xca,
-	0x02, 0x0c, 0x4f, 0x6e, 0x64, 0x6f, 0x5c, 0x55, 0x73, 0x64, 0x79, 0x5c, 0x56, 0x31, 0xe2, 0x02,
-	0x18, 0x4f, 0x6e, 0x64, 0x6f, 0x5c, 0x55, 0x73, 0x64, 0x79, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50,
-	0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x0e, 0x4f, 0x6e, 0x64, 0x6f,
-	0x3a, 0x3a, 0x55, 0x73, 0x64, 0x79, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x14, 0x67, 0x6f, 0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x24, 0x6f, 0x6e, 0x64,
+	0x6f, 0x2f, 0x75, 0x73, 0x64, 0x79, 0x2f, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69, 0x73, 0x74,
+	0x2f, 0x76, 0x31, 0x2f, 0x67, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x22, 0xad, 0x01, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61,
+	0x74, 0x65, 0x12, 0x53, 0x0a, 0x0f, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69, 0x73, 0x74, 0x5f,
+	0x73, 0x74, 0x61, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x24, 0x2e, 0x6f, 0x6e,
+	0x64, 0x6f, 0x2e, 0x75, 0x73, 0x64, 0x79, 0x2e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69, 0x73,
+	0x74, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74,
+	0x65, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x0e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69,
+	0x73, 0x74, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65,
+	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x12,
+	0x30, 0x0a, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42,
+	0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72,
+	0x65, 0x73, 0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65,
+	0x72, 0x42, 0xa8, 0x01, 0x0a, 0x10, 0x63, 0x6f, 0x6d, 0x2e, 0x6f, 0x6e, 0x64, 0x6f, 0x2e, 0x75,
+	0x73, 0x64, 0x79, 0x2e, 0x76, 0x31, 0x42, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50,
+	0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
+	0x6f, 0x6d, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2d, 0x61, 0x73, 0x73, 0x65, 0x74, 0x73, 0x2f,
+	0x6f, 0x6e, 0x64, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6f, 0x6e, 0x64, 0x6f, 0x2f, 0x75, 0x73,
+	0x64, 0x79, 0x2f, 0x76, 0x31, 0x3b, 0x75, 0x73, 0x64, 0x79, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4f,
+	0x55, 0x58, 0xaa, 0x02, 0x0c, 0x4f, 0x6e, 0x64, 0x6f, 0x2e, 0x55, 0x73, 0x64, 0x79, 0x2e, 0x56,
+	0x31, 0xca, 0x02, 0x0c, 0x4f, 0x6e, 0x64, 0x6f, 0x5c, 0x55, 0x73, 0x64, 0x79, 0x5c, 0x56, 0x31,
+	0xe2, 0x02, 0x18, 0x4f, 0x6e, 0x64, 0x6f, 0x5c, 0x55, 0x73, 0x64, 0x79, 0x5c, 0x56, 0x31, 0x5c,
+	0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x0e, 0x4f, 0x6e,
+	0x64, 0x6f, 0x3a, 0x3a, 0x55, 0x73, 0x64, 0x79, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -586,14 +685,16 @@ func file_ondo_usdy_v1_genesis_proto_rawDescGZIP() []byte {
 
 var file_ondo_usdy_v1_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_ondo_usdy_v1_genesis_proto_goTypes = []interface{}{
-	(*GenesisState)(nil), // 0: ondo.usdy.v1.GenesisState
+	(*GenesisState)(nil),    // 0: ondo.usdy.v1.GenesisState
+	(*v1.GenesisState)(nil), // 1: ondo.usdy.blocklist.v1.GenesisState
 }
 var file_ondo_usdy_v1_genesis_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	1, // 0: ondo.usdy.v1.GenesisState.blocklist_state:type_name -> ondo.usdy.blocklist.v1.GenesisState
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_ondo_usdy_v1_genesis_proto_init() }

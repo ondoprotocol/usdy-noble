@@ -3,12 +3,17 @@ syntax = "proto3";
 package ondo.usdy.v1;
 
 import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "ondo/usdy/blocklist/v1/genesis.proto";
 
 option go_package = "github.com/noble-assets/ondo/x/usdy/types";
 
 message GenesisState {
+  // blocklist_state is the genesis state of the blocklist submodule.
+  ondo.usdy.blocklist.v1.GenesisState blocklist_state = 1 [(gogoproto.nullable) = false];
+
   // paused is the paused state of the Ondo USDY module.
-  bool paused = 1;
+  bool paused = 2;
   // pauser is the address that can control the paused state.
-  string pauser = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string pauser = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }

@@ -39,19 +39,19 @@ func TestPausedQuery(t *testing.T) {
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
 	// ACT: Attempt to query paused state with no state.
-	req, err := server.Paused(ctx, &types.QueryPaused{})
+	res, err := server.Paused(ctx, &types.QueryPaused{})
 	// ASSERT: The query should've succeeded, and returned false.
 	require.NoError(t, err)
-	require.False(t, req.Paused)
+	require.False(t, res.Paused)
 
 	// ARRANGE: Set paused state to true.
 	require.NoError(t, k.Paused.Set(ctx, true))
 
 	// ACT: Attempt to query paused state with state.
-	req, err = server.Paused(ctx, &types.QueryPaused{})
+	res, err = server.Paused(ctx, &types.QueryPaused{})
 	// ASSERT: The query should've succeeded, and returned true.
 	require.NoError(t, err)
-	require.True(t, req.Paused)
+	require.True(t, res.Paused)
 }
 
 func TestPauserQuery(t *testing.T) {
@@ -73,8 +73,8 @@ func TestPauserQuery(t *testing.T) {
 	require.NoError(t, k.Pauser.Set(ctx, pauser.Address))
 
 	// ACT: Attempt to query pauser with state.
-	req, err := server.Pauser(ctx, &types.QueryPauser{})
+	res, err := server.Pauser(ctx, &types.QueryPauser{})
 	// ASSERT: The query should've succeeded.
 	require.NoError(t, err)
-	require.Equal(t, pauser.Address, req.Pauser)
+	require.Equal(t, pauser.Address, res.Pauser)
 }

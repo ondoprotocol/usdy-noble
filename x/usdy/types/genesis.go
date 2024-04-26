@@ -1,8 +1,11 @@
 package types
 
+import "github.com/noble-assets/ondo/x/usdy/types/blocklist"
+
 func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
-		Paused: false,
+		BlocklistState: blocklist.DefaultGenesisState(),
+		Paused:         false,
 	}
 }
 
