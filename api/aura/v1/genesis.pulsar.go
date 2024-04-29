@@ -15,12 +15,104 @@ import (
 	sync "sync"
 )
 
+var _ protoreflect.List = (*_GenesisState_3_list)(nil)
+
+type _GenesisState_3_list struct {
+	list *[]string
+}
+
+func (x *_GenesisState_3_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_GenesisState_3_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfString((*x.list)[i])
+}
+
+func (x *_GenesisState_3_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_GenesisState_3_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_GenesisState_3_list) AppendMutable() protoreflect.Value {
+	panic(fmt.Errorf("AppendMutable can not be called on message GenesisState at list field Burners as it is not of Message kind"))
+}
+
+func (x *_GenesisState_3_list) Truncate(n int) {
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_GenesisState_3_list) NewElement() protoreflect.Value {
+	v := ""
+	return protoreflect.ValueOfString(v)
+}
+
+func (x *_GenesisState_3_list) IsValid() bool {
+	return x.list != nil
+}
+
+var _ protoreflect.List = (*_GenesisState_4_list)(nil)
+
+type _GenesisState_4_list struct {
+	list *[]string
+}
+
+func (x *_GenesisState_4_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_GenesisState_4_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfString((*x.list)[i])
+}
+
+func (x *_GenesisState_4_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_GenesisState_4_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_GenesisState_4_list) AppendMutable() protoreflect.Value {
+	panic(fmt.Errorf("AppendMutable can not be called on message GenesisState at list field Minters as it is not of Message kind"))
+}
+
+func (x *_GenesisState_4_list) Truncate(n int) {
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_GenesisState_4_list) NewElement() protoreflect.Value {
+	v := ""
+	return protoreflect.ValueOfString(v)
+}
+
+func (x *_GenesisState_4_list) IsValid() bool {
+	return x.list != nil
+}
+
 var (
 	md_GenesisState                 protoreflect.MessageDescriptor
 	fd_GenesisState_blocklist_state protoreflect.FieldDescriptor
 	fd_GenesisState_paused          protoreflect.FieldDescriptor
-	fd_GenesisState_burner          protoreflect.FieldDescriptor
-	fd_GenesisState_minter          protoreflect.FieldDescriptor
+	fd_GenesisState_burners         protoreflect.FieldDescriptor
+	fd_GenesisState_minters         protoreflect.FieldDescriptor
 	fd_GenesisState_pauser          protoreflect.FieldDescriptor
 )
 
@@ -29,8 +121,8 @@ func init() {
 	md_GenesisState = File_aura_v1_genesis_proto.Messages().ByName("GenesisState")
 	fd_GenesisState_blocklist_state = md_GenesisState.Fields().ByName("blocklist_state")
 	fd_GenesisState_paused = md_GenesisState.Fields().ByName("paused")
-	fd_GenesisState_burner = md_GenesisState.Fields().ByName("burner")
-	fd_GenesisState_minter = md_GenesisState.Fields().ByName("minter")
+	fd_GenesisState_burners = md_GenesisState.Fields().ByName("burners")
+	fd_GenesisState_minters = md_GenesisState.Fields().ByName("minters")
 	fd_GenesisState_pauser = md_GenesisState.Fields().ByName("pauser")
 }
 
@@ -111,15 +203,15 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 			return
 		}
 	}
-	if x.Burner != "" {
-		value := protoreflect.ValueOfString(x.Burner)
-		if !f(fd_GenesisState_burner, value) {
+	if len(x.Burners) != 0 {
+		value := protoreflect.ValueOfList(&_GenesisState_3_list{list: &x.Burners})
+		if !f(fd_GenesisState_burners, value) {
 			return
 		}
 	}
-	if x.Minter != "" {
-		value := protoreflect.ValueOfString(x.Minter)
-		if !f(fd_GenesisState_minter, value) {
+	if len(x.Minters) != 0 {
+		value := protoreflect.ValueOfList(&_GenesisState_4_list{list: &x.Minters})
+		if !f(fd_GenesisState_minters, value) {
 			return
 		}
 	}
@@ -148,10 +240,10 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 		return x.BlocklistState != nil
 	case "aura.v1.GenesisState.paused":
 		return x.Paused != false
-	case "aura.v1.GenesisState.burner":
-		return x.Burner != ""
-	case "aura.v1.GenesisState.minter":
-		return x.Minter != ""
+	case "aura.v1.GenesisState.burners":
+		return len(x.Burners) != 0
+	case "aura.v1.GenesisState.minters":
+		return len(x.Minters) != 0
 	case "aura.v1.GenesisState.pauser":
 		return x.Pauser != ""
 	default:
@@ -174,10 +266,10 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 		x.BlocklistState = nil
 	case "aura.v1.GenesisState.paused":
 		x.Paused = false
-	case "aura.v1.GenesisState.burner":
-		x.Burner = ""
-	case "aura.v1.GenesisState.minter":
-		x.Minter = ""
+	case "aura.v1.GenesisState.burners":
+		x.Burners = nil
+	case "aura.v1.GenesisState.minters":
+		x.Minters = nil
 	case "aura.v1.GenesisState.pauser":
 		x.Pauser = ""
 	default:
@@ -202,12 +294,18 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 	case "aura.v1.GenesisState.paused":
 		value := x.Paused
 		return protoreflect.ValueOfBool(value)
-	case "aura.v1.GenesisState.burner":
-		value := x.Burner
-		return protoreflect.ValueOfString(value)
-	case "aura.v1.GenesisState.minter":
-		value := x.Minter
-		return protoreflect.ValueOfString(value)
+	case "aura.v1.GenesisState.burners":
+		if len(x.Burners) == 0 {
+			return protoreflect.ValueOfList(&_GenesisState_3_list{})
+		}
+		listValue := &_GenesisState_3_list{list: &x.Burners}
+		return protoreflect.ValueOfList(listValue)
+	case "aura.v1.GenesisState.minters":
+		if len(x.Minters) == 0 {
+			return protoreflect.ValueOfList(&_GenesisState_4_list{})
+		}
+		listValue := &_GenesisState_4_list{list: &x.Minters}
+		return protoreflect.ValueOfList(listValue)
 	case "aura.v1.GenesisState.pauser":
 		value := x.Pauser
 		return protoreflect.ValueOfString(value)
@@ -235,10 +333,14 @@ func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value
 		x.BlocklistState = value.Message().Interface().(*v1.GenesisState)
 	case "aura.v1.GenesisState.paused":
 		x.Paused = value.Bool()
-	case "aura.v1.GenesisState.burner":
-		x.Burner = value.Interface().(string)
-	case "aura.v1.GenesisState.minter":
-		x.Minter = value.Interface().(string)
+	case "aura.v1.GenesisState.burners":
+		lv := value.List()
+		clv := lv.(*_GenesisState_3_list)
+		x.Burners = *clv.list
+	case "aura.v1.GenesisState.minters":
+		lv := value.List()
+		clv := lv.(*_GenesisState_4_list)
+		x.Minters = *clv.list
 	case "aura.v1.GenesisState.pauser":
 		x.Pauser = value.Interface().(string)
 	default:
@@ -266,12 +368,20 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 			x.BlocklistState = new(v1.GenesisState)
 		}
 		return protoreflect.ValueOfMessage(x.BlocklistState.ProtoReflect())
+	case "aura.v1.GenesisState.burners":
+		if x.Burners == nil {
+			x.Burners = []string{}
+		}
+		value := &_GenesisState_3_list{list: &x.Burners}
+		return protoreflect.ValueOfList(value)
+	case "aura.v1.GenesisState.minters":
+		if x.Minters == nil {
+			x.Minters = []string{}
+		}
+		value := &_GenesisState_4_list{list: &x.Minters}
+		return protoreflect.ValueOfList(value)
 	case "aura.v1.GenesisState.paused":
 		panic(fmt.Errorf("field paused of message aura.v1.GenesisState is not mutable"))
-	case "aura.v1.GenesisState.burner":
-		panic(fmt.Errorf("field burner of message aura.v1.GenesisState is not mutable"))
-	case "aura.v1.GenesisState.minter":
-		panic(fmt.Errorf("field minter of message aura.v1.GenesisState is not mutable"))
 	case "aura.v1.GenesisState.pauser":
 		panic(fmt.Errorf("field pauser of message aura.v1.GenesisState is not mutable"))
 	default:
@@ -292,10 +402,12 @@ func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) 
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
 	case "aura.v1.GenesisState.paused":
 		return protoreflect.ValueOfBool(false)
-	case "aura.v1.GenesisState.burner":
-		return protoreflect.ValueOfString("")
-	case "aura.v1.GenesisState.minter":
-		return protoreflect.ValueOfString("")
+	case "aura.v1.GenesisState.burners":
+		list := []string{}
+		return protoreflect.ValueOfList(&_GenesisState_3_list{list: &list})
+	case "aura.v1.GenesisState.minters":
+		list := []string{}
+		return protoreflect.ValueOfList(&_GenesisState_4_list{list: &list})
 	case "aura.v1.GenesisState.pauser":
 		return protoreflect.ValueOfString("")
 	default:
@@ -374,13 +486,17 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 		if x.Paused {
 			n += 2
 		}
-		l = len(x.Burner)
-		if l > 0 {
-			n += 1 + l + runtime.Sov(uint64(l))
+		if len(x.Burners) > 0 {
+			for _, s := range x.Burners {
+				l = len(s)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
 		}
-		l = len(x.Minter)
-		if l > 0 {
-			n += 1 + l + runtime.Sov(uint64(l))
+		if len(x.Minters) > 0 {
+			for _, s := range x.Minters {
+				l = len(s)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
 		}
 		l = len(x.Pauser)
 		if l > 0 {
@@ -422,19 +538,23 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			i--
 			dAtA[i] = 0x2a
 		}
-		if len(x.Minter) > 0 {
-			i -= len(x.Minter)
-			copy(dAtA[i:], x.Minter)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Minter)))
-			i--
-			dAtA[i] = 0x22
+		if len(x.Minters) > 0 {
+			for iNdEx := len(x.Minters) - 1; iNdEx >= 0; iNdEx-- {
+				i -= len(x.Minters[iNdEx])
+				copy(dAtA[i:], x.Minters[iNdEx])
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Minters[iNdEx])))
+				i--
+				dAtA[i] = 0x22
+			}
 		}
-		if len(x.Burner) > 0 {
-			i -= len(x.Burner)
-			copy(dAtA[i:], x.Burner)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Burner)))
-			i--
-			dAtA[i] = 0x1a
+		if len(x.Burners) > 0 {
+			for iNdEx := len(x.Burners) - 1; iNdEx >= 0; iNdEx-- {
+				i -= len(x.Burners[iNdEx])
+				copy(dAtA[i:], x.Burners[iNdEx])
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Burners[iNdEx])))
+				i--
+				dAtA[i] = 0x1a
+			}
 		}
 		if x.Paused {
 			i--
@@ -567,7 +687,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				x.Paused = bool(v != 0)
 			case 3:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Burner", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Burners", wireType)
 				}
 				var stringLen uint64
 				for shift := uint(0); ; shift += 7 {
@@ -595,11 +715,11 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				x.Burner = string(dAtA[iNdEx:postIndex])
+				x.Burners = append(x.Burners, string(dAtA[iNdEx:postIndex]))
 				iNdEx = postIndex
 			case 4:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Minter", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Minters", wireType)
 				}
 				var stringLen uint64
 				for shift := uint(0); ; shift += 7 {
@@ -627,7 +747,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				x.Minter = string(dAtA[iNdEx:postIndex])
+				x.Minters = append(x.Minters, string(dAtA[iNdEx:postIndex]))
 				iNdEx = postIndex
 			case 5:
 				if wireType != 2 {
@@ -718,10 +838,10 @@ type GenesisState struct {
 	BlocklistState *v1.GenesisState `protobuf:"bytes,1,opt,name=blocklist_state,json=blocklistState,proto3" json:"blocklist_state,omitempty"`
 	// paused is the paused state of the Aura module.
 	Paused bool `protobuf:"varint,2,opt,name=paused,proto3" json:"paused,omitempty"`
-	// burner is the address that can burn USDY.
-	Burner string `protobuf:"bytes,3,opt,name=burner,proto3" json:"burner,omitempty"`
-	// minter is the address that can mint USDY.
-	Minter string `protobuf:"bytes,4,opt,name=minter,proto3" json:"minter,omitempty"`
+	// burners is the list of addresses that can burn USDY.
+	Burners []string `protobuf:"bytes,3,rep,name=burners,proto3" json:"burners,omitempty"`
+	// minters is the list of addresses that can mint USDY.
+	Minters []string `protobuf:"bytes,4,rep,name=minters,proto3" json:"minters,omitempty"`
 	// pauser is the address that can control the paused state.
 	Pauser string `protobuf:"bytes,5,opt,name=pauser,proto3" json:"pauser,omitempty"`
 }
@@ -760,18 +880,18 @@ func (x *GenesisState) GetPaused() bool {
 	return false
 }
 
-func (x *GenesisState) GetBurner() string {
+func (x *GenesisState) GetBurners() []string {
 	if x != nil {
-		return x.Burner
+		return x.Burners
 	}
-	return ""
+	return nil
 }
 
-func (x *GenesisState) GetMinter() string {
+func (x *GenesisState) GetMinters() []string {
 	if x != nil {
-		return x.Minter
+		return x.Minters
 	}
-	return ""
+	return nil
 }
 
 func (x *GenesisState) GetPauser() string {
@@ -791,20 +911,17 @@ var file_aura_v1_genesis_proto_rawDesc = []byte{
 	0x6f, 0x1a, 0x19, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
 	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x14, 0x67, 0x6f,
 	0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x22, 0x8c, 0x02, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74,
+	0x74, 0x6f, 0x22, 0xdc, 0x01, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74,
 	0x61, 0x74, 0x65, 0x12, 0x4e, 0x0a, 0x0f, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69, 0x73, 0x74,
 	0x5f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1f, 0x2e, 0x61,
 	0x75, 0x72, 0x61, 0x2e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69, 0x73, 0x74, 0x2e, 0x76, 0x31,
 	0x2e, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x42, 0x04, 0xc8,
 	0xde, 0x1f, 0x00, 0x52, 0x0e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69, 0x73, 0x74, 0x53, 0x74,
 	0x61, 0x74, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x08, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x12, 0x30, 0x0a, 0x06, 0x62,
-	0x75, 0x72, 0x6e, 0x65, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d,
-	0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53,
-	0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x06, 0x62, 0x75, 0x72, 0x6e, 0x65, 0x72, 0x12, 0x30, 0x0a,
-	0x06, 0x6d, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2,
-	0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73,
-	0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x06, 0x6d, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x12,
+	0x01, 0x28, 0x08, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x62,
+	0x75, 0x72, 0x6e, 0x65, 0x72, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x62, 0x75,
+	0x72, 0x6e, 0x65, 0x72, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x73,
+	0x18, 0x04, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x73, 0x12,
 	0x30, 0x0a, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x72, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x42,
 	0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72,
 	0x65, 0x73, 0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65,

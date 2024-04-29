@@ -24,10 +24,10 @@ type Keeper struct {
 	Denom  string
 	Schema collections.Schema
 
-	Paused collections.Item[bool]
-	Burner collections.Item[string]
-	Minter collections.Item[string]
-	Pauser collections.Item[string]
+	Paused  collections.Item[bool]
+	Burners collections.KeySet[string]
+	Minters collections.KeySet[string]
+	Pauser  collections.Item[string]
 
 	Owner            collections.Item[string]
 	PendingOwner     collections.Item[string]
@@ -58,10 +58,10 @@ func NewKeeper(
 		accountKeeper: accountKeeper,
 		bankKeeper:    bankKeeper,
 
-		Paused: collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
-		Burner: collections.NewItem(builder, types.BurnerKey, "burner", collections.StringValue),
-		Minter: collections.NewItem(builder, types.MinterKey, "minter", collections.StringValue),
-		Pauser: collections.NewItem(builder, types.PauserKey, "pauser", collections.StringValue),
+		Paused:  collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
+		Burners: collections.NewKeySet(builder, types.BurnerPrefix, "burners", collections.StringKey),
+		Minters: collections.NewKeySet(builder, types.MinterPrefix, "minters", collections.StringKey),
+		Pauser:  collections.NewItem(builder, types.PauserKey, "pauser", collections.StringValue),
 
 		Owner:            collections.NewItem(builder, blocklist.OwnerKey, "owner", collections.StringValue),
 		PendingOwner:     collections.NewItem(builder, blocklist.PendingOwnerKey, "pending_owner", collections.StringValue),

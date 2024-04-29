@@ -21,12 +21,12 @@ func NewMsgServer(keeper *Keeper) types.MsgServer {
 }
 
 func (k msgServer) Burn(ctx context.Context, msg *types.MsgBurn) (*types.MsgBurnResponse, error) {
-	burner, err := k.Burner.Get(ctx)
+	has, err := k.Burners.Has(ctx, msg.Signer)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to retrieve burner from state")
 	}
-	if msg.Signer != burner {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidBurner, "expected %s, got %s", burner, msg.Signer)
+	if !has {
+		return nil, types.ErrInvalidBurner
 	}
 
 	from, err := k.accountKeeper.AddressCodec().StringToBytes(msg.From)
@@ -49,12 +49,12 @@ func (k msgServer) Burn(ctx context.Context, msg *types.MsgBurn) (*types.MsgBurn
 }
 
 func (k msgServer) Mint(ctx context.Context, msg *types.MsgMint) (*types.MsgMintResponse, error) {
-	minter, err := k.Minter.Get(ctx)
+	has, err := k.Minters.Has(ctx, msg.Signer)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to retrieve minter from state")
 	}
-	if msg.Signer != minter {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidMinter, "expected %s, got %s", minter, msg.Signer)
+	if !has {
+		return nil, types.ErrInvalidMinter
 	}
 
 	to, err := k.accountKeeper.AddressCodec().StringToBytes(msg.To)

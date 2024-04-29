@@ -31,8 +31,8 @@ if ! [ -f .aura/data/priv_validator_state.json ]; then
   TEMP=.aura/genesis.json
   touch $TEMP && jq '.app_state.staking.params.bond_denom = "ustake"' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.blocklist_state.owner = '$BLOCKLIST_OWNER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
-  touch $TEMP && jq '.app_state.aura.burner = '$BURNER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
-  touch $TEMP && jq '.app_state.aura.minter = '$MINTER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
+  touch $TEMP && jq '.app_state.aura.burners = ['$BURNER']' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
+  touch $TEMP && jq '.app_state.aura.minters = ['$MINTER']' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.pauser = '$PAUSER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
 
   aurad genesis gentx validator 1000000ustake --chain-id "aura-1" --home .aura --keyring-backend test &> /dev/null

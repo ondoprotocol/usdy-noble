@@ -15,10 +15,10 @@ message GenesisState {
   // paused is the paused state of the Aura module.
   bool paused = 2;
 
-  // burner is the address that can burn USDY.
-  string burner = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  // minter is the address that can mint USDY.
-  string minter = 4 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // burners is the list of addresses that can burn USDY.
+  repeated string burners = 3;
+  // minters is the list of addresses that can mint USDY.
+  repeated string minters = 4;
   // pauser is the address that can control the paused state.
   string pauser = 5 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
