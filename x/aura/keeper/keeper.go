@@ -7,6 +7,7 @@ import (
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/event"
 	"cosmossdk.io/core/store"
+	"cosmossdk.io/errors"
 	"cosmossdk.io/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -77,8 +78,10 @@ func NewKeeper(
 	return keeper
 }
 
-// SendRestrictionFn checks every USDY transfer on the Noble chain to and checks
-// if transfers are currently paused.
+// SendRestrictionFn executes the following checks against all USDY transfers:
+// - Is the module currently paused?
+// - If we're not minting, check the sender against the blocklist.
+// - If we're not burning, check the recipient against the blocklist.
 func (k *Keeper) SendRestrictionFn(ctx context.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error) {
 	if amount := amt.AmountOf(k.Denom); !amount.IsZero() {
 		paused, _ := k.Paused.Get(ctx)
@@ -86,7 +89,27 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, fromAddr, toAddr sdk.Acc
 			return toAddr, fmt.Errorf("%s transfers are paused", k.Denom)
 		}
 
-		// TODO(@john): Discuss with Ondo the checks needed here.
+		if !fromAddr.Equals(types.ModuleAddress) {
+			has, err := k.BlockedAddresses.Has(ctx, fromAddr)
+			if err != nil {
+				return toAddr, errors.Wrap(err, "unable to retrieve blocked address")
+			}
+			if has {
+				address, _ := k.accountKeeper.AddressCodec().BytesToString(fromAddr)
+				return toAddr, fmt.Errorf("%s is blocked from sending %s", address, k.Denom)
+			}
+		}
+
+		if !toAddr.Equals(types.ModuleAddress) {
+			has, err := k.BlockedAddresses.Has(ctx, toAddr)
+			if err != nil {
+				return toAddr, errors.Wrap(err, "unable to retrieve blocked address")
+			}
+			if has {
+				address, _ := k.accountKeeper.AddressCodec().BytesToString(toAddr)
+				return toAddr, fmt.Errorf("%s is blocked from receiving %s", address, k.Denom)
+			}
+		}
 	}
 
 	return toAddr, nil
