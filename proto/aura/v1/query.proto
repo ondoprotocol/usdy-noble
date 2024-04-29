@@ -20,6 +20,14 @@ service Query {
     option (google.api.http).get = "/aura/v1/paused";
   }
 
+  rpc Burners(aura.v1.QueryBurners) returns (aura.v1.QueryBurnersResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/aura/v1/burners";
+  }
+  rpc Minters(aura.v1.QueryMinters) returns (aura.v1.QueryMintersResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/aura/v1/minters";
+  }
   rpc Pauser(aura.v1.QueryPauser) returns (aura.v1.QueryPauserResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/v1/pauser";
@@ -38,6 +46,18 @@ message QueryPaused {}
 
 message QueryPausedResponse {
   bool paused = 1 [(amino.dont_omitempty) = true];
+}
+
+message QueryBurners {}
+
+message QueryBurnersResponse {
+  repeated string burners = 1;
+}
+
+message QueryMinters {}
+
+message QueryMintersResponse {
+  repeated string minters = 1;
 }
 
 message QueryPauser {}

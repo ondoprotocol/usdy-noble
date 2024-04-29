@@ -191,6 +191,166 @@ func (m *QueryPausedResponse) GetPaused() bool {
 	return false
 }
 
+type QueryBurners struct {
+}
+
+func (m *QueryBurners) Reset()         { *m = QueryBurners{} }
+func (m *QueryBurners) String() string { return proto.CompactTextString(m) }
+func (*QueryBurners) ProtoMessage()    {}
+func (*QueryBurners) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2046dd993d22edf0, []int{4}
+}
+func (m *QueryBurners) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBurners) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBurners.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBurners) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBurners.Merge(m, src)
+}
+func (m *QueryBurners) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBurners) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBurners.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBurners proto.InternalMessageInfo
+
+type QueryBurnersResponse struct {
+	Burners []string `protobuf:"bytes,1,rep,name=burners,proto3" json:"burners,omitempty"`
+}
+
+func (m *QueryBurnersResponse) Reset()         { *m = QueryBurnersResponse{} }
+func (m *QueryBurnersResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryBurnersResponse) ProtoMessage()    {}
+func (*QueryBurnersResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2046dd993d22edf0, []int{5}
+}
+func (m *QueryBurnersResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBurnersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBurnersResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBurnersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBurnersResponse.Merge(m, src)
+}
+func (m *QueryBurnersResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBurnersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBurnersResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBurnersResponse proto.InternalMessageInfo
+
+func (m *QueryBurnersResponse) GetBurners() []string {
+	if m != nil {
+		return m.Burners
+	}
+	return nil
+}
+
+type QueryMinters struct {
+}
+
+func (m *QueryMinters) Reset()         { *m = QueryMinters{} }
+func (m *QueryMinters) String() string { return proto.CompactTextString(m) }
+func (*QueryMinters) ProtoMessage()    {}
+func (*QueryMinters) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2046dd993d22edf0, []int{6}
+}
+func (m *QueryMinters) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMinters) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMinters.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMinters) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMinters.Merge(m, src)
+}
+func (m *QueryMinters) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMinters) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMinters.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMinters proto.InternalMessageInfo
+
+type QueryMintersResponse struct {
+	Minters []string `protobuf:"bytes,1,rep,name=minters,proto3" json:"minters,omitempty"`
+}
+
+func (m *QueryMintersResponse) Reset()         { *m = QueryMintersResponse{} }
+func (m *QueryMintersResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryMintersResponse) ProtoMessage()    {}
+func (*QueryMintersResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2046dd993d22edf0, []int{7}
+}
+func (m *QueryMintersResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMintersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMintersResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMintersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMintersResponse.Merge(m, src)
+}
+func (m *QueryMintersResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMintersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMintersResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMintersResponse proto.InternalMessageInfo
+
+func (m *QueryMintersResponse) GetMinters() []string {
+	if m != nil {
+		return m.Minters
+	}
+	return nil
+}
+
 type QueryPauser struct {
 }
 
@@ -198,7 +358,7 @@ func (m *QueryPauser) Reset()         { *m = QueryPauser{} }
 func (m *QueryPauser) String() string { return proto.CompactTextString(m) }
 func (*QueryPauser) ProtoMessage()    {}
 func (*QueryPauser) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2046dd993d22edf0, []int{4}
+	return fileDescriptor_2046dd993d22edf0, []int{8}
 }
 func (m *QueryPauser) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -235,7 +395,7 @@ func (m *QueryPauserResponse) Reset()         { *m = QueryPauserResponse{} }
 func (m *QueryPauserResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryPauserResponse) ProtoMessage()    {}
 func (*QueryPauserResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2046dd993d22edf0, []int{5}
+	return fileDescriptor_2046dd993d22edf0, []int{9}
 }
 func (m *QueryPauserResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -276,6 +436,10 @@ func init() {
 	proto.RegisterType((*QueryDenomResponse)(nil), "aura.v1.QueryDenomResponse")
 	proto.RegisterType((*QueryPaused)(nil), "aura.v1.QueryPaused")
 	proto.RegisterType((*QueryPausedResponse)(nil), "aura.v1.QueryPausedResponse")
+	proto.RegisterType((*QueryBurners)(nil), "aura.v1.QueryBurners")
+	proto.RegisterType((*QueryBurnersResponse)(nil), "aura.v1.QueryBurnersResponse")
+	proto.RegisterType((*QueryMinters)(nil), "aura.v1.QueryMinters")
+	proto.RegisterType((*QueryMintersResponse)(nil), "aura.v1.QueryMintersResponse")
 	proto.RegisterType((*QueryPauser)(nil), "aura.v1.QueryPauser")
 	proto.RegisterType((*QueryPauserResponse)(nil), "aura.v1.QueryPauserResponse")
 }
@@ -283,32 +447,38 @@ func init() {
 func init() { proto.RegisterFile("aura/v1/query.proto", fileDescriptor_2046dd993d22edf0) }
 
 var fileDescriptor_2046dd993d22edf0 = []byte{
-	// 389 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0xbd, 0x4e, 0xeb, 0x30,
-	0x1c, 0xc5, 0x9b, 0x4a, 0xe9, 0xbd, 0xd7, 0x97, 0xaf, 0xba, 0x1d, 0x4a, 0x5a, 0x22, 0x94, 0x09,
-	0x2a, 0x35, 0xa6, 0xc0, 0x0b, 0x50, 0x90, 0x58, 0xa1, 0x48, 0x0c, 0x5d, 0x90, 0xdb, 0x58, 0x21,
-	0x52, 0x63, 0x07, 0x3b, 0xa9, 0xe8, 0xca, 0xc4, 0x88, 0xc4, 0xc0, 0x2b, 0x30, 0x32, 0xf0, 0x10,
-	0x8c, 0x15, 0x2c, 0x8c, 0xa8, 0x45, 0xe2, 0x35, 0x50, 0xec, 0x34, 0x6d, 0x51, 0x06, 0x96, 0x44,
-	0xe7, 0x1c, 0xff, 0x7f, 0xf1, 0x71, 0x0c, 0x4a, 0x38, 0xe2, 0x18, 0x0d, 0x9a, 0xe8, 0x2a, 0x22,
-	0x7c, 0x68, 0x07, 0x9c, 0x85, 0x0c, 0xfe, 0x89, 0x4d, 0x7b, 0xd0, 0x34, 0x8a, 0xd8, 0xf7, 0x28,
-	0x43, 0xf2, 0xa9, 0x32, 0xa3, 0xda, 0x63, 0xc2, 0x67, 0x42, 0xad, 0xff, 0x31, 0x68, 0xac, 0xab,
-	0xf0, 0x42, 0x2a, 0xa4, 0x44, 0x12, 0xd5, 0x5c, 0xc6, 0xdc, 0x3e, 0x41, 0x38, 0xf0, 0x10, 0xa6,
-	0x94, 0x85, 0x38, 0xf4, 0x18, 0x4d, 0x52, 0x6b, 0x09, 0x80, 0xd3, 0x98, 0x73, 0x44, 0x28, 0xf3,
-	0xad, 0x3a, 0x80, 0x33, 0xd5, 0x26, 0x22, 0x60, 0x54, 0x10, 0x58, 0x06, 0xba, 0x13, 0x1b, 0x15,
-	0x6d, 0x53, 0xdb, 0xfa, 0xd7, 0x56, 0xc2, 0x5a, 0x06, 0xff, 0xe5, 0xda, 0x13, 0x1c, 0x09, 0xe2,
-	0x58, 0xfb, 0xa0, 0x34, 0x27, 0xd3, 0xd9, 0x0d, 0x50, 0x08, 0xa4, 0x23, 0x87, 0xff, 0xb6, 0xf4,
-	0xc7, 0xaf, 0xa7, 0xba, 0xd6, 0x4e, 0xcc, 0x45, 0x08, 0xb7, 0x8e, 0xe7, 0x21, 0x3c, 0x85, 0xec,
-	0x24, 0x10, 0xae, 0x76, 0xd0, 0xaa, 0xbc, 0x3e, 0x37, 0xca, 0x49, 0xc9, 0x03, 0xc7, 0xe1, 0x44,
-	0x88, 0xb3, 0x90, 0x7b, 0xd4, 0x4d, 0xb8, 0x7c, 0xf7, 0x21, 0x0f, 0x74, 0x49, 0x82, 0xe7, 0x40,
-	0x97, 0x6d, 0x60, 0xc9, 0x4e, 0x0e, 0xd7, 0x9e, 0x55, 0x34, 0xaa, 0x19, 0xe6, 0xf4, 0xb3, 0x56,
-	0xf5, 0x36, 0xde, 0xeb, 0xcd, 0xdb, 0xe7, 0x7d, 0x7e, 0x0d, 0xae, 0xa0, 0xe9, 0x0f, 0x93, 0xf5,
-	0x61, 0x07, 0x14, 0x54, 0x55, 0x58, 0x5e, 0x64, 0x28, 0xd7, 0xa8, 0x65, 0xb9, 0x29, 0xba, 0x36,
-	0x43, 0x17, 0xe1, 0x6a, 0x8a, 0x56, 0xa7, 0x92, 0xb2, 0x79, 0x26, 0x9b, 0x67, 0xb2, 0xf9, 0xaf,
-	0xd8, 0xbc, 0x75, 0xf8, 0x32, 0x36, 0xb5, 0xd1, 0xd8, 0xd4, 0x3e, 0xc6, 0xa6, 0x76, 0x37, 0x31,
-	0x73, 0xa3, 0x89, 0x99, 0x7b, 0x9f, 0x98, 0xb9, 0xce, 0xb6, 0xeb, 0x85, 0x97, 0x51, 0xd7, 0xee,
-	0x31, 0x1f, 0x51, 0xd6, 0xed, 0x93, 0x06, 0x16, 0x82, 0x84, 0x42, 0x11, 0xae, 0xd5, 0x2b, 0x1c,
-	0x06, 0x44, 0x74, 0x0b, 0xf2, 0xf2, 0xec, 0x7d, 0x07, 0x00, 0x00, 0xff, 0xff, 0x3c, 0xc1, 0x7b,
-	0x3b, 0xc5, 0x02, 0x00, 0x00,
+	// 481 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x93, 0xc1, 0x6e, 0xd3, 0x30,
+	0x1c, 0xc6, 0x1b, 0xa6, 0xb6, 0xcc, 0x8c, 0xb1, 0xb9, 0x45, 0x2a, 0x69, 0x1b, 0x4d, 0x3e, 0x8d,
+	0x49, 0x8b, 0x37, 0xe0, 0x05, 0x28, 0x48, 0x9c, 0x90, 0xa0, 0x48, 0x1c, 0x76, 0x00, 0xb9, 0x8b,
+	0x15, 0x22, 0x2d, 0x76, 0xb0, 0x9d, 0x89, 0x5d, 0x39, 0x71, 0x44, 0xe2, 0x25, 0x38, 0x72, 0xe0,
+	0x21, 0x38, 0x4e, 0x70, 0x80, 0x23, 0x6a, 0x91, 0x78, 0x0d, 0x14, 0xdb, 0x71, 0xd2, 0x28, 0x48,
+	0xbb, 0xb4, 0xfa, 0xbe, 0x7f, 0xfe, 0xbf, 0xea, 0xff, 0x7d, 0x0d, 0x18, 0x90, 0x5c, 0x10, 0x7c,
+	0x7e, 0x8c, 0xdf, 0xe6, 0x54, 0x5c, 0x84, 0x99, 0xe0, 0x8a, 0xc3, 0x7e, 0x61, 0x86, 0xe7, 0xc7,
+	0xfe, 0x2e, 0x49, 0x13, 0xc6, 0xb1, 0xfe, 0x34, 0x33, 0x7f, 0x7c, 0xca, 0x65, 0xca, 0xa5, 0x79,
+	0xbe, 0xb1, 0xe8, 0xdf, 0x31, 0xc3, 0xd7, 0x5a, 0x61, 0x23, 0xec, 0x68, 0x12, 0x73, 0x1e, 0x9f,
+	0x51, 0x4c, 0xb2, 0x04, 0x13, 0xc6, 0xb8, 0x22, 0x2a, 0xe1, 0xcc, 0x4e, 0xd1, 0x16, 0x00, 0xcf,
+	0x0b, 0xce, 0x63, 0xca, 0x78, 0x8a, 0x0e, 0x00, 0xac, 0xd4, 0x9c, 0xca, 0x8c, 0x33, 0x49, 0xe1,
+	0x10, 0x74, 0xa3, 0xc2, 0x18, 0x79, 0x7b, 0xde, 0xfe, 0xe6, 0xdc, 0x08, 0x74, 0x13, 0xdc, 0xd0,
+	0xcf, 0x3e, 0x23, 0xb9, 0xa4, 0x11, 0x7a, 0x00, 0x06, 0x35, 0xe9, 0x76, 0xa7, 0xa0, 0x97, 0x69,
+	0x47, 0x2f, 0x5f, 0x9f, 0x75, 0x3f, 0xff, 0xfd, 0x72, 0xe0, 0xcd, 0xad, 0x89, 0xb6, 0xc1, 0x96,
+	0xde, 0x9a, 0xe5, 0x82, 0x51, 0x21, 0xd1, 0x11, 0x18, 0xd6, 0xb5, 0xc3, 0x8c, 0x40, 0x7f, 0x61,
+	0xac, 0x91, 0xb7, 0xb7, 0xb1, 0xbf, 0x39, 0x2f, 0xa5, 0x23, 0x3c, 0x4d, 0x98, 0xaa, 0x13, 0xac,
+	0xae, 0x13, 0x52, 0x63, 0x95, 0x04, 0x2b, 0xd7, 0x0f, 0x11, 0xe8, 0x49, 0xfd, 0x10, 0xe1, 0xf6,
+	0x8f, 0xec, 0x21, 0xc2, 0xa4, 0x30, 0x1b, 0x7d, 0xff, 0x7a, 0x38, 0xb4, 0x41, 0x3f, 0x8c, 0x22,
+	0x41, 0xa5, 0x7c, 0xa1, 0x44, 0xc2, 0x62, 0x7b, 0x9b, 0xb8, 0xf7, 0x73, 0x03, 0x74, 0x35, 0x09,
+	0xbe, 0x04, 0x5d, 0x9d, 0x28, 0x1c, 0x84, 0xb6, 0xe0, 0xb0, 0x8a, 0xd9, 0x1f, 0xb7, 0x98, 0xe5,
+	0xcf, 0xa2, 0xf1, 0x87, 0x22, 0xaf, 0xf7, 0x3f, 0xfe, 0x7c, 0xba, 0xb6, 0x03, 0xb7, 0x71, 0xf9,
+	0xa7, 0xd1, 0x15, 0xc0, 0x13, 0xd0, 0x33, 0x71, 0xc3, 0xe1, 0x3a, 0xc3, 0xb8, 0xfe, 0xa4, 0xcd,
+	0x75, 0xe8, 0x49, 0x85, 0xde, 0x85, 0xb7, 0x1c, 0xda, 0x34, 0x03, 0x5f, 0x81, 0xbe, 0x2d, 0x01,
+	0xde, 0x5e, 0xc7, 0x58, 0xdb, 0x9f, 0xb6, 0xda, 0x0e, 0x3f, 0xad, 0xf0, 0x10, 0xee, 0x38, 0xbc,
+	0xed, 0xad, 0xe0, 0xdb, 0x8a, 0x9a, 0x7c, 0x6b, 0x37, 0xf9, 0x8d, 0x42, 0xff, 0xc7, 0xb7, 0xad,
+	0xba, 0x6c, 0x44, 0x6b, 0x36, 0xa2, 0x35, 0x1b, 0x71, 0xa5, 0x6c, 0xc4, 0xec, 0xd1, 0xb7, 0x65,
+	0xe0, 0x5d, 0x2e, 0x03, 0xef, 0xf7, 0x32, 0xf0, 0x3e, 0xae, 0x82, 0xce, 0xe5, 0x2a, 0xe8, 0xfc,
+	0x5a, 0x05, 0x9d, 0x93, 0xbb, 0x71, 0xa2, 0xde, 0xe4, 0x8b, 0xf0, 0x94, 0xa7, 0x98, 0xf1, 0xc5,
+	0x19, 0x3d, 0x24, 0x52, 0x52, 0x25, 0x0d, 0xe1, 0x9d, 0xf9, 0x52, 0x17, 0x19, 0x95, 0x8b, 0x9e,
+	0x7e, 0x01, 0xef, 0xff, 0x0b, 0x00, 0x00, 0xff, 0xff, 0x3d, 0x5b, 0xd5, 0x01, 0x09, 0x04, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -325,6 +495,8 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	Denom(ctx context.Context, in *QueryDenom, opts ...grpc.CallOption) (*QueryDenomResponse, error)
 	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
+	Burners(ctx context.Context, in *QueryBurners, opts ...grpc.CallOption) (*QueryBurnersResponse, error)
+	Minters(ctx context.Context, in *QueryMinters, opts ...grpc.CallOption) (*QueryMintersResponse, error)
 	Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.CallOption) (*QueryPauserResponse, error)
 }
 
@@ -354,6 +526,24 @@ func (c *queryClient) Paused(ctx context.Context, in *QueryPaused, opts ...grpc.
 	return out, nil
 }
 
+func (c *queryClient) Burners(ctx context.Context, in *QueryBurners, opts ...grpc.CallOption) (*QueryBurnersResponse, error) {
+	out := new(QueryBurnersResponse)
+	err := c.cc.Invoke(ctx, "/aura.v1.Query/Burners", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) Minters(ctx context.Context, in *QueryMinters, opts ...grpc.CallOption) (*QueryMintersResponse, error) {
+	out := new(QueryMintersResponse)
+	err := c.cc.Invoke(ctx, "/aura.v1.Query/Minters", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.CallOption) (*QueryPauserResponse, error) {
 	out := new(QueryPauserResponse)
 	err := c.cc.Invoke(ctx, "/aura.v1.Query/Pauser", in, out, opts...)
@@ -367,6 +557,8 @@ func (c *queryClient) Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.
 type QueryServer interface {
 	Denom(context.Context, *QueryDenom) (*QueryDenomResponse, error)
 	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
+	Burners(context.Context, *QueryBurners) (*QueryBurnersResponse, error)
+	Minters(context.Context, *QueryMinters) (*QueryMintersResponse, error)
 	Pauser(context.Context, *QueryPauser) (*QueryPauserResponse, error)
 }
 
@@ -379,6 +571,12 @@ func (*UnimplementedQueryServer) Denom(ctx context.Context, req *QueryDenom) (*Q
 }
 func (*UnimplementedQueryServer) Paused(ctx context.Context, req *QueryPaused) (*QueryPausedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Paused not implemented")
+}
+func (*UnimplementedQueryServer) Burners(ctx context.Context, req *QueryBurners) (*QueryBurnersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Burners not implemented")
+}
+func (*UnimplementedQueryServer) Minters(ctx context.Context, req *QueryMinters) (*QueryMintersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Minters not implemented")
 }
 func (*UnimplementedQueryServer) Pauser(ctx context.Context, req *QueryPauser) (*QueryPauserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Pauser not implemented")
@@ -424,6 +622,42 @@ func _Query_Paused_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Burners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBurners)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Burners(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/aura.v1.Query/Burners",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Burners(ctx, req.(*QueryBurners))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_Minters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryMinters)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Minters(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/aura.v1.Query/Minters",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Minters(ctx, req.(*QueryMinters))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_Pauser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryPauser)
 	if err := dec(in); err != nil {
@@ -453,6 +687,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Paused",
 			Handler:    _Query_Paused_Handler,
+		},
+		{
+			MethodName: "Burners",
+			Handler:    _Query_Burners_Handler,
+		},
+		{
+			MethodName: "Minters",
+			Handler:    _Query_Minters_Handler,
 		},
 		{
 			MethodName: "Pauser",
@@ -572,6 +814,116 @@ func (m *QueryPausedResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryBurners) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBurners) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBurners) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBurnersResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBurnersResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBurnersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Burners) > 0 {
+		for iNdEx := len(m.Burners) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Burners[iNdEx])
+			copy(dAtA[i:], m.Burners[iNdEx])
+			i = encodeVarintQuery(dAtA, i, uint64(len(m.Burners[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryMinters) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMinters) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMinters) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryMintersResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMintersResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMintersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Minters) > 0 {
+		for iNdEx := len(m.Minters) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Minters[iNdEx])
+			copy(dAtA[i:], m.Minters[iNdEx])
+			i = encodeVarintQuery(dAtA, i, uint64(len(m.Minters[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *QueryPauser) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -675,6 +1027,54 @@ func (m *QueryPausedResponse) Size() (n int) {
 	_ = l
 	if m.Paused {
 		n += 2
+	}
+	return n
+}
+
+func (m *QueryBurners) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryBurnersResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Burners) > 0 {
+		for _, s := range m.Burners {
+			l = len(s)
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryMinters) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryMintersResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Minters) > 0 {
+		for _, s := range m.Minters {
+			l = len(s)
+			n += 1 + l + sovQuery(uint64(l))
+		}
 	}
 	return n
 }
@@ -938,6 +1338,270 @@ func (m *QueryPausedResponse) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.Paused = bool(v != 0)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBurners) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBurners: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBurners: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBurnersResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBurnersResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBurnersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Burners", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Burners = append(m.Burners, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMinters) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMinters: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMinters: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMintersResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMintersResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMintersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Minters", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Minters = append(m.Minters, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])

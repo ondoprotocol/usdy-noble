@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Query_Denom_FullMethodName  = "/aura.v1.Query/Denom"
-	Query_Paused_FullMethodName = "/aura.v1.Query/Paused"
-	Query_Pauser_FullMethodName = "/aura.v1.Query/Pauser"
+	Query_Denom_FullMethodName   = "/aura.v1.Query/Denom"
+	Query_Paused_FullMethodName  = "/aura.v1.Query/Paused"
+	Query_Burners_FullMethodName = "/aura.v1.Query/Burners"
+	Query_Minters_FullMethodName = "/aura.v1.Query/Minters"
+	Query_Pauser_FullMethodName  = "/aura.v1.Query/Pauser"
 )
 
 // QueryClient is the client API for Query service.
@@ -30,6 +32,8 @@ const (
 type QueryClient interface {
 	Denom(ctx context.Context, in *QueryDenom, opts ...grpc.CallOption) (*QueryDenomResponse, error)
 	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
+	Burners(ctx context.Context, in *QueryBurners, opts ...grpc.CallOption) (*QueryBurnersResponse, error)
+	Minters(ctx context.Context, in *QueryMinters, opts ...grpc.CallOption) (*QueryMintersResponse, error)
 	Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.CallOption) (*QueryPauserResponse, error)
 }
 
@@ -59,6 +63,24 @@ func (c *queryClient) Paused(ctx context.Context, in *QueryPaused, opts ...grpc.
 	return out, nil
 }
 
+func (c *queryClient) Burners(ctx context.Context, in *QueryBurners, opts ...grpc.CallOption) (*QueryBurnersResponse, error) {
+	out := new(QueryBurnersResponse)
+	err := c.cc.Invoke(ctx, Query_Burners_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) Minters(ctx context.Context, in *QueryMinters, opts ...grpc.CallOption) (*QueryMintersResponse, error) {
+	out := new(QueryMintersResponse)
+	err := c.cc.Invoke(ctx, Query_Minters_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.CallOption) (*QueryPauserResponse, error) {
 	out := new(QueryPauserResponse)
 	err := c.cc.Invoke(ctx, Query_Pauser_FullMethodName, in, out, opts...)
@@ -74,6 +96,8 @@ func (c *queryClient) Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.
 type QueryServer interface {
 	Denom(context.Context, *QueryDenom) (*QueryDenomResponse, error)
 	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
+	Burners(context.Context, *QueryBurners) (*QueryBurnersResponse, error)
+	Minters(context.Context, *QueryMinters) (*QueryMintersResponse, error)
 	Pauser(context.Context, *QueryPauser) (*QueryPauserResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
@@ -87,6 +111,12 @@ func (UnimplementedQueryServer) Denom(context.Context, *QueryDenom) (*QueryDenom
 }
 func (UnimplementedQueryServer) Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Paused not implemented")
+}
+func (UnimplementedQueryServer) Burners(context.Context, *QueryBurners) (*QueryBurnersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Burners not implemented")
+}
+func (UnimplementedQueryServer) Minters(context.Context, *QueryMinters) (*QueryMintersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Minters not implemented")
 }
 func (UnimplementedQueryServer) Pauser(context.Context, *QueryPauser) (*QueryPauserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Pauser not implemented")
@@ -140,6 +170,42 @@ func _Query_Paused_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Burners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBurners)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Burners(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Burners_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Burners(ctx, req.(*QueryBurners))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_Minters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryMinters)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Minters(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Minters_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Minters(ctx, req.(*QueryMinters))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_Pauser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryPauser)
 	if err := dec(in); err != nil {
@@ -172,6 +238,14 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Paused",
 			Handler:    _Query_Paused_Handler,
+		},
+		{
+			MethodName: "Burners",
+			Handler:    _Query_Burners_Handler,
+		},
+		{
+			MethodName: "Minters",
+			Handler:    _Query_Minters_Handler,
 		},
 		{
 			MethodName: "Pauser",

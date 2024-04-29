@@ -154,23 +154,9 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 			},
 		},
 		Query: &autocliv1.ServiceCommandDescriptor{
-			Service: aurav1.Query_ServiceDesc.ServiceName,
+			Service:           aurav1.Query_ServiceDesc.ServiceName,
 			RpcCommandOptions: []*autocliv1.RpcCommandOptions{
-				{
-					RpcMethod: "Denom",
-					Use:       "denom",
-					Short:     "Query the module's denom",
-				},
-				{
-					RpcMethod: "Paused",
-					Use:       "paused",
-					Short:     "Query the module's paused",
-				},
-				{
-					RpcMethod: "Pauser",
-					Use:       "pauser",
-					Short:     "Query the module's pauser",
-				},
+				// NOTE(@john): Queries are simple, so no need to configure.
 			},
 		},
 	}

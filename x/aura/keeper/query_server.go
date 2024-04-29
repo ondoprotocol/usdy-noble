@@ -35,6 +35,26 @@ func (k queryServer) Paused(ctx context.Context, req *types.QueryPaused) (*types
 	return &types.QueryPausedResponse{Paused: paused}, nil
 }
 
+func (k queryServer) Burners(ctx context.Context, req *types.QueryBurners) (*types.QueryBurnersResponse, error) {
+	if req == nil {
+		return nil, errors.ErrInvalidRequest
+	}
+
+	burners, err := k.GetBurners(ctx)
+
+	return &types.QueryBurnersResponse{Burners: burners}, err
+}
+
+func (k queryServer) Minters(ctx context.Context, req *types.QueryMinters) (*types.QueryMintersResponse, error) {
+	if req == nil {
+		return nil, errors.ErrInvalidRequest
+	}
+
+	minters, err := k.GetMinters(ctx)
+
+	return &types.QueryMintersResponse{Minters: minters}, err
+}
+
 func (k queryServer) Pauser(ctx context.Context, req *types.QueryPauser) (*types.QueryPauserResponse, error) {
 	if req == nil {
 		return nil, errors.ErrInvalidRequest
