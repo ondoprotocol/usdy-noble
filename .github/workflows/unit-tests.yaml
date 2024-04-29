@@ -2,7 +2,6 @@ name: Unit Tests
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
 
 jobs:
@@ -19,3 +18,8 @@ jobs:
 
       - name: Run Tests
         run: make test-unit
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
