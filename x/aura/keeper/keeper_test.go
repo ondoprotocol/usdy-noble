@@ -18,14 +18,14 @@ func TestSendRestriction(t *testing.T) {
 	_, err := keeper.SendRestrictionFn(ctx, from.Bytes, to.Bytes, sdk.NewCoins(sdk.NewCoin(
 		"uusdc", math.NewInt(1_000_000),
 	)))
-	// ASSERT: Action should succeed as it's not USDY.
+	// ASSERT: The action should've succeeded due to different denom.
 	require.NoError(t, err)
 
 	// ACT: Attempt to send 1 USDY.
 	_, err = keeper.SendRestrictionFn(ctx, from.Bytes, to.Bytes, sdk.NewCoins(sdk.NewCoin(
 		keeper.Denom, ONE,
 	)))
-	// ASSERT: Action should succeed.
+	// ASSERT: The action should've succeeded.
 	require.NoError(t, err)
 
 	// ARRANGE: Set paused state to true.
@@ -35,7 +35,7 @@ func TestSendRestriction(t *testing.T) {
 	_, err = keeper.SendRestrictionFn(ctx, from.Bytes, to.Bytes, sdk.NewCoins(sdk.NewCoin(
 		keeper.Denom, ONE,
 	)))
-	// ASSERT: Action should succeed.
+	// ASSERT: The action should've failed due to module being paused.
 	require.ErrorContains(t, err, "ausdy transfers are paused")
 
 	// ARRANGE: Set paused state to false.
@@ -47,7 +47,7 @@ func TestSendRestriction(t *testing.T) {
 	_, err = keeper.SendRestrictionFn(ctx, from.Bytes, to.Bytes, sdk.NewCoins(sdk.NewCoin(
 		keeper.Denom, ONE,
 	)))
-	// ASSERT: Action should've failed due to blocked sender.
+	// ASSERT: The action should've failed due to blocked sender.
 	require.ErrorContains(t, err, "blocked from sending")
 
 	// ARRANGE: Unblock from address.
@@ -59,6 +59,6 @@ func TestSendRestriction(t *testing.T) {
 	_, err = keeper.SendRestrictionFn(ctx, from.Bytes, to.Bytes, sdk.NewCoins(sdk.NewCoin(
 		keeper.Denom, ONE,
 	)))
-	// ASSERT: Action should've failed due to blocked recipient.
+	// ASSERT: The action should've failed due to blocked recipient.
 	require.ErrorContains(t, err, "blocked from receiving")
 }
