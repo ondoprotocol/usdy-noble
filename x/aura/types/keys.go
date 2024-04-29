@@ -7,8 +7,10 @@ const ModuleName = "aura"
 var ModuleAddress = authtypes.NewModuleAddress(ModuleName)
 
 var (
-	PausedKey    = []byte("paused")
-	BurnerPrefix = []byte("burner/")
-	MinterPrefix = []byte("minter/")
-	PauserKey    = []byte("pauser")
+	PausedKey       = []byte("paused")
+	OwnerKey        = []byte("owner")
+	PendingOwnerKey = []byte("pending_owner")
+	BurnerPrefix    = []byte("burner/")
+	MinterPrefix    = []byte("minter/")
+	PauserPrefix    = []byte("pauser/")
 )

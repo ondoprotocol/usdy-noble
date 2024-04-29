@@ -10,16 +10,20 @@ import (
 
 func InitGenesis(ctx context.Context, k *keeper.Keeper, accountKeeper types.AccountKeeper, genesis types.GenesisState) {
 	_ = k.Paused.Set(ctx, genesis.Paused)
+	_ = k.Owner.Set(ctx, genesis.Owner)
+	_ = k.PendingOwner.Set(ctx, genesis.PendingOwner)
 	for _, burner := range genesis.Burners {
 		_ = k.Burners.Set(ctx, burner)
 	}
 	for _, minter := range genesis.Minters {
 		_ = k.Minters.Set(ctx, minter)
 	}
-	_ = k.Pauser.Set(ctx, genesis.Pauser)
+	for _, pauser := range genesis.Pausers {
+		_ = k.Pausers.Set(ctx, pauser)
+	}
 
-	_ = k.Owner.Set(ctx, genesis.BlocklistState.Owner)
-	_ = k.PendingOwner.Set(ctx, genesis.BlocklistState.PendingOwner)
+	_ = k.BlocklistOwner.Set(ctx, genesis.BlocklistState.Owner)
+	_ = k.BlocklistPendingOwner.Set(ctx, genesis.BlocklistState.PendingOwner)
 
 	for address, blocked := range genesis.BlocklistState.BlockedAddresses {
 		if blocked {
@@ -31,12 +35,14 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, accountKeeper types.Acco
 
 func ExportGenesis(ctx context.Context, k *keeper.Keeper, accountKeeper types.AccountKeeper) *types.GenesisState {
 	paused, _ := k.Paused.Get(ctx)
-	burners, _ := k.GetBurners(ctx)
-	minters, _ := k.GetMinters(ctx)
-	pauser, _ := k.Pauser.Get(ctx)
-
 	owner, _ := k.Owner.Get(ctx)
 	pendingOwner, _ := k.PendingOwner.Get(ctx)
+	burners, _ := k.GetBurners(ctx)
+	minters, _ := k.GetMinters(ctx)
+	pausers, _ := k.GetPausers(ctx)
+
+	blocklistOwner, _ := k.BlocklistOwner.Get(ctx)
+	blocklistPendingOwner, _ := k.BlocklistPendingOwner.Get(ctx)
 
 	blockedAddresses := make(map[string]bool)
 	_ = k.BlockedAddresses.Walk(ctx, nil, func(account []byte, blocked bool) (stop bool, err error) {
@@ -48,13 +54,15 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper, accountKeeper types.Ac
 
 	return &types.GenesisState{
 		BlocklistState: blocklist.GenesisState{
-			Owner:            owner,
-			PendingOwner:     pendingOwner,
+			Owner:            blocklistOwner,
+			PendingOwner:     blocklistPendingOwner,
 			BlockedAddresses: blockedAddresses,
 		},
-		Paused:  paused,
-		Burners: burners,
-		Minters: minters,
-		Pauser:  pauser,
+		Paused:       paused,
+		Owner:        owner,
+		PendingOwner: pendingOwner,
+		Burners:      burners,
+		Minters:      minters,
+		Pausers:      pausers,
 	}
 }

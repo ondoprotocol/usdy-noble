@@ -21,7 +21,7 @@ func TestTransferOwnership(t *testing.T) {
 
 	// ARRANGE: Set blocklist owner in state.
 	owner := utils.TestAccount()
-	require.NoError(t, k.Owner.Set(ctx, owner.Address))
+	require.NoError(t, k.BlocklistOwner.Set(ctx, owner.Address))
 
 	// ACT: Attempt to transfer ownership with invalid signer.
 	_, err = server.TransferOwnership(ctx, &blocklist.MsgTransferOwnership{
@@ -40,7 +40,7 @@ func TestTransferOwnership(t *testing.T) {
 	})
 	// ASSERT: The action should've succeeded, and set a pending owner in state.
 	require.NoError(t, err)
-	res, err := k.PendingOwner.Get(ctx)
+	res, err := k.BlocklistPendingOwner.Get(ctx)
 	require.NoError(t, err)
 	require.Equal(t, pendingOwner.Address, res)
 }
@@ -56,7 +56,7 @@ func TestAcceptOwnership(t *testing.T) {
 
 	// ARRANGE: Set blocklist pending owner in state.
 	pendingOwner := utils.TestAccount()
-	require.NoError(t, k.PendingOwner.Set(ctx, pendingOwner.Address))
+	require.NoError(t, k.BlocklistPendingOwner.Set(ctx, pendingOwner.Address))
 
 	// ACT: Attempt to accept ownership with invalid signer.
 	_, err = server.AcceptOwnership(ctx, &blocklist.MsgAcceptOwnership{
@@ -71,10 +71,10 @@ func TestAcceptOwnership(t *testing.T) {
 	})
 	// ASSERT: The action should've succeeded, and updated the owner in state.
 	require.NoError(t, err)
-	res, err := k.Owner.Get(ctx)
+	res, err := k.BlocklistOwner.Get(ctx)
 	require.NoError(t, err)
 	require.Equal(t, pendingOwner.Address, res)
-	has, err := k.PendingOwner.Has(ctx)
+	has, err := k.BlocklistPendingOwner.Has(ctx)
 	require.NoError(t, err)
 	require.False(t, has)
 }
@@ -90,7 +90,7 @@ func TestAddToBlocklist(t *testing.T) {
 
 	// ARRANGE: Set blocklist owner in state.
 	owner := utils.TestAccount()
-	require.NoError(t, k.Owner.Set(ctx, owner.Address))
+	require.NoError(t, k.BlocklistOwner.Set(ctx, owner.Address))
 
 	// ACT: Attempt to add to blocklist with invalid signer.
 	_, err = server.AddToBlocklist(ctx, &blocklist.MsgAddToBlocklist{
@@ -133,7 +133,7 @@ func TestRemoveFromBlocklist(t *testing.T) {
 
 	// ARRANGE: Set blocklist owner in state.
 	owner := utils.TestAccount()
-	require.NoError(t, k.Owner.Set(ctx, owner.Address))
+	require.NoError(t, k.BlocklistOwner.Set(ctx, owner.Address))
 
 	// ACT: Attempt to remove from blocklist with invalid signer.
 	_, err = server.RemoveFromBlocklist(ctx, &blocklist.MsgRemoveFromBlocklist{

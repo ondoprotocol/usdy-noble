@@ -35,6 +35,20 @@ func (k queryServer) Paused(ctx context.Context, req *types.QueryPaused) (*types
 	return &types.QueryPausedResponse{Paused: paused}, nil
 }
 
+func (k queryServer) Owner(ctx context.Context, req *types.QueryOwner) (*types.QueryOwnerResponse, error) {
+	if req == nil {
+		return nil, errors.ErrInvalidRequest
+	}
+
+	owner, err := k.Keeper.Owner.Get(ctx)
+	pendingOwner, _ := k.PendingOwner.Get(ctx)
+
+	return &types.QueryOwnerResponse{
+		Owner:        owner,
+		PendingOwner: pendingOwner,
+	}, err
+}
+
 func (k queryServer) Burners(ctx context.Context, req *types.QueryBurners) (*types.QueryBurnersResponse, error) {
 	if req == nil {
 		return nil, errors.ErrInvalidRequest
@@ -55,12 +69,12 @@ func (k queryServer) Minters(ctx context.Context, req *types.QueryMinters) (*typ
 	return &types.QueryMintersResponse{Minters: minters}, err
 }
 
-func (k queryServer) Pauser(ctx context.Context, req *types.QueryPauser) (*types.QueryPauserResponse, error) {
+func (k queryServer) Pausers(ctx context.Context, req *types.QueryPausers) (*types.QueryPausersResponse, error) {
 	if req == nil {
 		return nil, errors.ErrInvalidRequest
 	}
 
-	pauser, err := k.Keeper.Pauser.Get(ctx)
+	pausers, err := k.GetPausers(ctx)
 
-	return &types.QueryPauserResponse{Pauser: pauser}, err
+	return &types.QueryPausersResponse{Pausers: pausers}, err
 }

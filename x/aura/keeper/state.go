@@ -23,3 +23,14 @@ func (k *Keeper) GetMinters(ctx context.Context) ([]string, error) {
 
 	return minters, err
 }
+
+func (k *Keeper) GetPausers(ctx context.Context) ([]string, error) {
+	var pausers []string
+
+	err := k.Pausers.Walk(ctx, nil, func(pauser string) (stop bool, err error) {
+		pausers = append(pausers, pauser)
+		return false, nil
+	})
+
+	return pausers, err
+}

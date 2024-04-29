@@ -22,8 +22,8 @@ func (k blocklistQueryServer) Owner(ctx context.Context, req *blocklist.QueryOwn
 		return nil, errors.ErrInvalidRequest
 	}
 
-	owner, err := k.Keeper.Owner.Get(ctx)
-	pendingOwner, _ := k.PendingOwner.Get(ctx)
+	owner, err := k.Keeper.BlocklistOwner.Get(ctx)
+	pendingOwner, _ := k.BlocklistPendingOwner.Get(ctx)
 
 	return &blocklist.QueryOwnerResponse{
 		Owner:        owner,

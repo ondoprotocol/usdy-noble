@@ -12,13 +12,18 @@ message GenesisState {
   // blocklist_state is the genesis state of the blocklist submodule.
   aura.blocklist.v1.GenesisState blocklist_state = 1 [(gogoproto.nullable) = false];
 
-  // paused is the paused state of the Aura module.
+  // paused is the paused state of this module.
   bool paused = 2;
 
+  // owner is the address that can control this module.
+  string owner = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // pending_owner is the address of the new owner during an ownership transfer.
+  string pending_owner = 4 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
   // burners is the list of addresses that can burn USDY.
-  repeated string burners = 3;
+  repeated string burners = 5;
   // minters is the list of addresses that can mint USDY.
-  repeated string minters = 4;
-  // pauser is the address that can control the paused state.
-  string pauser = 5 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  repeated string minters = 6;
+  // pausers is the list of addresses that can pause USDY.
+  repeated string pausers = 7;
 }

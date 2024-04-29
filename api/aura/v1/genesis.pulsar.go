@@ -15,95 +15,141 @@ import (
 	sync "sync"
 )
 
-var _ protoreflect.List = (*_GenesisState_3_list)(nil)
+var _ protoreflect.List = (*_GenesisState_5_list)(nil)
 
-type _GenesisState_3_list struct {
+type _GenesisState_5_list struct {
 	list *[]string
 }
 
-func (x *_GenesisState_3_list) Len() int {
+func (x *_GenesisState_5_list) Len() int {
 	if x.list == nil {
 		return 0
 	}
 	return len(*x.list)
 }
 
-func (x *_GenesisState_3_list) Get(i int) protoreflect.Value {
+func (x *_GenesisState_5_list) Get(i int) protoreflect.Value {
 	return protoreflect.ValueOfString((*x.list)[i])
 }
 
-func (x *_GenesisState_3_list) Set(i int, value protoreflect.Value) {
+func (x *_GenesisState_5_list) Set(i int, value protoreflect.Value) {
 	valueUnwrapped := value.String()
 	concreteValue := valueUnwrapped
 	(*x.list)[i] = concreteValue
 }
 
-func (x *_GenesisState_3_list) Append(value protoreflect.Value) {
+func (x *_GenesisState_5_list) Append(value protoreflect.Value) {
 	valueUnwrapped := value.String()
 	concreteValue := valueUnwrapped
 	*x.list = append(*x.list, concreteValue)
 }
 
-func (x *_GenesisState_3_list) AppendMutable() protoreflect.Value {
+func (x *_GenesisState_5_list) AppendMutable() protoreflect.Value {
 	panic(fmt.Errorf("AppendMutable can not be called on message GenesisState at list field Burners as it is not of Message kind"))
 }
 
-func (x *_GenesisState_3_list) Truncate(n int) {
+func (x *_GenesisState_5_list) Truncate(n int) {
 	*x.list = (*x.list)[:n]
 }
 
-func (x *_GenesisState_3_list) NewElement() protoreflect.Value {
+func (x *_GenesisState_5_list) NewElement() protoreflect.Value {
 	v := ""
 	return protoreflect.ValueOfString(v)
 }
 
-func (x *_GenesisState_3_list) IsValid() bool {
+func (x *_GenesisState_5_list) IsValid() bool {
 	return x.list != nil
 }
 
-var _ protoreflect.List = (*_GenesisState_4_list)(nil)
+var _ protoreflect.List = (*_GenesisState_6_list)(nil)
 
-type _GenesisState_4_list struct {
+type _GenesisState_6_list struct {
 	list *[]string
 }
 
-func (x *_GenesisState_4_list) Len() int {
+func (x *_GenesisState_6_list) Len() int {
 	if x.list == nil {
 		return 0
 	}
 	return len(*x.list)
 }
 
-func (x *_GenesisState_4_list) Get(i int) protoreflect.Value {
+func (x *_GenesisState_6_list) Get(i int) protoreflect.Value {
 	return protoreflect.ValueOfString((*x.list)[i])
 }
 
-func (x *_GenesisState_4_list) Set(i int, value protoreflect.Value) {
+func (x *_GenesisState_6_list) Set(i int, value protoreflect.Value) {
 	valueUnwrapped := value.String()
 	concreteValue := valueUnwrapped
 	(*x.list)[i] = concreteValue
 }
 
-func (x *_GenesisState_4_list) Append(value protoreflect.Value) {
+func (x *_GenesisState_6_list) Append(value protoreflect.Value) {
 	valueUnwrapped := value.String()
 	concreteValue := valueUnwrapped
 	*x.list = append(*x.list, concreteValue)
 }
 
-func (x *_GenesisState_4_list) AppendMutable() protoreflect.Value {
+func (x *_GenesisState_6_list) AppendMutable() protoreflect.Value {
 	panic(fmt.Errorf("AppendMutable can not be called on message GenesisState at list field Minters as it is not of Message kind"))
 }
 
-func (x *_GenesisState_4_list) Truncate(n int) {
+func (x *_GenesisState_6_list) Truncate(n int) {
 	*x.list = (*x.list)[:n]
 }
 
-func (x *_GenesisState_4_list) NewElement() protoreflect.Value {
+func (x *_GenesisState_6_list) NewElement() protoreflect.Value {
 	v := ""
 	return protoreflect.ValueOfString(v)
 }
 
-func (x *_GenesisState_4_list) IsValid() bool {
+func (x *_GenesisState_6_list) IsValid() bool {
+	return x.list != nil
+}
+
+var _ protoreflect.List = (*_GenesisState_7_list)(nil)
+
+type _GenesisState_7_list struct {
+	list *[]string
+}
+
+func (x *_GenesisState_7_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_GenesisState_7_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfString((*x.list)[i])
+}
+
+func (x *_GenesisState_7_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_GenesisState_7_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_GenesisState_7_list) AppendMutable() protoreflect.Value {
+	panic(fmt.Errorf("AppendMutable can not be called on message GenesisState at list field Pausers as it is not of Message kind"))
+}
+
+func (x *_GenesisState_7_list) Truncate(n int) {
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_GenesisState_7_list) NewElement() protoreflect.Value {
+	v := ""
+	return protoreflect.ValueOfString(v)
+}
+
+func (x *_GenesisState_7_list) IsValid() bool {
 	return x.list != nil
 }
 
@@ -111,9 +157,11 @@ var (
 	md_GenesisState                 protoreflect.MessageDescriptor
 	fd_GenesisState_blocklist_state protoreflect.FieldDescriptor
 	fd_GenesisState_paused          protoreflect.FieldDescriptor
+	fd_GenesisState_owner           protoreflect.FieldDescriptor
+	fd_GenesisState_pending_owner   protoreflect.FieldDescriptor
 	fd_GenesisState_burners         protoreflect.FieldDescriptor
 	fd_GenesisState_minters         protoreflect.FieldDescriptor
-	fd_GenesisState_pauser          protoreflect.FieldDescriptor
+	fd_GenesisState_pausers         protoreflect.FieldDescriptor
 )
 
 func init() {
@@ -121,9 +169,11 @@ func init() {
 	md_GenesisState = File_aura_v1_genesis_proto.Messages().ByName("GenesisState")
 	fd_GenesisState_blocklist_state = md_GenesisState.Fields().ByName("blocklist_state")
 	fd_GenesisState_paused = md_GenesisState.Fields().ByName("paused")
+	fd_GenesisState_owner = md_GenesisState.Fields().ByName("owner")
+	fd_GenesisState_pending_owner = md_GenesisState.Fields().ByName("pending_owner")
 	fd_GenesisState_burners = md_GenesisState.Fields().ByName("burners")
 	fd_GenesisState_minters = md_GenesisState.Fields().ByName("minters")
-	fd_GenesisState_pauser = md_GenesisState.Fields().ByName("pauser")
+	fd_GenesisState_pausers = md_GenesisState.Fields().ByName("pausers")
 }
 
 var _ protoreflect.Message = (*fastReflection_GenesisState)(nil)
@@ -203,21 +253,33 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 			return
 		}
 	}
+	if x.Owner != "" {
+		value := protoreflect.ValueOfString(x.Owner)
+		if !f(fd_GenesisState_owner, value) {
+			return
+		}
+	}
+	if x.PendingOwner != "" {
+		value := protoreflect.ValueOfString(x.PendingOwner)
+		if !f(fd_GenesisState_pending_owner, value) {
+			return
+		}
+	}
 	if len(x.Burners) != 0 {
-		value := protoreflect.ValueOfList(&_GenesisState_3_list{list: &x.Burners})
+		value := protoreflect.ValueOfList(&_GenesisState_5_list{list: &x.Burners})
 		if !f(fd_GenesisState_burners, value) {
 			return
 		}
 	}
 	if len(x.Minters) != 0 {
-		value := protoreflect.ValueOfList(&_GenesisState_4_list{list: &x.Minters})
+		value := protoreflect.ValueOfList(&_GenesisState_6_list{list: &x.Minters})
 		if !f(fd_GenesisState_minters, value) {
 			return
 		}
 	}
-	if x.Pauser != "" {
-		value := protoreflect.ValueOfString(x.Pauser)
-		if !f(fd_GenesisState_pauser, value) {
+	if len(x.Pausers) != 0 {
+		value := protoreflect.ValueOfList(&_GenesisState_7_list{list: &x.Pausers})
+		if !f(fd_GenesisState_pausers, value) {
 			return
 		}
 	}
@@ -240,12 +302,16 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 		return x.BlocklistState != nil
 	case "aura.v1.GenesisState.paused":
 		return x.Paused != false
+	case "aura.v1.GenesisState.owner":
+		return x.Owner != ""
+	case "aura.v1.GenesisState.pending_owner":
+		return x.PendingOwner != ""
 	case "aura.v1.GenesisState.burners":
 		return len(x.Burners) != 0
 	case "aura.v1.GenesisState.minters":
 		return len(x.Minters) != 0
-	case "aura.v1.GenesisState.pauser":
-		return x.Pauser != ""
+	case "aura.v1.GenesisState.pausers":
+		return len(x.Pausers) != 0
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: aura.v1.GenesisState"))
@@ -266,12 +332,16 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 		x.BlocklistState = nil
 	case "aura.v1.GenesisState.paused":
 		x.Paused = false
+	case "aura.v1.GenesisState.owner":
+		x.Owner = ""
+	case "aura.v1.GenesisState.pending_owner":
+		x.PendingOwner = ""
 	case "aura.v1.GenesisState.burners":
 		x.Burners = nil
 	case "aura.v1.GenesisState.minters":
 		x.Minters = nil
-	case "aura.v1.GenesisState.pauser":
-		x.Pauser = ""
+	case "aura.v1.GenesisState.pausers":
+		x.Pausers = nil
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: aura.v1.GenesisState"))
@@ -294,21 +364,30 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 	case "aura.v1.GenesisState.paused":
 		value := x.Paused
 		return protoreflect.ValueOfBool(value)
+	case "aura.v1.GenesisState.owner":
+		value := x.Owner
+		return protoreflect.ValueOfString(value)
+	case "aura.v1.GenesisState.pending_owner":
+		value := x.PendingOwner
+		return protoreflect.ValueOfString(value)
 	case "aura.v1.GenesisState.burners":
 		if len(x.Burners) == 0 {
-			return protoreflect.ValueOfList(&_GenesisState_3_list{})
+			return protoreflect.ValueOfList(&_GenesisState_5_list{})
 		}
-		listValue := &_GenesisState_3_list{list: &x.Burners}
+		listValue := &_GenesisState_5_list{list: &x.Burners}
 		return protoreflect.ValueOfList(listValue)
 	case "aura.v1.GenesisState.minters":
 		if len(x.Minters) == 0 {
-			return protoreflect.ValueOfList(&_GenesisState_4_list{})
+			return protoreflect.ValueOfList(&_GenesisState_6_list{})
 		}
-		listValue := &_GenesisState_4_list{list: &x.Minters}
+		listValue := &_GenesisState_6_list{list: &x.Minters}
 		return protoreflect.ValueOfList(listValue)
-	case "aura.v1.GenesisState.pauser":
-		value := x.Pauser
-		return protoreflect.ValueOfString(value)
+	case "aura.v1.GenesisState.pausers":
+		if len(x.Pausers) == 0 {
+			return protoreflect.ValueOfList(&_GenesisState_7_list{})
+		}
+		listValue := &_GenesisState_7_list{list: &x.Pausers}
+		return protoreflect.ValueOfList(listValue)
 	default:
 		if descriptor.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: aura.v1.GenesisState"))
@@ -333,16 +412,22 @@ func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value
 		x.BlocklistState = value.Message().Interface().(*v1.GenesisState)
 	case "aura.v1.GenesisState.paused":
 		x.Paused = value.Bool()
+	case "aura.v1.GenesisState.owner":
+		x.Owner = value.Interface().(string)
+	case "aura.v1.GenesisState.pending_owner":
+		x.PendingOwner = value.Interface().(string)
 	case "aura.v1.GenesisState.burners":
 		lv := value.List()
-		clv := lv.(*_GenesisState_3_list)
+		clv := lv.(*_GenesisState_5_list)
 		x.Burners = *clv.list
 	case "aura.v1.GenesisState.minters":
 		lv := value.List()
-		clv := lv.(*_GenesisState_4_list)
+		clv := lv.(*_GenesisState_6_list)
 		x.Minters = *clv.list
-	case "aura.v1.GenesisState.pauser":
-		x.Pauser = value.Interface().(string)
+	case "aura.v1.GenesisState.pausers":
+		lv := value.List()
+		clv := lv.(*_GenesisState_7_list)
+		x.Pausers = *clv.list
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: aura.v1.GenesisState"))
@@ -372,18 +457,26 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 		if x.Burners == nil {
 			x.Burners = []string{}
 		}
-		value := &_GenesisState_3_list{list: &x.Burners}
+		value := &_GenesisState_5_list{list: &x.Burners}
 		return protoreflect.ValueOfList(value)
 	case "aura.v1.GenesisState.minters":
 		if x.Minters == nil {
 			x.Minters = []string{}
 		}
-		value := &_GenesisState_4_list{list: &x.Minters}
+		value := &_GenesisState_6_list{list: &x.Minters}
+		return protoreflect.ValueOfList(value)
+	case "aura.v1.GenesisState.pausers":
+		if x.Pausers == nil {
+			x.Pausers = []string{}
+		}
+		value := &_GenesisState_7_list{list: &x.Pausers}
 		return protoreflect.ValueOfList(value)
 	case "aura.v1.GenesisState.paused":
 		panic(fmt.Errorf("field paused of message aura.v1.GenesisState is not mutable"))
-	case "aura.v1.GenesisState.pauser":
-		panic(fmt.Errorf("field pauser of message aura.v1.GenesisState is not mutable"))
+	case "aura.v1.GenesisState.owner":
+		panic(fmt.Errorf("field owner of message aura.v1.GenesisState is not mutable"))
+	case "aura.v1.GenesisState.pending_owner":
+		panic(fmt.Errorf("field pending_owner of message aura.v1.GenesisState is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: aura.v1.GenesisState"))
@@ -402,14 +495,19 @@ func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) 
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
 	case "aura.v1.GenesisState.paused":
 		return protoreflect.ValueOfBool(false)
+	case "aura.v1.GenesisState.owner":
+		return protoreflect.ValueOfString("")
+	case "aura.v1.GenesisState.pending_owner":
+		return protoreflect.ValueOfString("")
 	case "aura.v1.GenesisState.burners":
 		list := []string{}
-		return protoreflect.ValueOfList(&_GenesisState_3_list{list: &list})
+		return protoreflect.ValueOfList(&_GenesisState_5_list{list: &list})
 	case "aura.v1.GenesisState.minters":
 		list := []string{}
-		return protoreflect.ValueOfList(&_GenesisState_4_list{list: &list})
-	case "aura.v1.GenesisState.pauser":
-		return protoreflect.ValueOfString("")
+		return protoreflect.ValueOfList(&_GenesisState_6_list{list: &list})
+	case "aura.v1.GenesisState.pausers":
+		list := []string{}
+		return protoreflect.ValueOfList(&_GenesisState_7_list{list: &list})
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: aura.v1.GenesisState"))
@@ -486,6 +584,14 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 		if x.Paused {
 			n += 2
 		}
+		l = len(x.Owner)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.PendingOwner)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
 		if len(x.Burners) > 0 {
 			for _, s := range x.Burners {
 				l = len(s)
@@ -498,9 +604,11 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				n += 1 + l + runtime.Sov(uint64(l))
 			}
 		}
-		l = len(x.Pauser)
-		if l > 0 {
-			n += 1 + l + runtime.Sov(uint64(l))
+		if len(x.Pausers) > 0 {
+			for _, s := range x.Pausers {
+				l = len(s)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
 		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
@@ -531,12 +639,14 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
-		if len(x.Pauser) > 0 {
-			i -= len(x.Pauser)
-			copy(dAtA[i:], x.Pauser)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Pauser)))
-			i--
-			dAtA[i] = 0x2a
+		if len(x.Pausers) > 0 {
+			for iNdEx := len(x.Pausers) - 1; iNdEx >= 0; iNdEx-- {
+				i -= len(x.Pausers[iNdEx])
+				copy(dAtA[i:], x.Pausers[iNdEx])
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Pausers[iNdEx])))
+				i--
+				dAtA[i] = 0x3a
+			}
 		}
 		if len(x.Minters) > 0 {
 			for iNdEx := len(x.Minters) - 1; iNdEx >= 0; iNdEx-- {
@@ -544,7 +654,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				copy(dAtA[i:], x.Minters[iNdEx])
 				i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Minters[iNdEx])))
 				i--
-				dAtA[i] = 0x22
+				dAtA[i] = 0x32
 			}
 		}
 		if len(x.Burners) > 0 {
@@ -553,8 +663,22 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				copy(dAtA[i:], x.Burners[iNdEx])
 				i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Burners[iNdEx])))
 				i--
-				dAtA[i] = 0x1a
+				dAtA[i] = 0x2a
 			}
+		}
+		if len(x.PendingOwner) > 0 {
+			i -= len(x.PendingOwner)
+			copy(dAtA[i:], x.PendingOwner)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.PendingOwner)))
+			i--
+			dAtA[i] = 0x22
+		}
+		if len(x.Owner) > 0 {
+			i -= len(x.Owner)
+			copy(dAtA[i:], x.Owner)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Owner)))
+			i--
+			dAtA[i] = 0x1a
 		}
 		if x.Paused {
 			i--
@@ -687,6 +811,70 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				x.Paused = bool(v != 0)
 			case 3:
 				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Owner = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 4:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field PendingOwner", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.PendingOwner = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 5:
+				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Burners", wireType)
 				}
 				var stringLen uint64
@@ -717,7 +905,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				}
 				x.Burners = append(x.Burners, string(dAtA[iNdEx:postIndex]))
 				iNdEx = postIndex
-			case 4:
+			case 6:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Minters", wireType)
 				}
@@ -749,9 +937,9 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				}
 				x.Minters = append(x.Minters, string(dAtA[iNdEx:postIndex]))
 				iNdEx = postIndex
-			case 5:
+			case 7:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Pauser", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Pausers", wireType)
 				}
 				var stringLen uint64
 				for shift := uint(0); ; shift += 7 {
@@ -779,7 +967,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				x.Pauser = string(dAtA[iNdEx:postIndex])
+				x.Pausers = append(x.Pausers, string(dAtA[iNdEx:postIndex]))
 				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
@@ -836,14 +1024,18 @@ type GenesisState struct {
 
 	// blocklist_state is the genesis state of the blocklist submodule.
 	BlocklistState *v1.GenesisState `protobuf:"bytes,1,opt,name=blocklist_state,json=blocklistState,proto3" json:"blocklist_state,omitempty"`
-	// paused is the paused state of the Aura module.
+	// paused is the paused state of this module.
 	Paused bool `protobuf:"varint,2,opt,name=paused,proto3" json:"paused,omitempty"`
+	// owner is the address that can control this module.
+	Owner string `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
+	// pending_owner is the address of the new owner during an ownership transfer.
+	PendingOwner string `protobuf:"bytes,4,opt,name=pending_owner,json=pendingOwner,proto3" json:"pending_owner,omitempty"`
 	// burners is the list of addresses that can burn USDY.
-	Burners []string `protobuf:"bytes,3,rep,name=burners,proto3" json:"burners,omitempty"`
+	Burners []string `protobuf:"bytes,5,rep,name=burners,proto3" json:"burners,omitempty"`
 	// minters is the list of addresses that can mint USDY.
-	Minters []string `protobuf:"bytes,4,rep,name=minters,proto3" json:"minters,omitempty"`
-	// pauser is the address that can control the paused state.
-	Pauser string `protobuf:"bytes,5,opt,name=pauser,proto3" json:"pauser,omitempty"`
+	Minters []string `protobuf:"bytes,6,rep,name=minters,proto3" json:"minters,omitempty"`
+	// pausers is the list of addresses that can pause USDY.
+	Pausers []string `protobuf:"bytes,7,rep,name=pausers,proto3" json:"pausers,omitempty"`
 }
 
 func (x *GenesisState) Reset() {
@@ -880,6 +1072,20 @@ func (x *GenesisState) GetPaused() bool {
 	return false
 }
 
+func (x *GenesisState) GetOwner() string {
+	if x != nil {
+		return x.Owner
+	}
+	return ""
+}
+
+func (x *GenesisState) GetPendingOwner() string {
+	if x != nil {
+		return x.PendingOwner
+	}
+	return ""
+}
+
 func (x *GenesisState) GetBurners() []string {
 	if x != nil {
 		return x.Burners
@@ -894,11 +1100,11 @@ func (x *GenesisState) GetMinters() []string {
 	return nil
 }
 
-func (x *GenesisState) GetPauser() string {
+func (x *GenesisState) GetPausers() []string {
 	if x != nil {
-		return x.Pauser
+		return x.Pausers
 	}
-	return ""
+	return nil
 }
 
 var File_aura_v1_genesis_proto protoreflect.FileDescriptor
@@ -911,30 +1117,35 @@ var file_aura_v1_genesis_proto_rawDesc = []byte{
 	0x6f, 0x1a, 0x19, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
 	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x14, 0x67, 0x6f,
 	0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x22, 0xdc, 0x01, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74,
+	0x74, 0x6f, 0x22, 0xb3, 0x02, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74,
 	0x61, 0x74, 0x65, 0x12, 0x4e, 0x0a, 0x0f, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69, 0x73, 0x74,
 	0x5f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1f, 0x2e, 0x61,
 	0x75, 0x72, 0x61, 0x2e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69, 0x73, 0x74, 0x2e, 0x76, 0x31,
 	0x2e, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x42, 0x04, 0xc8,
 	0xde, 0x1f, 0x00, 0x52, 0x0e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x6c, 0x69, 0x73, 0x74, 0x53, 0x74,
 	0x61, 0x74, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x08, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x62,
-	0x75, 0x72, 0x6e, 0x65, 0x72, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x62, 0x75,
-	0x72, 0x6e, 0x65, 0x72, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x73,
-	0x18, 0x04, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x73, 0x12,
-	0x30, 0x0a, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x72, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x42,
-	0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72,
-	0x65, 0x73, 0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65,
-	0x72, 0x42, 0x89, 0x01, 0x0a, 0x0b, 0x63, 0x6f, 0x6d, 0x2e, 0x61, 0x75, 0x72, 0x61, 0x2e, 0x76,
-	0x31, 0x42, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50,
-	0x01, 0x5a, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6e, 0x6f,
-	0x62, 0x6c, 0x65, 0x2d, 0x61, 0x73, 0x73, 0x65, 0x74, 0x73, 0x2f, 0x61, 0x75, 0x72, 0x61, 0x2f,
-	0x61, 0x70, 0x69, 0x2f, 0x61, 0x75, 0x72, 0x61, 0x2f, 0x76, 0x31, 0x3b, 0x61, 0x75, 0x72, 0x61,
-	0x76, 0x31, 0xa2, 0x02, 0x03, 0x41, 0x58, 0x58, 0xaa, 0x02, 0x07, 0x41, 0x75, 0x72, 0x61, 0x2e,
-	0x56, 0x31, 0xca, 0x02, 0x07, 0x41, 0x75, 0x72, 0x61, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x13, 0x41,
-	0x75, 0x72, 0x61, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61,
-	0x74, 0x61, 0xea, 0x02, 0x08, 0x41, 0x75, 0x72, 0x61, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x01, 0x28, 0x08, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x12, 0x2e, 0x0a, 0x05, 0x6f,
+	0x77, 0x6e, 0x65, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d, 0x14,
+	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53, 0x74,
+	0x72, 0x69, 0x6e, 0x67, 0x52, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x3d, 0x0a, 0x0d, 0x70,
+	0x65, 0x6e, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41,
+	0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x0c, 0x70, 0x65,
+	0x6e, 0x64, 0x69, 0x6e, 0x67, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x18, 0x0a, 0x07, 0x62, 0x75,
+	0x72, 0x6e, 0x65, 0x72, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x62, 0x75, 0x72,
+	0x6e, 0x65, 0x72, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x73, 0x18,
+	0x06, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x73, 0x12, 0x18,
+	0x0a, 0x07, 0x70, 0x61, 0x75, 0x73, 0x65, 0x72, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x09, 0x52,
+	0x07, 0x70, 0x61, 0x75, 0x73, 0x65, 0x72, 0x73, 0x42, 0x89, 0x01, 0x0a, 0x0b, 0x63, 0x6f, 0x6d,
+	0x2e, 0x61, 0x75, 0x72, 0x61, 0x2e, 0x76, 0x31, 0x42, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69,
+	0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2d, 0x61, 0x73, 0x73, 0x65, 0x74,
+	0x73, 0x2f, 0x61, 0x75, 0x72, 0x61, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x75, 0x72, 0x61, 0x2f,
+	0x76, 0x31, 0x3b, 0x61, 0x75, 0x72, 0x61, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x41, 0x58, 0x58, 0xaa,
+	0x02, 0x07, 0x41, 0x75, 0x72, 0x61, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x07, 0x41, 0x75, 0x72, 0x61,
+	0x5c, 0x56, 0x31, 0xe2, 0x02, 0x13, 0x41, 0x75, 0x72, 0x61, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50,
+	0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x08, 0x41, 0x75, 0x72, 0x61,
+	0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (

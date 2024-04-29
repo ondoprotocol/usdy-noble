@@ -19,7 +19,7 @@ func NewBlocklistMsgServer(keeper *Keeper) blocklist.MsgServer {
 }
 
 func (k blocklistMsgServer) TransferOwnership(ctx context.Context, msg *blocklist.MsgTransferOwnership) (*blocklist.MsgTransferOwnershipResponse, error) {
-	owner, err := k.Owner.Get(ctx)
+	owner, err := k.BlocklistOwner.Get(ctx)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to retrieve blocklist owner from state")
 	}
@@ -27,7 +27,7 @@ func (k blocklistMsgServer) TransferOwnership(ctx context.Context, msg *blocklis
 		return nil, sdkerrors.Wrapf(blocklist.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	err = k.PendingOwner.Set(ctx, msg.NewOwner)
+	err = k.BlocklistPendingOwner.Set(ctx, msg.NewOwner)
 	if err != nil {
 		return nil, errors.New("unable to set blocklist pending owner state")
 	}
@@ -39,7 +39,7 @@ func (k blocklistMsgServer) TransferOwnership(ctx context.Context, msg *blocklis
 }
 
 func (k blocklistMsgServer) AcceptOwnership(ctx context.Context, msg *blocklist.MsgAcceptOwnership) (*blocklist.MsgAcceptOwnershipResponse, error) {
-	pendingOwner, err := k.PendingOwner.Get(ctx)
+	pendingOwner, err := k.BlocklistPendingOwner.Get(ctx)
 	if err != nil {
 		return nil, errors.New("there is no blocklist pending owner")
 	}
@@ -47,11 +47,11 @@ func (k blocklistMsgServer) AcceptOwnership(ctx context.Context, msg *blocklist.
 		return nil, sdkerrors.Wrapf(blocklist.ErrInvalidPendingOwner, "expected %s, got %s", pendingOwner, msg.Signer)
 	}
 
-	err = k.Owner.Set(ctx, pendingOwner)
+	err = k.BlocklistOwner.Set(ctx, pendingOwner)
 	if err != nil {
 		return nil, errors.New("unable to set blocklist owner state")
 	}
-	err = k.PendingOwner.Remove(ctx)
+	err = k.BlocklistPendingOwner.Remove(ctx)
 	if err != nil {
 		return nil, errors.New("unable to remove blocklist pending owner state")
 	}
@@ -60,7 +60,7 @@ func (k blocklistMsgServer) AcceptOwnership(ctx context.Context, msg *blocklist.
 }
 
 func (k blocklistMsgServer) AddToBlocklist(ctx context.Context, msg *blocklist.MsgAddToBlocklist) (*blocklist.MsgAddToBlocklistResponse, error) {
-	owner, err := k.Owner.Get(ctx)
+	owner, err := k.BlocklistOwner.Get(ctx)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to retrieve blocklist owner from state")
 	}
@@ -86,7 +86,7 @@ func (k blocklistMsgServer) AddToBlocklist(ctx context.Context, msg *blocklist.M
 }
 
 func (k blocklistMsgServer) RemoveFromBlocklist(ctx context.Context, msg *blocklist.MsgRemoveFromBlocklist) (*blocklist.MsgRemoveFromBlocklistResponse, error) {
-	owner, err := k.Owner.Get(ctx)
+	owner, err := k.BlocklistOwner.Get(ctx)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to retrieve blocklist owner from state")
 	}

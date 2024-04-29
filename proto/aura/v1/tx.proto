@@ -17,6 +17,8 @@ service Msg {
 
   rpc Pause(aura.v1.MsgPause) returns (aura.v1.MsgPauseResponse);
   rpc Unpause(aura.v1.MsgUnpause) returns (aura.v1.MsgUnpauseResponse);
+
+  // TODO(@john): Implement role transfer msgs.
 }
 
 //

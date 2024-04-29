@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestOwnerQuery(t *testing.T) {
+func TestBlocklistOwnerQuery(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
 	server := keeper.NewBlocklistQueryServer(k)
 
@@ -28,7 +28,7 @@ func TestOwnerQuery(t *testing.T) {
 
 	// ARRANGE: Set blocklist owner in state.
 	owner := utils.TestAccount()
-	require.NoError(t, k.Owner.Set(ctx, owner.Address))
+	require.NoError(t, k.BlocklistOwner.Set(ctx, owner.Address))
 
 	// ACT: Attempt to query blocklist owner with state.
 	res, err := server.Owner(ctx, &blocklist.QueryOwner{})
@@ -39,7 +39,7 @@ func TestOwnerQuery(t *testing.T) {
 
 	// ARRANGE: Set blocklist pending owner in state.
 	pendingOwner := utils.TestAccount()
-	require.NoError(t, k.PendingOwner.Set(ctx, pendingOwner.Address))
+	require.NoError(t, k.BlocklistPendingOwner.Set(ctx, pendingOwner.Address))
 
 	// ACT: Attempt to query blocklist owner with state.
 	res, err = server.Owner(ctx, &blocklist.QueryOwner{})

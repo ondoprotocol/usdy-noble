@@ -15,6 +15,10 @@ if ! [ -f .aura/data/priv_validator_state.json ]; then
 
   aurad keys add validator --home .aura --keyring-backend test &> /dev/null
   aurad genesis add-genesis-account validator 1000000ustake --home .aura --keyring-backend test
+  OWNER=$(aurad keys add owner --home .aura --keyring-backend test --output json | jq .address)
+  aurad genesis add-genesis-account owner 10000000uusdc --home .aura --keyring-backend test
+  PENDING_OWNER=$(aurad keys add pending-owner --home .aura --keyring-backend test --output json | jq .address)
+  aurad genesis add-genesis-account pending-owner 10000000uusdc --home .aura --keyring-backend test
   BURNER=$(aurad keys add burner --home .aura --keyring-backend test --output json | jq .address)
   aurad genesis add-genesis-account burner 10000000uusdc --home .aura --keyring-backend test
   MINTER=$(aurad keys add minter --home .aura --keyring-backend test --output json | jq .address)
@@ -31,9 +35,10 @@ if ! [ -f .aura/data/priv_validator_state.json ]; then
   TEMP=.aura/genesis.json
   touch $TEMP && jq '.app_state.staking.params.bond_denom = "ustake"' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.blocklist_state.owner = '$BLOCKLIST_OWNER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
+  touch $TEMP && jq '.app_state.aura.owner = '$OWNER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.burners = ['$BURNER']' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.minters = ['$MINTER']' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
-  touch $TEMP && jq '.app_state.aura.pauser = '$PAUSER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
+  touch $TEMP && jq '.app_state.aura.pausers = ['$PAUSER']' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
 
   aurad genesis gentx validator 1000000ustake --chain-id "aura-1" --home .aura --keyring-backend test &> /dev/null
   aurad genesis collect-gentxs --home .aura &> /dev/null

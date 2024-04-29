@@ -77,12 +77,12 @@ func (k msgServer) Mint(ctx context.Context, msg *types.MsgMint) (*types.MsgMint
 }
 
 func (k msgServer) Pause(ctx context.Context, msg *types.MsgPause) (*types.MsgPauseResponse, error) {
-	pauser, err := k.Pauser.Get(ctx)
+	has, err := k.Pausers.Has(ctx, msg.Signer)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to retrieve pauser from state")
 	}
-	if msg.Signer != pauser {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidPauser, "expected %s, got %s", pauser, msg.Signer)
+	if !has {
+		return nil, types.ErrInvalidPauser
 	}
 
 	if paused, _ := k.Paused.Get(ctx); paused {
@@ -100,12 +100,12 @@ func (k msgServer) Pause(ctx context.Context, msg *types.MsgPause) (*types.MsgPa
 }
 
 func (k msgServer) Unpause(ctx context.Context, msg *types.MsgUnpause) (*types.MsgUnpauseResponse, error) {
-	pauser, err := k.Pauser.Get(ctx)
+	has, err := k.Pausers.Has(ctx, msg.Signer)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to retrieve pauser from state")
 	}
-	if msg.Signer != pauser {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidPauser, "expected %s, got %s", pauser, msg.Signer)
+	if !has {
+		return nil, types.ErrInvalidPauser
 	}
 
 	if paused, _ := k.Paused.Get(ctx); !paused {

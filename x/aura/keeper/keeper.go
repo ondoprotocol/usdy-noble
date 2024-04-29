@@ -25,14 +25,16 @@ type Keeper struct {
 	Denom  string
 	Schema collections.Schema
 
-	Paused  collections.Item[bool]
-	Burners collections.KeySet[string]
-	Minters collections.KeySet[string]
-	Pauser  collections.Item[string]
+	Paused       collections.Item[bool]
+	Owner        collections.Item[string]
+	PendingOwner collections.Item[string]
+	Burners      collections.KeySet[string]
+	Minters      collections.KeySet[string]
+	Pausers      collections.KeySet[string]
 
-	Owner            collections.Item[string]
-	PendingOwner     collections.Item[string]
-	BlockedAddresses collections.Map[[]byte, bool]
+	BlocklistOwner        collections.Item[string]
+	BlocklistPendingOwner collections.Item[string]
+	BlockedAddresses      collections.Map[[]byte, bool]
 
 	accountKeeper types.AccountKeeper
 	bankKeeper    types.BankKeeper
@@ -59,14 +61,18 @@ func NewKeeper(
 		accountKeeper: accountKeeper,
 		bankKeeper:    bankKeeper,
 
-		Paused:  collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
+		Paused: collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
+
+		Owner:        collections.NewItem(builder, types.OwnerKey, "owner", collections.StringValue),
+		PendingOwner: collections.NewItem(builder, types.PendingOwnerKey, "pending_owner", collections.StringValue),
+
 		Burners: collections.NewKeySet(builder, types.BurnerPrefix, "burners", collections.StringKey),
 		Minters: collections.NewKeySet(builder, types.MinterPrefix, "minters", collections.StringKey),
-		Pauser:  collections.NewItem(builder, types.PauserKey, "pauser", collections.StringValue),
+		Pausers: collections.NewKeySet(builder, types.PauserPrefix, "pausers", collections.StringKey),
 
-		Owner:            collections.NewItem(builder, blocklist.OwnerKey, "owner", collections.StringValue),
-		PendingOwner:     collections.NewItem(builder, blocklist.PendingOwnerKey, "pending_owner", collections.StringValue),
-		BlockedAddresses: collections.NewMap(builder, blocklist.BlockedAddressPrefix, "blocked_addresses", collections.BytesKey, collections.BoolValue),
+		BlocklistOwner:        collections.NewItem(builder, blocklist.OwnerKey, "blocklist_owner", collections.StringValue),
+		BlocklistPendingOwner: collections.NewItem(builder, blocklist.PendingOwnerKey, "blocklist_pending_owner", collections.StringValue),
+		BlockedAddresses:      collections.NewMap(builder, blocklist.BlockedAddressPrefix, "blocked_addresses", collections.BytesKey, collections.BoolValue),
 	}
 
 	schema, err := builder.Build()

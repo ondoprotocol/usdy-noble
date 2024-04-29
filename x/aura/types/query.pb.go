@@ -191,6 +191,94 @@ func (m *QueryPausedResponse) GetPaused() bool {
 	return false
 }
 
+type QueryOwner struct {
+}
+
+func (m *QueryOwner) Reset()         { *m = QueryOwner{} }
+func (m *QueryOwner) String() string { return proto.CompactTextString(m) }
+func (*QueryOwner) ProtoMessage()    {}
+func (*QueryOwner) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2046dd993d22edf0, []int{4}
+}
+func (m *QueryOwner) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryOwner) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryOwner.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryOwner) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOwner.Merge(m, src)
+}
+func (m *QueryOwner) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryOwner) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOwner.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryOwner proto.InternalMessageInfo
+
+type QueryOwnerResponse struct {
+	Owner        string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	PendingOwner string `protobuf:"bytes,2,opt,name=pending_owner,json=pendingOwner,proto3" json:"pending_owner,omitempty"`
+}
+
+func (m *QueryOwnerResponse) Reset()         { *m = QueryOwnerResponse{} }
+func (m *QueryOwnerResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryOwnerResponse) ProtoMessage()    {}
+func (*QueryOwnerResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2046dd993d22edf0, []int{5}
+}
+func (m *QueryOwnerResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryOwnerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryOwnerResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryOwnerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOwnerResponse.Merge(m, src)
+}
+func (m *QueryOwnerResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryOwnerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOwnerResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryOwnerResponse proto.InternalMessageInfo
+
+func (m *QueryOwnerResponse) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *QueryOwnerResponse) GetPendingOwner() string {
+	if m != nil {
+		return m.PendingOwner
+	}
+	return ""
+}
+
 type QueryBurners struct {
 }
 
@@ -198,7 +286,7 @@ func (m *QueryBurners) Reset()         { *m = QueryBurners{} }
 func (m *QueryBurners) String() string { return proto.CompactTextString(m) }
 func (*QueryBurners) ProtoMessage()    {}
 func (*QueryBurners) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2046dd993d22edf0, []int{4}
+	return fileDescriptor_2046dd993d22edf0, []int{6}
 }
 func (m *QueryBurners) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -235,7 +323,7 @@ func (m *QueryBurnersResponse) Reset()         { *m = QueryBurnersResponse{} }
 func (m *QueryBurnersResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryBurnersResponse) ProtoMessage()    {}
 func (*QueryBurnersResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2046dd993d22edf0, []int{5}
+	return fileDescriptor_2046dd993d22edf0, []int{7}
 }
 func (m *QueryBurnersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -278,7 +366,7 @@ func (m *QueryMinters) Reset()         { *m = QueryMinters{} }
 func (m *QueryMinters) String() string { return proto.CompactTextString(m) }
 func (*QueryMinters) ProtoMessage()    {}
 func (*QueryMinters) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2046dd993d22edf0, []int{6}
+	return fileDescriptor_2046dd993d22edf0, []int{8}
 }
 func (m *QueryMinters) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -315,7 +403,7 @@ func (m *QueryMintersResponse) Reset()         { *m = QueryMintersResponse{} }
 func (m *QueryMintersResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryMintersResponse) ProtoMessage()    {}
 func (*QueryMintersResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2046dd993d22edf0, []int{7}
+	return fileDescriptor_2046dd993d22edf0, []int{9}
 }
 func (m *QueryMintersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -351,21 +439,21 @@ func (m *QueryMintersResponse) GetMinters() []string {
 	return nil
 }
 
-type QueryPauser struct {
+type QueryPausers struct {
 }
 
-func (m *QueryPauser) Reset()         { *m = QueryPauser{} }
-func (m *QueryPauser) String() string { return proto.CompactTextString(m) }
-func (*QueryPauser) ProtoMessage()    {}
-func (*QueryPauser) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2046dd993d22edf0, []int{8}
+func (m *QueryPausers) Reset()         { *m = QueryPausers{} }
+func (m *QueryPausers) String() string { return proto.CompactTextString(m) }
+func (*QueryPausers) ProtoMessage()    {}
+func (*QueryPausers) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2046dd993d22edf0, []int{10}
 }
-func (m *QueryPauser) XXX_Unmarshal(b []byte) error {
+func (m *QueryPausers) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryPauser) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPausers) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryPauser.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPausers.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -375,34 +463,34 @@ func (m *QueryPauser) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 		return b[:n], nil
 	}
 }
-func (m *QueryPauser) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryPauser.Merge(m, src)
+func (m *QueryPausers) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPausers.Merge(m, src)
 }
-func (m *QueryPauser) XXX_Size() int {
+func (m *QueryPausers) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryPauser) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryPauser.DiscardUnknown(m)
+func (m *QueryPausers) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPausers.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryPauser proto.InternalMessageInfo
+var xxx_messageInfo_QueryPausers proto.InternalMessageInfo
 
-type QueryPauserResponse struct {
-	Pauser string `protobuf:"bytes,1,opt,name=pauser,proto3" json:"pauser,omitempty"`
+type QueryPausersResponse struct {
+	Pausers []string `protobuf:"bytes,1,rep,name=pausers,proto3" json:"pausers,omitempty"`
 }
 
-func (m *QueryPauserResponse) Reset()         { *m = QueryPauserResponse{} }
-func (m *QueryPauserResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryPauserResponse) ProtoMessage()    {}
-func (*QueryPauserResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2046dd993d22edf0, []int{9}
+func (m *QueryPausersResponse) Reset()         { *m = QueryPausersResponse{} }
+func (m *QueryPausersResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryPausersResponse) ProtoMessage()    {}
+func (*QueryPausersResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2046dd993d22edf0, []int{11}
 }
-func (m *QueryPauserResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryPausersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryPauserResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPausersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryPauserResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPausersResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -412,23 +500,23 @@ func (m *QueryPauserResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-func (m *QueryPauserResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryPauserResponse.Merge(m, src)
+func (m *QueryPausersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPausersResponse.Merge(m, src)
 }
-func (m *QueryPauserResponse) XXX_Size() int {
+func (m *QueryPausersResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryPauserResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryPauserResponse.DiscardUnknown(m)
+func (m *QueryPausersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPausersResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryPauserResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryPausersResponse proto.InternalMessageInfo
 
-func (m *QueryPauserResponse) GetPauser() string {
+func (m *QueryPausersResponse) GetPausers() []string {
 	if m != nil {
-		return m.Pauser
+		return m.Pausers
 	}
-	return ""
+	return nil
 }
 
 func init() {
@@ -436,49 +524,54 @@ func init() {
 	proto.RegisterType((*QueryDenomResponse)(nil), "aura.v1.QueryDenomResponse")
 	proto.RegisterType((*QueryPaused)(nil), "aura.v1.QueryPaused")
 	proto.RegisterType((*QueryPausedResponse)(nil), "aura.v1.QueryPausedResponse")
+	proto.RegisterType((*QueryOwner)(nil), "aura.v1.QueryOwner")
+	proto.RegisterType((*QueryOwnerResponse)(nil), "aura.v1.QueryOwnerResponse")
 	proto.RegisterType((*QueryBurners)(nil), "aura.v1.QueryBurners")
 	proto.RegisterType((*QueryBurnersResponse)(nil), "aura.v1.QueryBurnersResponse")
 	proto.RegisterType((*QueryMinters)(nil), "aura.v1.QueryMinters")
 	proto.RegisterType((*QueryMintersResponse)(nil), "aura.v1.QueryMintersResponse")
-	proto.RegisterType((*QueryPauser)(nil), "aura.v1.QueryPauser")
-	proto.RegisterType((*QueryPauserResponse)(nil), "aura.v1.QueryPauserResponse")
+	proto.RegisterType((*QueryPausers)(nil), "aura.v1.QueryPausers")
+	proto.RegisterType((*QueryPausersResponse)(nil), "aura.v1.QueryPausersResponse")
 }
 
 func init() { proto.RegisterFile("aura/v1/query.proto", fileDescriptor_2046dd993d22edf0) }
 
 var fileDescriptor_2046dd993d22edf0 = []byte{
-	// 481 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x93, 0xc1, 0x6e, 0xd3, 0x30,
-	0x1c, 0xc6, 0x1b, 0xa6, 0xb6, 0xcc, 0x8c, 0xb1, 0xb9, 0x45, 0x2a, 0x69, 0x1b, 0x4d, 0x3e, 0x8d,
-	0x49, 0x8b, 0x37, 0xe0, 0x05, 0x28, 0x48, 0x9c, 0x90, 0xa0, 0x48, 0x1c, 0x76, 0x00, 0xb9, 0x8b,
-	0x15, 0x22, 0x2d, 0x76, 0xb0, 0x9d, 0x89, 0x5d, 0x39, 0x71, 0x44, 0xe2, 0x25, 0x38, 0x72, 0xe0,
-	0x21, 0x38, 0x4e, 0x70, 0x80, 0x23, 0x6a, 0x91, 0x78, 0x0d, 0x14, 0xdb, 0x71, 0xd2, 0x28, 0x48,
-	0xbb, 0xb4, 0xfa, 0xbe, 0x7f, 0xfe, 0xbf, 0xea, 0xff, 0x7d, 0x0d, 0x18, 0x90, 0x5c, 0x10, 0x7c,
-	0x7e, 0x8c, 0xdf, 0xe6, 0x54, 0x5c, 0x84, 0x99, 0xe0, 0x8a, 0xc3, 0x7e, 0x61, 0x86, 0xe7, 0xc7,
-	0xfe, 0x2e, 0x49, 0x13, 0xc6, 0xb1, 0xfe, 0x34, 0x33, 0x7f, 0x7c, 0xca, 0x65, 0xca, 0xa5, 0x79,
-	0xbe, 0xb1, 0xe8, 0xdf, 0x31, 0xc3, 0xd7, 0x5a, 0x61, 0x23, 0xec, 0x68, 0x12, 0x73, 0x1e, 0x9f,
-	0x51, 0x4c, 0xb2, 0x04, 0x13, 0xc6, 0xb8, 0x22, 0x2a, 0xe1, 0xcc, 0x4e, 0xd1, 0x16, 0x00, 0xcf,
-	0x0b, 0xce, 0x63, 0xca, 0x78, 0x8a, 0x0e, 0x00, 0xac, 0xd4, 0x9c, 0xca, 0x8c, 0x33, 0x49, 0xe1,
-	0x10, 0x74, 0xa3, 0xc2, 0x18, 0x79, 0x7b, 0xde, 0xfe, 0xe6, 0xdc, 0x08, 0x74, 0x13, 0xdc, 0xd0,
-	0xcf, 0x3e, 0x23, 0xb9, 0xa4, 0x11, 0x7a, 0x00, 0x06, 0x35, 0xe9, 0x76, 0xa7, 0xa0, 0x97, 0x69,
-	0x47, 0x2f, 0x5f, 0x9f, 0x75, 0x3f, 0xff, 0xfd, 0x72, 0xe0, 0xcd, 0xad, 0x89, 0xb6, 0xc1, 0x96,
-	0xde, 0x9a, 0xe5, 0x82, 0x51, 0x21, 0xd1, 0x11, 0x18, 0xd6, 0xb5, 0xc3, 0x8c, 0x40, 0x7f, 0x61,
-	0xac, 0x91, 0xb7, 0xb7, 0xb1, 0xbf, 0x39, 0x2f, 0xa5, 0x23, 0x3c, 0x4d, 0x98, 0xaa, 0x13, 0xac,
-	0xae, 0x13, 0x52, 0x63, 0x95, 0x04, 0x2b, 0xd7, 0x0f, 0x11, 0xe8, 0x49, 0xfd, 0x10, 0xe1, 0xf6,
-	0x8f, 0xec, 0x21, 0xc2, 0xa4, 0x30, 0x1b, 0x7d, 0xff, 0x7a, 0x38, 0xb4, 0x41, 0x3f, 0x8c, 0x22,
-	0x41, 0xa5, 0x7c, 0xa1, 0x44, 0xc2, 0x62, 0x7b, 0x9b, 0xb8, 0xf7, 0x73, 0x03, 0x74, 0x35, 0x09,
-	0xbe, 0x04, 0x5d, 0x9d, 0x28, 0x1c, 0x84, 0xb6, 0xe0, 0xb0, 0x8a, 0xd9, 0x1f, 0xb7, 0x98, 0xe5,
-	0xcf, 0xa2, 0xf1, 0x87, 0x22, 0xaf, 0xf7, 0x3f, 0xfe, 0x7c, 0xba, 0xb6, 0x03, 0xb7, 0x71, 0xf9,
-	0xa7, 0xd1, 0x15, 0xc0, 0x13, 0xd0, 0x33, 0x71, 0xc3, 0xe1, 0x3a, 0xc3, 0xb8, 0xfe, 0xa4, 0xcd,
-	0x75, 0xe8, 0x49, 0x85, 0xde, 0x85, 0xb7, 0x1c, 0xda, 0x34, 0x03, 0x5f, 0x81, 0xbe, 0x2d, 0x01,
-	0xde, 0x5e, 0xc7, 0x58, 0xdb, 0x9f, 0xb6, 0xda, 0x0e, 0x3f, 0xad, 0xf0, 0x10, 0xee, 0x38, 0xbc,
-	0xed, 0xad, 0xe0, 0xdb, 0x8a, 0x9a, 0x7c, 0x6b, 0x37, 0xf9, 0x8d, 0x42, 0xff, 0xc7, 0xb7, 0xad,
-	0xba, 0x6c, 0x44, 0x6b, 0x36, 0xa2, 0x35, 0x1b, 0x71, 0xa5, 0x6c, 0xc4, 0xec, 0xd1, 0xb7, 0x65,
-	0xe0, 0x5d, 0x2e, 0x03, 0xef, 0xf7, 0x32, 0xf0, 0x3e, 0xae, 0x82, 0xce, 0xe5, 0x2a, 0xe8, 0xfc,
-	0x5a, 0x05, 0x9d, 0x93, 0xbb, 0x71, 0xa2, 0xde, 0xe4, 0x8b, 0xf0, 0x94, 0xa7, 0x98, 0xf1, 0xc5,
-	0x19, 0x3d, 0x24, 0x52, 0x52, 0x25, 0x0d, 0xe1, 0x9d, 0xf9, 0x52, 0x17, 0x19, 0x95, 0x8b, 0x9e,
-	0x7e, 0x01, 0xef, 0xff, 0x0b, 0x00, 0x00, 0xff, 0xff, 0x3d, 0x5b, 0xd5, 0x01, 0x09, 0x04, 0x00,
-	0x00,
+	// 538 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x94, 0xc1, 0x6e, 0xd3, 0x4e,
+	0x10, 0xc6, 0xe3, 0xfe, 0xff, 0x4e, 0xe8, 0x92, 0x96, 0x76, 0x13, 0xa4, 0xe0, 0x24, 0x56, 0xe5,
+	0x53, 0xa9, 0x54, 0x9b, 0x02, 0x57, 0x0e, 0x04, 0xae, 0x08, 0x30, 0x12, 0x87, 0x1e, 0xa8, 0x9c,
+	0x7a, 0x65, 0x2c, 0xd5, 0xbb, 0xc6, 0x6b, 0x17, 0x7a, 0x85, 0x0b, 0x47, 0x24, 0x5e, 0x82, 0x23,
+	0x12, 0x3c, 0x04, 0xc7, 0x0a, 0x2e, 0x1c, 0x51, 0x82, 0xc4, 0x6b, 0x20, 0xef, 0x8c, 0x37, 0x8e,
+	0x95, 0x88, 0x4b, 0xa2, 0xef, 0xdb, 0x99, 0xdf, 0x8e, 0x3d, 0x9f, 0x4c, 0x7a, 0x41, 0x91, 0x05,
+	0xde, 0xf9, 0x91, 0xf7, 0xaa, 0x60, 0xd9, 0x85, 0x9b, 0x66, 0x22, 0x17, 0xb4, 0x53, 0x9a, 0xee,
+	0xf9, 0x91, 0xb5, 0x1b, 0x24, 0x31, 0x17, 0x9e, 0xfa, 0x85, 0x33, 0x6b, 0x78, 0x2a, 0x64, 0x22,
+	0x24, 0xd4, 0x37, 0x1a, 0xad, 0x1b, 0x70, 0x78, 0xa2, 0x94, 0x07, 0x02, 0x8f, 0x46, 0x91, 0x10,
+	0xd1, 0x19, 0xf3, 0x82, 0x34, 0xf6, 0x02, 0xce, 0x45, 0x1e, 0xe4, 0xb1, 0xe0, 0x78, 0xea, 0x74,
+	0x09, 0x79, 0x5a, 0x72, 0x1e, 0x32, 0x2e, 0x12, 0xe7, 0x80, 0xd0, 0x85, 0xf2, 0x99, 0x4c, 0x05,
+	0x97, 0x8c, 0xf6, 0x89, 0x19, 0x96, 0xc6, 0xc0, 0xd8, 0x33, 0xf6, 0x37, 0x7d, 0x10, 0xce, 0x16,
+	0xb9, 0xaa, 0x6a, 0x9f, 0x04, 0x85, 0x64, 0xa1, 0x73, 0x97, 0xf4, 0x6a, 0x52, 0xf7, 0x8e, 0x49,
+	0x3b, 0x55, 0x8e, 0x6a, 0xbe, 0x32, 0x31, 0x3f, 0xfd, 0xf9, 0x7c, 0x60, 0xf8, 0x68, 0xea, 0xeb,
+	0x1f, 0xbf, 0xe6, 0x2c, 0x73, 0xde, 0x19, 0x78, 0xbf, 0x92, 0x9a, 0xe1, 0x12, 0x53, 0x94, 0x06,
+	0xdc, 0x3f, 0x19, 0x7c, 0xff, 0x7a, 0xd8, 0xc7, 0x47, 0xbc, 0x1f, 0x86, 0x19, 0x93, 0xf2, 0x59,
+	0x9e, 0xc5, 0x3c, 0xf2, 0xa1, 0x8c, 0xde, 0x23, 0x5b, 0x29, 0xe3, 0x61, 0xcc, 0xa3, 0x13, 0xe8,
+	0xdb, 0xf8, 0x47, 0x5f, 0x17, 0xcb, 0x61, 0x8a, 0x6d, 0xd2, 0x55, 0x43, 0x4c, 0x8a, 0x8c, 0xb3,
+	0x4c, 0x3a, 0xb7, 0x48, 0xbf, 0xae, 0xf5, 0x58, 0x03, 0xd2, 0x99, 0x82, 0x35, 0x30, 0xf6, 0xfe,
+	0xdb, 0xdf, 0xf4, 0x2b, 0xa9, 0x09, 0x8f, 0x62, 0x9e, 0xd7, 0x09, 0xa8, 0xeb, 0x84, 0x04, 0xac,
+	0x8a, 0x80, 0x52, 0x13, 0xd4, 0xdb, 0xac, 0x11, 0x50, 0xd7, 0x09, 0x29, 0x58, 0x15, 0x01, 0xe5,
+	0xed, 0x2f, 0xff, 0x13, 0x53, 0xb5, 0xd0, 0xe7, 0xc4, 0x54, 0xfb, 0xa4, 0x3d, 0x17, 0xe3, 0xe5,
+	0x2e, 0x96, 0x6c, 0x0d, 0x57, 0x98, 0x15, 0xde, 0x19, 0xbe, 0x2f, 0xb7, 0xf5, 0xf6, 0xc7, 0xef,
+	0x8f, 0x1b, 0x3b, 0x74, 0xdb, 0xab, 0x22, 0xab, 0x02, 0x40, 0x8f, 0x49, 0x1b, 0x96, 0x4d, 0xfb,
+	0xcb, 0x0c, 0x70, 0xad, 0xd1, 0x2a, 0x57, 0xa3, 0x47, 0x0b, 0xf4, 0x2e, 0xbd, 0xa6, 0xd1, 0x90,
+	0x8b, 0x72, 0x66, 0xb5, 0x8c, 0xe6, 0xcc, 0xca, 0x6c, 0xce, 0xbc, 0x94, 0x96, 0x75, 0x33, 0x43,
+	0x34, 0x5e, 0x90, 0x0e, 0xae, 0x91, 0x5e, 0x5f, 0x86, 0xa0, 0x6d, 0x8d, 0x57, 0xda, 0x9a, 0x3e,
+	0x5e, 0xd0, 0x29, 0xdd, 0xd1, 0x74, 0xdc, 0x7c, 0xc9, 0xc7, 0x25, 0x37, 0xf9, 0x68, 0x37, 0xf9,
+	0x8d, 0x48, 0xac, 0xe3, 0x63, 0x2e, 0x4a, 0x3e, 0x46, 0xa0, 0xc9, 0x47, 0xbb, 0xc9, 0x6f, 0x04,
+	0x66, 0x1d, 0x1f, 0x53, 0x33, 0x79, 0xf0, 0x6d, 0x66, 0x1b, 0x97, 0x33, 0xdb, 0xf8, 0x35, 0xb3,
+	0x8d, 0x0f, 0x73, 0xbb, 0x75, 0x39, 0xb7, 0x5b, 0x3f, 0xe7, 0x76, 0xeb, 0xf8, 0x66, 0x14, 0xe7,
+	0x2f, 0x8b, 0xa9, 0x7b, 0x2a, 0x12, 0x8f, 0x8b, 0xe9, 0x19, 0x3b, 0x0c, 0xa4, 0x64, 0xb9, 0x04,
+	0xc4, 0x1b, 0xf8, 0xcb, 0x2f, 0x52, 0x26, 0xa7, 0x6d, 0xf5, 0x69, 0xb9, 0xf3, 0x37, 0x00, 0x00,
+	0xff, 0xff, 0xb8, 0xe0, 0x7e, 0x37, 0xe3, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -495,9 +588,10 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	Denom(ctx context.Context, in *QueryDenom, opts ...grpc.CallOption) (*QueryDenomResponse, error)
 	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
+	Owner(ctx context.Context, in *QueryOwner, opts ...grpc.CallOption) (*QueryOwnerResponse, error)
 	Burners(ctx context.Context, in *QueryBurners, opts ...grpc.CallOption) (*QueryBurnersResponse, error)
 	Minters(ctx context.Context, in *QueryMinters, opts ...grpc.CallOption) (*QueryMintersResponse, error)
-	Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.CallOption) (*QueryPauserResponse, error)
+	Pausers(ctx context.Context, in *QueryPausers, opts ...grpc.CallOption) (*QueryPausersResponse, error)
 }
 
 type queryClient struct {
@@ -526,6 +620,15 @@ func (c *queryClient) Paused(ctx context.Context, in *QueryPaused, opts ...grpc.
 	return out, nil
 }
 
+func (c *queryClient) Owner(ctx context.Context, in *QueryOwner, opts ...grpc.CallOption) (*QueryOwnerResponse, error) {
+	out := new(QueryOwnerResponse)
+	err := c.cc.Invoke(ctx, "/aura.v1.Query/Owner", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) Burners(ctx context.Context, in *QueryBurners, opts ...grpc.CallOption) (*QueryBurnersResponse, error) {
 	out := new(QueryBurnersResponse)
 	err := c.cc.Invoke(ctx, "/aura.v1.Query/Burners", in, out, opts...)
@@ -544,9 +647,9 @@ func (c *queryClient) Minters(ctx context.Context, in *QueryMinters, opts ...grp
 	return out, nil
 }
 
-func (c *queryClient) Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.CallOption) (*QueryPauserResponse, error) {
-	out := new(QueryPauserResponse)
-	err := c.cc.Invoke(ctx, "/aura.v1.Query/Pauser", in, out, opts...)
+func (c *queryClient) Pausers(ctx context.Context, in *QueryPausers, opts ...grpc.CallOption) (*QueryPausersResponse, error) {
+	out := new(QueryPausersResponse)
+	err := c.cc.Invoke(ctx, "/aura.v1.Query/Pausers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -557,9 +660,10 @@ func (c *queryClient) Pauser(ctx context.Context, in *QueryPauser, opts ...grpc.
 type QueryServer interface {
 	Denom(context.Context, *QueryDenom) (*QueryDenomResponse, error)
 	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
+	Owner(context.Context, *QueryOwner) (*QueryOwnerResponse, error)
 	Burners(context.Context, *QueryBurners) (*QueryBurnersResponse, error)
 	Minters(context.Context, *QueryMinters) (*QueryMintersResponse, error)
-	Pauser(context.Context, *QueryPauser) (*QueryPauserResponse, error)
+	Pausers(context.Context, *QueryPausers) (*QueryPausersResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -572,14 +676,17 @@ func (*UnimplementedQueryServer) Denom(ctx context.Context, req *QueryDenom) (*Q
 func (*UnimplementedQueryServer) Paused(ctx context.Context, req *QueryPaused) (*QueryPausedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Paused not implemented")
 }
+func (*UnimplementedQueryServer) Owner(ctx context.Context, req *QueryOwner) (*QueryOwnerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Owner not implemented")
+}
 func (*UnimplementedQueryServer) Burners(ctx context.Context, req *QueryBurners) (*QueryBurnersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Burners not implemented")
 }
 func (*UnimplementedQueryServer) Minters(ctx context.Context, req *QueryMinters) (*QueryMintersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Minters not implemented")
 }
-func (*UnimplementedQueryServer) Pauser(ctx context.Context, req *QueryPauser) (*QueryPauserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Pauser not implemented")
+func (*UnimplementedQueryServer) Pausers(ctx context.Context, req *QueryPausers) (*QueryPausersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Pausers not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -622,6 +729,24 @@ func _Query_Paused_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Owner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryOwner)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Owner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/aura.v1.Query/Owner",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Owner(ctx, req.(*QueryOwner))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_Burners_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryBurners)
 	if err := dec(in); err != nil {
@@ -658,20 +783,20 @@ func _Query_Minters_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_Pauser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryPauser)
+func _Query_Pausers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPausers)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).Pauser(ctx, in)
+		return srv.(QueryServer).Pausers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/aura.v1.Query/Pauser",
+		FullMethod: "/aura.v1.Query/Pausers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Pauser(ctx, req.(*QueryPauser))
+		return srv.(QueryServer).Pausers(ctx, req.(*QueryPausers))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -689,6 +814,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_Paused_Handler,
 		},
 		{
+			MethodName: "Owner",
+			Handler:    _Query_Owner_Handler,
+		},
+		{
 			MethodName: "Burners",
 			Handler:    _Query_Burners_Handler,
 		},
@@ -697,8 +826,8 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_Minters_Handler,
 		},
 		{
-			MethodName: "Pauser",
-			Handler:    _Query_Pauser_Handler,
+			MethodName: "Pausers",
+			Handler:    _Query_Pausers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -814,6 +943,66 @@ func (m *QueryPausedResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryOwner) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryOwner) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryOwner) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryOwnerResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryOwnerResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryOwnerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.PendingOwner) > 0 {
+		i -= len(m.PendingOwner)
+		copy(dAtA[i:], m.PendingOwner)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.PendingOwner)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Owner) > 0 {
+		i -= len(m.Owner)
+		copy(dAtA[i:], m.Owner)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Owner)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *QueryBurners) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -924,7 +1113,7 @@ func (m *QueryMintersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryPauser) Marshal() (dAtA []byte, err error) {
+func (m *QueryPausers) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -934,12 +1123,12 @@ func (m *QueryPauser) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryPauser) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPausers) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryPauser) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPausers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -947,7 +1136,7 @@ func (m *QueryPauser) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryPauserResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryPausersResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -957,22 +1146,24 @@ func (m *QueryPauserResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryPauserResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPausersResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryPauserResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPausersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Pauser) > 0 {
-		i -= len(m.Pauser)
-		copy(dAtA[i:], m.Pauser)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.Pauser)))
-		i--
-		dAtA[i] = 0xa
+	if len(m.Pausers) > 0 {
+		for iNdEx := len(m.Pausers) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Pausers[iNdEx])
+			copy(dAtA[i:], m.Pausers[iNdEx])
+			i = encodeVarintQuery(dAtA, i, uint64(len(m.Pausers[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
 	}
 	return len(dAtA) - i, nil
 }
@@ -1031,6 +1222,32 @@ func (m *QueryPausedResponse) Size() (n int) {
 	return n
 }
 
+func (m *QueryOwner) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryOwnerResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Owner)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.PendingOwner)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
 func (m *QueryBurners) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1079,7 +1296,7 @@ func (m *QueryMintersResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryPauser) Size() (n int) {
+func (m *QueryPausers) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1088,15 +1305,17 @@ func (m *QueryPauser) Size() (n int) {
 	return n
 }
 
-func (m *QueryPauserResponse) Size() (n int) {
+func (m *QueryPausersResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.Pauser)
-	if l > 0 {
-		n += 1 + l + sovQuery(uint64(l))
+	if len(m.Pausers) > 0 {
+		for _, s := range m.Pausers {
+			l = len(s)
+			n += 1 + l + sovQuery(uint64(l))
+		}
 	}
 	return n
 }
@@ -1338,6 +1557,170 @@ func (m *QueryPausedResponse) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.Paused = bool(v != 0)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryOwner) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryOwner: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryOwner: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryOwnerResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryOwnerResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryOwnerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Owner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PendingOwner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PendingOwner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])
@@ -1623,7 +2006,7 @@ func (m *QueryMintersResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryPauser) Unmarshal(dAtA []byte) error {
+func (m *QueryPausers) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1646,10 +2029,10 @@ func (m *QueryPauser) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryPauser: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPausers: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryPauser: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPausers: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -1673,7 +2056,7 @@ func (m *QueryPauser) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryPauserResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryPausersResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1696,15 +2079,15 @@ func (m *QueryPauserResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryPauserResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPausersResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryPauserResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPausersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pauser", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Pausers", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1732,7 +2115,7 @@ func (m *QueryPauserResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Pauser = string(dAtA[iNdEx:postIndex])
+			m.Pausers = append(m.Pausers, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

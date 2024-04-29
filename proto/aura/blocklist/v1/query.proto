@@ -13,6 +13,8 @@ service Query {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/blocklist/v1/owner";
   }
+
+  // TODO(@john): Implement blocklist queries.
 }
 
 //
