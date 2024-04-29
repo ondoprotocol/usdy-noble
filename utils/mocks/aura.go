@@ -15,6 +15,10 @@ import (
 )
 
 func AuraKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
+	return AuraKeeperWithBank(t, BankKeeper{})
+}
+
+func AuraKeeperWithBank(t testing.TB, bank types.BankKeeper) (*keeper.Keeper, sdk.Context) {
 	logger := log.NewNopLogger()
 
 	key := storetypes.NewKVStoreKey(types.ModuleName)
@@ -28,6 +32,6 @@ func AuraKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		runtime.ProvideEventService(),
 		"ausdy",
 		AccountKeeper{},
-		BankKeeper{},
+		bank,
 	), wrapper.Ctx
 }
