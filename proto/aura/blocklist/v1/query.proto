@@ -3,6 +3,7 @@ syntax = "proto3";
 package aura.blocklist.v1;
 
 import "amino/amino.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
 import "cosmos/query/v1/query.proto";
 import "cosmos_proto/cosmos.proto";
 import "google/api/annotations.proto";
@@ -15,7 +16,11 @@ service Query {
     option (google.api.http).get = "/aura/blocklist/v1/owner";
   }
 
-  // TODO(@john): Implement blocklist queries.
+  // TODO(@john): Implement more blocklist queries.
+  rpc Addresses(QueryAddresses) returns (QueryAddressesResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/aura/blocklist/v1/addresses";
+  }
 }
 
 //
@@ -28,4 +33,13 @@ message QueryOwnerResponse {
     (cosmos_proto.scalar) = "cosmos.AddressString",
     (amino.dont_omitempty) = true
   ];
+}
+
+message QueryAddresses {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAddressesResponse {
+  repeated string addresses = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
