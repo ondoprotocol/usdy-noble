@@ -57,7 +57,10 @@ message QueryOwner {}
 
 message QueryOwnerResponse {
   string owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  string pending_owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string pending_owner = 2 [
+    (cosmos_proto.scalar) = "cosmos.AddressString",
+    (amino.dont_omitempty) = true
+  ];
 }
 
 message QueryBurners {}

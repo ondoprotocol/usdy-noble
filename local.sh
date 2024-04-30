@@ -29,8 +29,12 @@ if ! [ -f .aura/data/priv_validator_state.json ]; then
   aurad genesis add-genesis-account blocklist-owner 10000000uusdc --home .aura --keyring-backend test
   BLOCKLIST_PENDING_OWNER=$(aurad keys add blocklist-pending-owner --home .aura --keyring-backend test --output json | jq .address)
   aurad genesis add-genesis-account blocklist-pending-owner 10000000uusdc --home .aura --keyring-backend test
-  aurad keys add user --home .aura --keyring-backend test &> /dev/null
-  aurad genesis add-genesis-account user 10000000uusdc --home .aura --keyring-backend test
+  aurad keys add alice --home .aura --keyring-backend test &> /dev/null
+  aurad genesis add-genesis-account alice 10000000uusdc --home .aura --keyring-backend test
+  aurad keys add bob --home .aura --keyring-backend test &> /dev/null
+  aurad genesis add-genesis-account bob 10000000uusdc --home .aura --keyring-backend test
+  aurad keys add charlie --home .aura --keyring-backend test &> /dev/null
+  aurad genesis add-genesis-account charlie 10000000uusdc --home .aura --keyring-backend test
 
   TEMP=.aura/genesis.json
   touch $TEMP && jq '.app_state.staking.params.bond_denom = "ustake"' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json

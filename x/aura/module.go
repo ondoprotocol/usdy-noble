@@ -23,7 +23,6 @@ import (
 	aurav1 "github.com/noble-assets/aura/api/aura/v1"
 	"github.com/noble-assets/aura/x/aura/keeper"
 	"github.com/noble-assets/aura/x/aura/types"
-	"github.com/noble-assets/aura/x/aura/types/blocklist"
 )
 
 // ConsensusVersion defines the current x/aura module consensus version.
@@ -57,10 +56,6 @@ func (AppModuleBasic) RegisterInterfaces(reg codectypes.InterfaceRegistry) {
 
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
 	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
-		panic(err)
-	}
-
-	if err := blocklist.RegisterQueryHandlerClient(context.Background(), mux, blocklist.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
 }
@@ -116,15 +111,11 @@ func (m AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawM
 func (m AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServer(m.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServer(m.keeper))
-
-	blocklist.RegisterMsgServer(cfg.MsgServer(), keeper.NewBlocklistMsgServer(m.keeper))
-	blocklist.RegisterQueryServer(cfg.QueryServer(), keeper.NewBlocklistQueryServer(m.keeper))
 }
 
 //
 
 func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
-	// TODO(@john): Figure out how to register submodule msgs + queries.
 	return &autocliv1.ModuleOptions{
 		Tx: &autocliv1.ServiceCommandDescriptor{
 			Service: aurav1.Msg_ServiceDesc.ServiceName,
