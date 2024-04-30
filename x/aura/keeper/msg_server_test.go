@@ -150,22 +150,30 @@ func TestUnpause(t *testing.T) {
 
 	// ARRANGE: Set paused state to true.
 	require.NoError(t, k.Paused.Set(ctx, true))
-	// ARRANGE: Set pauser in state.
-	pauser := utils.TestAccount()
-	require.NoError(t, k.Pausers.Set(ctx, pauser.Address))
+
+	// ACT: Attempt to unpause with no owner set.
+	_, err := server.Unpause(ctx, &types.MsgUnpause{})
+	// ASSERT: The action should've failed due to no owner set.
+	require.ErrorContains(t, err, "unable to retrieve owner from state")
+	paused, _ := k.Paused.Get(ctx)
+	require.True(t, paused)
+
+	// ARRANGE: Set owner in state.
+	owner := utils.TestAccount()
+	require.NoError(t, k.Owner.Set(ctx, owner.Address))
 
 	// ACT: Attempt to unpause with invalid signer.
-	_, err := server.Unpause(ctx, &types.MsgUnpause{
+	_, err = server.Unpause(ctx, &types.MsgUnpause{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
-	require.ErrorContains(t, err, types.ErrInvalidPauser.Error())
-	paused, _ := k.Paused.Get(ctx)
+	require.ErrorContains(t, err, types.ErrInvalidOwner.Error())
+	paused, _ = k.Paused.Get(ctx)
 	require.True(t, paused)
 
 	// ACT: Attempt to unpause.
 	_, err = server.Unpause(ctx, &types.MsgUnpause{
-		Signer: pauser.Address,
+		Signer: owner.Address,
 	})
 	// ASSERT: The action should've succeeded.
 	require.NoError(t, err)
@@ -174,7 +182,7 @@ func TestUnpause(t *testing.T) {
 
 	// ACT: Attempt to unpause again.
 	_, err = server.Unpause(ctx, &types.MsgUnpause{
-		Signer: pauser.Address,
+		Signer: owner.Address,
 	})
 	// ASSERT: The action should've failed due to module being unpaused already.
 	require.ErrorContains(t, err, "module is already unpaused")

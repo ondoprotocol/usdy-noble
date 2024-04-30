@@ -100,12 +100,12 @@ func (k msgServer) Pause(ctx context.Context, msg *types.MsgPause) (*types.MsgPa
 }
 
 func (k msgServer) Unpause(ctx context.Context, msg *types.MsgUnpause) (*types.MsgUnpauseResponse, error) {
-	has, err := k.Pausers.Has(ctx, msg.Signer)
+	owner, err := k.Owner.Get(ctx)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve pauser from state")
+		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
 	}
-	if !has {
-		return nil, types.ErrInvalidPauser
+	if msg.Signer != owner {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
 	if paused, _ := k.Paused.Get(ctx); !paused {
