@@ -1,23 +1,36 @@
 package keeper
 
-import "context"
+import (
+	"context"
 
-func (k *Keeper) GetBurners(ctx context.Context) ([]string, error) {
-	var burners []string
+	"cosmossdk.io/math"
+	"github.com/noble-assets/aura/x/aura/types"
+)
 
-	err := k.Burners.Walk(ctx, nil, func(burner string) (stop bool, err error) {
-		burners = append(burners, burner)
+func (k *Keeper) GetBurners(ctx context.Context) ([]types.Burner, error) {
+	var burners []types.Burner
+
+	err := k.Burners.Walk(ctx, nil, func(address string, allowance math.Int) (stop bool, err error) {
+		burners = append(burners, types.Burner{
+			Address:   address,
+			Allowance: allowance,
+		})
+
 		return false, nil
 	})
 
 	return burners, err
 }
 
-func (k *Keeper) GetMinters(ctx context.Context) ([]string, error) {
-	var minters []string
+func (k *Keeper) GetMinters(ctx context.Context) ([]types.Minter, error) {
+	var minters []types.Minter
 
-	err := k.Minters.Walk(ctx, nil, func(minter string) (stop bool, err error) {
-		minters = append(minters, minter)
+	err := k.Minters.Walk(ctx, nil, func(address string, allowance math.Int) (stop bool, err error) {
+		minters = append(minters, types.Minter{
+			Address:   address,
+			Allowance: allowance,
+		})
+
 		return false, nil
 	})
 

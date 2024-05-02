@@ -15,3 +15,11 @@ message Unpaused {
   // account is the address of the account that unpaused the module.
   string account = 1;
 }
+
+// OwnershipTransferStarted is emitted whenever an ownership transfer is started.
+message OwnershipTransferStarted {
+  // old_owner is the address of the old owner account.
+  string old_owner = 1;
+  // new_owner is the address of the new owner account.
+  string new_owner = 2;
+}

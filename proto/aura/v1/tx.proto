@@ -18,7 +18,19 @@ service Msg {
   rpc Pause(aura.v1.MsgPause) returns (aura.v1.MsgPauseResponse);
   rpc Unpause(aura.v1.MsgUnpause) returns (aura.v1.MsgUnpauseResponse);
 
-  // TODO(@john): Implement role transfer msgs.
+  rpc TransferOwnership(aura.v1.MsgTransferOwnership) returns (aura.v1.MsgTransferOwnershipResponse);
+  rpc AcceptOwnership(aura.v1.MsgAcceptOwnership) returns (aura.v1.MsgAcceptOwnershipResponse);
+
+  rpc AddBurner(aura.v1.MsgAddBurner) returns (aura.v1.MsgAddBurnerResponse);
+  rpc RemoveBurner(aura.v1.MsgRemoveBurner) returns (aura.v1.MsgRemoveBurnerResponse);
+  rpc SetBurnerAllowance(aura.v1.MsgSetBurnerAllowance) returns (aura.v1.MsgSetBurnerAllowanceResponse);
+
+  rpc AddMinter(aura.v1.MsgAddMinter) returns (aura.v1.MsgAddMinterResponse);
+  rpc RemoveMinter(aura.v1.MsgRemoveMinter) returns (aura.v1.MsgRemoveMinterResponse);
+  rpc SetMinterAllowance(aura.v1.MsgSetMinterAllowance) returns (aura.v1.MsgSetMinterAllowanceResponse);
+
+  rpc AddPauser(aura.v1.MsgAddPauser) returns (aura.v1.MsgAddPauserResponse);
+  rpc RemovePauser(aura.v1.MsgRemovePauser) returns (aura.v1.MsgRemovePauserResponse);
 }
 
 //
@@ -80,3 +92,148 @@ message MsgUnpause {
 }
 
 message MsgUnpauseResponse {}
+
+message MsgTransferOwnership {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/TransferOwnership";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string new_owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message MsgTransferOwnershipResponse {}
+
+message MsgAcceptOwnership {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/AcceptOwnership";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message MsgAcceptOwnershipResponse {}
+
+message MsgAddBurner {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/AddBurner";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string burner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string allowance = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgAddBurnerResponse {}
+
+message MsgRemoveBurner {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/RemoveBurner";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string burner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message MsgRemoveBurnerResponse {}
+
+message MsgSetBurnerAllowance {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/SetBurnerAllowance";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string burner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string allowance = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgSetBurnerAllowanceResponse {}
+
+message MsgAddMinter {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/AddMinter";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string minter = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string allowance = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgAddMinterResponse {}
+
+message MsgRemoveMinter {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/RemoveMinter";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string minter = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message MsgRemoveMinterResponse {}
+
+message MsgSetMinterAllowance {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/SetMinterAllowance";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string minter = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string allowance = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message MsgSetMinterAllowanceResponse {}
+
+message MsgAddPauser {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/AddPauser";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string pauser = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message MsgAddPauserResponse {}
+
+message MsgRemovePauser {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "aura/RemovePauser";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string pauser = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message MsgRemovePauserResponse {}

@@ -107,16 +107,22 @@ func TestBurnersQuery(t *testing.T) {
 
 	// ARRANGE: Set burners in state.
 	burner1, burner2 := utils.TestAccount(), utils.TestAccount()
-	require.NoError(t, k.Burners.Set(ctx, burner1.Address))
-	require.NoError(t, k.Burners.Set(ctx, burner2.Address))
+	require.NoError(t, k.Burners.Set(ctx, burner1.Address, ONE))
+	require.NoError(t, k.Burners.Set(ctx, burner2.Address, ONE.MulRaw(2)))
 
 	// ACT: Attempt to query burners with state.
 	res, err = server.Burners(ctx, &types.QueryBurners{})
 	// ASSERT: The query should've succeeded, and returned burners.
 	require.NoError(t, err)
 	require.Len(t, res.Burners, 2)
-	require.Contains(t, res.Burners, burner1.Address)
-	require.Contains(t, res.Burners, burner2.Address)
+	require.Contains(t, res.Burners, types.Burner{
+		Address:   burner1.Address,
+		Allowance: ONE,
+	})
+	require.Contains(t, res.Burners, types.Burner{
+		Address:   burner2.Address,
+		Allowance: ONE.MulRaw(2),
+	})
 }
 
 func TestMintersQuery(t *testing.T) {
@@ -136,16 +142,22 @@ func TestMintersQuery(t *testing.T) {
 
 	// ARRANGE: Set minters in state.
 	minter1, minter2 := utils.TestAccount(), utils.TestAccount()
-	require.NoError(t, k.Minters.Set(ctx, minter1.Address))
-	require.NoError(t, k.Minters.Set(ctx, minter2.Address))
+	require.NoError(t, k.Minters.Set(ctx, minter1.Address, ONE))
+	require.NoError(t, k.Minters.Set(ctx, minter2.Address, ONE.MulRaw(2)))
 
 	// ACT: Attempt to query minters with state.
 	res, err = server.Minters(ctx, &types.QueryMinters{})
 	// ASSERT: The query should've succeeded, and returned minters.
 	require.NoError(t, err)
 	require.Len(t, res.Minters, 2)
-	require.Contains(t, res.Minters, minter1.Address)
-	require.Contains(t, res.Minters, minter2.Address)
+	require.Contains(t, res.Minters, types.Minter{
+		Address:   minter1.Address,
+		Allowance: ONE,
+	})
+	require.Contains(t, res.Minters, types.Minter{
+		Address:   minter2.Address,
+		Allowance: ONE.MulRaw(2),
+	})
 }
 
 func TestPausersQuery(t *testing.T) {

@@ -13,10 +13,10 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, accountKeeper types.Acco
 	_ = k.Owner.Set(ctx, genesis.Owner)
 	_ = k.PendingOwner.Set(ctx, genesis.PendingOwner)
 	for _, burner := range genesis.Burners {
-		_ = k.Burners.Set(ctx, burner)
+		_ = k.Burners.Set(ctx, burner.Address, burner.Allowance)
 	}
 	for _, minter := range genesis.Minters {
-		_ = k.Minters.Set(ctx, minter)
+		_ = k.Minters.Set(ctx, minter.Address, minter.Allowance)
 	}
 	for _, pauser := range genesis.Pausers {
 		_ = k.Pausers.Set(ctx, pauser)

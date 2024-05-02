@@ -21,9 +21,27 @@ message GenesisState {
   string pending_owner = 4 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // burners is the list of addresses that can burn USDY.
-  repeated string burners = 5;
+  repeated Burner burners = 5 [(gogoproto.nullable) = false];
   // minters is the list of addresses that can mint USDY.
-  repeated string minters = 6;
+  repeated Minter minters = 6 [(gogoproto.nullable) = false];
   // pausers is the list of addresses that can pause USDY.
   repeated string pausers = 7;
+}
+
+//
+
+message Burner {
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string allowance = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message Minter {
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string allowance = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
 }

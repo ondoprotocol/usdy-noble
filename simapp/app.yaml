@@ -47,6 +47,3 @@ modules:
     config:
       "@type": aura.module.v1.Module
       denom: ausdy
-  - name: aura-blocklist
-    config:
-      "@type": aura.blocklist.module.v1.Module

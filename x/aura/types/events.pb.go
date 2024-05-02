@@ -114,26 +114,85 @@ func (m *Unpaused) GetAccount() string {
 	return ""
 }
 
+// OwnershipTransferStarted is emitted whenever an ownership transfer is started.
+type OwnershipTransferStarted struct {
+	// old_owner is the address of the old owner account.
+	OldOwner string `protobuf:"bytes,1,opt,name=old_owner,json=oldOwner,proto3" json:"old_owner,omitempty"`
+	// new_owner is the address of the new owner account.
+	NewOwner string `protobuf:"bytes,2,opt,name=new_owner,json=newOwner,proto3" json:"new_owner,omitempty"`
+}
+
+func (m *OwnershipTransferStarted) Reset()         { *m = OwnershipTransferStarted{} }
+func (m *OwnershipTransferStarted) String() string { return proto.CompactTextString(m) }
+func (*OwnershipTransferStarted) ProtoMessage()    {}
+func (*OwnershipTransferStarted) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{2}
+}
+func (m *OwnershipTransferStarted) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *OwnershipTransferStarted) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_OwnershipTransferStarted.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *OwnershipTransferStarted) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_OwnershipTransferStarted.Merge(m, src)
+}
+func (m *OwnershipTransferStarted) XXX_Size() int {
+	return m.Size()
+}
+func (m *OwnershipTransferStarted) XXX_DiscardUnknown() {
+	xxx_messageInfo_OwnershipTransferStarted.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_OwnershipTransferStarted proto.InternalMessageInfo
+
+func (m *OwnershipTransferStarted) GetOldOwner() string {
+	if m != nil {
+		return m.OldOwner
+	}
+	return ""
+}
+
+func (m *OwnershipTransferStarted) GetNewOwner() string {
+	if m != nil {
+		return m.NewOwner
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Paused)(nil), "aura.v1.Paused")
 	proto.RegisterType((*Unpaused)(nil), "aura.v1.Unpaused")
+	proto.RegisterType((*OwnershipTransferStarted)(nil), "aura.v1.OwnershipTransferStarted")
 }
 
 func init() { proto.RegisterFile("aura/v1/events.proto", fileDescriptor_2e649e32a11ca0c4) }
 
 var fileDescriptor_2e649e32a11ca0c4 = []byte{
-	// 161 bytes of a gzipped FileDescriptorProto
+	// 221 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x49, 0x2c, 0x2d, 0x4a,
 	0xd4, 0x2f, 0x33, 0xd4, 0x4f, 0x2d, 0x4b, 0xcd, 0x2b, 0x29, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9,
 	0x17, 0x62, 0x07, 0x89, 0xea, 0x95, 0x19, 0x2a, 0x29, 0x71, 0xb1, 0x05, 0x24, 0x96, 0x16, 0xa7,
 	0xa6, 0x08, 0x49, 0x70, 0xb1, 0x27, 0x26, 0x27, 0xe7, 0x97, 0xe6, 0x95, 0x48, 0x30, 0x2a, 0x30,
-	0x6a, 0x70, 0x06, 0xc1, 0xb8, 0x4a, 0x2a, 0x5c, 0x1c, 0xa1, 0x79, 0x05, 0x04, 0x54, 0x39, 0x39,
-	0x9f, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb,
-	0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c, 0x43, 0x94, 0x66, 0x7a, 0x66, 0x49, 0x46,
-	0x69, 0x92, 0x5e, 0x72, 0x7e, 0xae, 0x7e, 0x5e, 0x7e, 0x52, 0x4e, 0xaa, 0x6e, 0x62, 0x71, 0x71,
-	0x6a, 0x49, 0xb1, 0x3e, 0xd8, 0x69, 0x15, 0x10, 0xaa, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d,
-	0xec, 0x3c, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0x25, 0xcd, 0x00, 0xec, 0xb6, 0x00, 0x00,
-	0x00,
+	0x6a, 0x70, 0x06, 0xc1, 0xb8, 0x4a, 0x2a, 0x5c, 0x1c, 0xa1, 0x79, 0x05, 0x84, 0x54, 0x85, 0x70,
+	0x49, 0xf8, 0x97, 0xe7, 0xa5, 0x16, 0x15, 0x67, 0x64, 0x16, 0x84, 0x14, 0x25, 0xe6, 0x15, 0xa7,
+	0xa5, 0x16, 0x05, 0x97, 0x24, 0x16, 0x95, 0xa4, 0xa6, 0x08, 0x49, 0x73, 0x71, 0xe6, 0xe7, 0xa4,
+	0xc4, 0xe7, 0x83, 0xe4, 0xa1, 0xfa, 0x38, 0xf2, 0x73, 0x52, 0xc0, 0xea, 0x41, 0x92, 0x79, 0xa9,
+	0xe5, 0x50, 0x49, 0x26, 0x88, 0x64, 0x5e, 0x6a, 0x39, 0x58, 0xd2, 0xc9, 0xf9, 0xc4, 0x23, 0x39,
+	0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0xe1, 0xc2, 0x63,
+	0x39, 0x86, 0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0x34, 0xd3, 0x33, 0x4b, 0x32, 0x4a, 0x93, 0xf4, 0x92,
+	0xf3, 0x73, 0xf5, 0xf3, 0xf2, 0x93, 0x72, 0x52, 0x75, 0x13, 0x8b, 0x8b, 0x53, 0x4b, 0x8a, 0xf5,
+	0xc1, 0x1e, 0xae, 0x80, 0x50, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c, 0x60, 0x4f, 0x1b, 0x03,
+	0x02, 0x00, 0x00, 0xff, 0xff, 0xfc, 0x7f, 0x68, 0xe5, 0x0c, 0x01, 0x00, 0x00,
 }
 
 func (m *Paused) Marshal() (dAtA []byte, err error) {
@@ -196,6 +255,43 @@ func (m *Unpaused) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *OwnershipTransferStarted) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *OwnershipTransferStarted) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *OwnershipTransferStarted) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.NewOwner) > 0 {
+		i -= len(m.NewOwner)
+		copy(dAtA[i:], m.NewOwner)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.NewOwner)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.OldOwner) > 0 {
+		i -= len(m.OldOwner)
+		copy(dAtA[i:], m.OldOwner)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.OldOwner)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintEvents(dAtA []byte, offset int, v uint64) int {
 	offset -= sovEvents(v)
 	base := offset
@@ -227,6 +323,23 @@ func (m *Unpaused) Size() (n int) {
 	var l int
 	_ = l
 	l = len(m.Account)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	return n
+}
+
+func (m *OwnershipTransferStarted) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.OldOwner)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = len(m.NewOwner)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
@@ -381,6 +494,120 @@ func (m *Unpaused) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Account = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *OwnershipTransferStarted) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: OwnershipTransferStarted: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: OwnershipTransferStarted: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OldOwner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OldOwner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewOwner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NewOwner = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

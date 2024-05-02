@@ -9,6 +9,7 @@ import (
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/errors"
 	"cosmossdk.io/log"
+	"cosmossdk.io/math"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -28,8 +29,8 @@ type Keeper struct {
 	Paused       collections.Item[bool]
 	Owner        collections.Item[string]
 	PendingOwner collections.Item[string]
-	Burners      collections.KeySet[string]
-	Minters      collections.KeySet[string]
+	Burners      collections.Map[string, math.Int]
+	Minters      collections.Map[string, math.Int]
 	Pausers      collections.KeySet[string]
 
 	BlocklistOwner        collections.Item[string]
@@ -66,8 +67,8 @@ func NewKeeper(
 		Owner:        collections.NewItem(builder, types.OwnerKey, "owner", collections.StringValue),
 		PendingOwner: collections.NewItem(builder, types.PendingOwnerKey, "pending_owner", collections.StringValue),
 
-		Burners: collections.NewKeySet(builder, types.BurnerPrefix, "burners", collections.StringKey),
-		Minters: collections.NewKeySet(builder, types.MinterPrefix, "minters", collections.StringKey),
+		Burners: collections.NewMap(builder, types.BurnerPrefix, "burners", collections.StringKey, sdk.IntValue),
+		Minters: collections.NewMap(builder, types.MinterPrefix, "minters", collections.StringKey, sdk.IntValue),
 		Pausers: collections.NewKeySet(builder, types.PauserPrefix, "pausers", collections.StringKey),
 
 		BlocklistOwner:        collections.NewItem(builder, blocklist.OwnerKey, "blocklist_owner", collections.StringValue),

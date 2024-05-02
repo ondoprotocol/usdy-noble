@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestTransferOwnership(t *testing.T) {
+func TestBlocklistTransferOwnership(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
 	server := keeper.NewBlocklistMsgServer(k)
 
@@ -45,7 +45,7 @@ func TestTransferOwnership(t *testing.T) {
 	require.Equal(t, pendingOwner.Address, res)
 }
 
-func TestAcceptOwnership(t *testing.T) {
+func TestBlocklistAcceptOwnership(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
 	server := keeper.NewBlocklistMsgServer(k)
 

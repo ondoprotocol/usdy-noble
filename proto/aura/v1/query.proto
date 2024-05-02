@@ -3,8 +3,10 @@ syntax = "proto3";
 package aura.v1;
 
 import "amino/amino.proto";
+import "aura/v1/genesis.proto";
 import "cosmos/query/v1/query.proto";
 import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
 option go_package = "github.com/noble-assets/aura/x/aura/types";
@@ -66,13 +68,13 @@ message QueryOwnerResponse {
 message QueryBurners {}
 
 message QueryBurnersResponse {
-  repeated string burners = 1;
+  repeated Burner burners = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryMinters {}
 
 message QueryMintersResponse {
-  repeated string minters = 1;
+  repeated Minter minters = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryPausers {}
