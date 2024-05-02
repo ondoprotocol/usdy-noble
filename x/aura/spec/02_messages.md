@@ -35,12 +35,12 @@ signatures: []
 
 ### Requirements
 
-- Signer must be one of the allowed `burners`.
+- Signer must be one of the allowed [`burners`](./01_state.md#burners).
 - Burner must have enough allowance.
 
 ### State Changes
 
-- `burners`
+- [`burners`](./01_state.md#burners)
 - User balance via `x/bank` module.
 
 ### Events Emitted
@@ -82,12 +82,12 @@ signatures: []
 
 ### Requirements
 
-- Signer must be one of the allowed `minters`.
+- Signer must be one of the allowed [`minters`](./01_state.md#minters).
 - Minter must have enough allowance.
 
 ### State Changes
 
-- `minters`
+- [`minters`](./01_state.md#minters)
 - User balance via `x/bank` module.
 
 ### Events Emitted
@@ -126,11 +126,11 @@ This message takes no arguments.
 
 ### Requirements
 
-- Signer must be one of the allowed `pausers`.
+- Signer must be one of the allowed [`pausers`](./01_state.md#pausers).
 
 ### State Changes
 
-- `paused`
+- [`paused`](./01_state.md#paused)
 
 ### Events Emitted
 
@@ -168,11 +168,11 @@ This message takes no arguments.
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `paused`
+- [`paused`](./01_state.md#paused)
 
 ### Events Emitted
 
@@ -211,11 +211,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `pending_owner`
+- [`pending_owner`](./01_state.md#pending-owner)
 
 ### Events Emitted
 
@@ -253,15 +253,16 @@ This message takes no arguments.
 
 ### Requirements
 
-- `pending_owner` must be set in state first, initiated via
+- [`pending_owner`](./01_state.md#pending-owner) must be set in state first,
+  initiated via
   a [`MsgTransferOwnership`](#transfer-ownership) message being previously
   executed.
-- Signer must be the current `pending_owner`.
+- Signer must be the current [`pending_owner`](./01_state.md#pending-owner).
 
 ### State Changes
 
-- `owner`
-- `pending_owner`
+- [`owner`](./01_state.md#owner)
+- [`pending_owner`](./01_state.md#pending-owner)
 
 ### Events Emitted
 
@@ -302,11 +303,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `burners`
+- [`burners`](./01_state.md#burners)
 
 ### Events Emitted
 
@@ -345,11 +346,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `burners`
+- [`burners`](./01_state.md#burners)
 
 ### Events Emitted
 
@@ -390,11 +391,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `burners`
+- [`burners`](./01_state.md#burners)
 
 ### Events Emitted
 
@@ -435,11 +436,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `minters`
+- [`minters`](./01_state.md#minters)
 
 ### Events Emitted
 
@@ -478,11 +479,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `minters`
+- [`minters`](./01_state.md#minters)
 
 ### Events Emitted
 
@@ -523,11 +524,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `minters`
+- [`minters`](./01_state.md#minters)
 
 ### Events Emitted
 
@@ -566,11 +567,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `pausers`
+- [`pausers`](./01_state.md#pausers)
 
 ### Events Emitted
 
@@ -609,11 +610,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 
-- `pausers`
+- [`pausers`](./01_state.md#pausers)
 
 ### Events Emitted
 

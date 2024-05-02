@@ -33,11 +33,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state_blocklist.md#owner).
 
 ### State Changes
 
-- `pending_owner`
+- [`pending_owner`](./01_state_blocklist.md#pending-owner)
 
 ### Events Emitted
 
@@ -75,15 +75,16 @@ This message takes no arguments.
 
 ### Requirements
 
-- `pending_owner` must be set in state first, initiated via
-  a [`MsgTransferOwnership`](#transfer-ownership) message being previously
-  executed.
-- Signer must be the current `pending_owner`.
+- [`pending_owner`](./01_state_blocklist.md#pending-owner) must be set in state
+  first, initiated via a [`MsgTransferOwnership`](#transfer-ownership) message
+  being previously executed.
+- Signer must be the
+  current [`pending_owner`](./01_state_blocklist.md#pending-owner).
 
 ### State Changes
 
-- `owner`
-- `pending_owner`
+- [`owner`](./01_state_blocklist.md#owner)
+- [`pending_owner`](./01_state_blocklist.md#pending-owner)
 
 ### Events Emitted
 
@@ -125,11 +126,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state_blocklist.md#owner).
 
 ### State Changes
 
-- `blocked_addresses`
+- [`blocked_address`](./01_state_blocklist.md#blocked-addresses)
 
 ### Events Emitted
 
@@ -171,11 +172,11 @@ signatures: []
 
 ### Requirements
 
-- Signer must be the current `owner`.
+- Signer must be the current [`owner`](./01_state_blocklist.md#owner).
 
 ### State Changes
 
-- `blocked_addresses`
+- [`blocked_address`](./01_state_blocklist.md#blocked-addresses)
 
 ### Events Emitted
 
