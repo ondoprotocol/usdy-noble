@@ -215,6 +215,7 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 			SubCommands: map[string]*autocliv1.ServiceCommandDescriptor{
 				"blocklist": {
 					Service: blocklistv1.Msg_ServiceDesc.ServiceName,
+					Short:   "Transactions commands for the blocklist submodule",
 					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
 						{
 							RpcMethod:      "TransferOwnership",
@@ -258,6 +259,7 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 			SubCommands: map[string]*autocliv1.ServiceCommandDescriptor{
 				"blocklist": {
 					Service:           blocklistv1.Query_ServiceDesc.ServiceName,
+					Short:             "Querying commands for the blocklist submodule",
 					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
 						// NOTE(@john): Queries are simple, so no need to configure.
 					},
