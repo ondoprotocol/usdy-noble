@@ -85,10 +85,7 @@ func NewKeeper(
 	return keeper
 }
 
-// SendRestrictionFn executes the following checks against all USDY transfers:
-// - Is the module currently paused?
-// - If we're not minting, check the sender against the blocklist.
-// - If we're not burning, check the recipient against the blocklist.
+// SendRestrictionFn executes necessary checks against all USDY transfers.
 func (k *Keeper) SendRestrictionFn(ctx context.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error) {
 	if amount := amt.AmountOf(k.Denom); !amount.IsZero() {
 		paused, _ := k.Paused.Get(ctx)
@@ -96,7 +93,14 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, fromAddr, toAddr sdk.Acc
 			return toAddr, fmt.Errorf("%s transfers are paused", k.Denom)
 		}
 
-		if !fromAddr.Equals(types.ModuleAddress) {
+		burning := !fromAddr.Equals(types.ModuleAddress) && toAddr.Equals(types.ModuleAddress)
+		minting := fromAddr.Equals(types.ModuleAddress) && !toAddr.Equals(types.ModuleAddress)
+
+		if burning {
+			return toAddr, nil
+		}
+
+		if !minting {
 			has, err := k.BlockedAddresses.Has(ctx, fromAddr)
 			if err != nil {
 				return toAddr, errors.Wrap(err, "unable to retrieve blocked address")
@@ -107,15 +111,13 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, fromAddr, toAddr sdk.Acc
 			}
 		}
 
-		if !toAddr.Equals(types.ModuleAddress) {
-			has, err := k.BlockedAddresses.Has(ctx, toAddr)
-			if err != nil {
-				return toAddr, errors.Wrap(err, "unable to retrieve blocked address")
-			}
-			if has {
-				address, _ := k.accountKeeper.AddressCodec().BytesToString(toAddr)
-				return toAddr, fmt.Errorf("%s is blocked from receiving %s", address, k.Denom)
-			}
+		has, err := k.BlockedAddresses.Has(ctx, toAddr)
+		if err != nil {
+			return toAddr, errors.Wrap(err, "unable to retrieve blocked address")
+		}
+		if has {
+			address, _ := k.accountKeeper.AddressCodec().BytesToString(toAddr)
+			return toAddr, fmt.Errorf("%s is blocked from receiving %s", address, k.Denom)
 		}
 	}
 
