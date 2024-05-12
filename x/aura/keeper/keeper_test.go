@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"errors"
 	"testing"
 
 	"cosmossdk.io/math"
@@ -11,73 +12,241 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestSendRestriction(t *testing.T) {
-	keeper, ctx := mocks.AuraKeeper(t)
-	coins := sdk.NewCoins(sdk.NewCoin(
-		keeper.Denom, ONE,
-	))
-
-	// ACT: Attempt to send different token.
-	_, err := keeper.SendRestrictionFn(ctx, utils.TestAccount().Bytes, utils.TestAccount().Bytes, sdk.NewCoins(sdk.NewCoin(
-		"uusdc", math.NewInt(1_000_000),
-	)))
-	// ASSERT: The action should've succeeded due to different denom.
-	require.NoError(t, err)
-
-	// ACT: Attempt to send.
-	_, err = keeper.SendRestrictionFn(ctx, utils.TestAccount().Bytes, utils.TestAccount().Bytes, coins)
-	// ASSERT: The action should've succeeded.
-	require.NoError(t, err)
-
-	// ARRANGE: Set paused state to true.
-	require.NoError(t, keeper.Paused.Set(ctx, true))
-
-	// ACT: Attempt to send when paused.
-	_, err = keeper.SendRestrictionFn(ctx, utils.TestAccount().Bytes, utils.TestAccount().Bytes, coins)
-	// ASSERT: The action should've failed due to module being paused.
-	require.ErrorContains(t, err, "ausdy transfers are paused")
-
-	// ARRANGE: Set paused state to false.
-	require.NoError(t, keeper.Paused.Set(ctx, false))
-	// ARRANGE: Generate a user account.
+func TestSendRestrictionBurn(t *testing.T) {
 	user := utils.TestAccount()
+	keeper, ctx := mocks.AuraKeeper(t)
+	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
 
-	// ACT: Attempt to burn from non-blocklisted address.
-	_, err = keeper.SendRestrictionFn(ctx, user.Bytes, types.ModuleAddress, coins)
-	// ASSERT: The action should've succeeded.
-	require.NoError(t, err)
+	testCases := []struct {
+		name    string
+		paused  bool
+		blocked bool
+		err     error
+	}{
+		{
+			name:    "PausedAndBlocked",
+			paused:  true,
+			blocked: true,
+			err:     nil,
+		},
+		{
+			name:    "PausedAndUnblocked",
+			paused:  true,
+			blocked: false,
+			err:     nil,
+		},
+		{
+			name:    "UnpausedAndBlocked",
+			paused:  false,
+			blocked: true,
+			err:     nil,
+		},
+		{
+			name:    "UnpausedAndUnblocked",
+			paused:  false,
+			blocked: false,
+			err:     nil,
+		},
+	}
 
-	// ARRANGE: Block user address.
-	require.NoError(t, keeper.BlockedAddresses.Set(ctx, user.Bytes, true))
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			// ARRANGE: Set paused state.
+			require.NoError(t, keeper.Paused.Set(ctx, testCase.paused))
+			// ARRANGE: Set blocked state.
+			if testCase.blocked {
+				require.NoError(t, keeper.BlockedAddresses.Set(ctx, user.Bytes, true))
+			} else {
+				require.NoError(t, keeper.BlockedAddresses.Remove(ctx, user.Bytes))
+			}
 
-	// ACT: Attempt to burn from blocklisted address.
-	_, err = keeper.SendRestrictionFn(ctx, user.Bytes, types.ModuleAddress, coins)
-	// ASSERT: The action should've succeeded.
-	require.NoError(t, err)
+			// ACT: Attempt to burn.
+			_, err := keeper.SendRestrictionFn(ctx, user.Bytes, types.ModuleAddress, coins)
 
-	// ACT: Attempt to mint to blocklisted address.
-	_, err = keeper.SendRestrictionFn(ctx, types.ModuleAddress, user.Bytes, coins)
-	// ASSERT: The action shoudl've failed due to blocked recipient.
-	require.ErrorContains(t, err, "blocked from receiving")
+			// ASSERT: Send restriction correctly handled test case.
+			if testCase.err != nil {
+				require.ErrorContains(t, err, testCase.err.Error())
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
 
-	// ARRANGE: Unblock user address.
-	require.NoError(t, keeper.BlockedAddresses.Remove(ctx, user.Bytes))
+func TestSendRestrictionMint(t *testing.T) {
+	user := utils.TestAccount()
+	keeper, ctx := mocks.AuraKeeper(t)
+	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
 
-	// ACT: Attempt to mint to non-blocklisted address.
-	_, err = keeper.SendRestrictionFn(ctx, types.ModuleAddress, user.Bytes, coins)
-	// ASSERT: The action should've succeeded.
-	require.NoError(t, err)
+	testCases := []struct {
+		name    string
+		paused  bool
+		blocked bool
+		err     error
+	}{
+		{
+			name:    "PausedAndBlocked",
+			paused:  true,
+			blocked: true,
+			err:     errors.New("transfers are paused"),
+		},
+		{
+			name:    "PausedAndUnblocked",
+			paused:  true,
+			blocked: false,
+			err:     errors.New("transfers are paused"),
+		},
+		{
+			name:    "UnpausedAndBlocked",
+			paused:  false,
+			blocked: true,
+			err:     errors.New("blocked from receiving"),
+		},
+		{
+			name:    "UnpausedAndUnblocked",
+			paused:  false,
+			blocked: false,
+			err:     nil,
+		},
+	}
 
-	// ARRANGE: Block user address.
-	require.NoError(t, keeper.BlockedAddresses.Set(ctx, user.Bytes, true))
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			// ARRANGE: Set paused state.
+			require.NoError(t, keeper.Paused.Set(ctx, testCase.paused))
+			// ARRANGE: Set blocked state.
+			if testCase.blocked {
+				require.NoError(t, keeper.BlockedAddresses.Set(ctx, user.Bytes, true))
+			} else {
+				require.NoError(t, keeper.BlockedAddresses.Remove(ctx, user.Bytes))
+			}
 
-	// ACT: Attempt to send from blocklisted address.
-	_, err = keeper.SendRestrictionFn(ctx, user.Bytes, utils.TestAccount().Bytes, coins)
-	// ASSERT: The action should've failed due to blocked sender.
-	require.ErrorContains(t, err, "blocked from sending")
+			// ACT: Attempt to mint.
+			_, err := keeper.SendRestrictionFn(ctx, types.ModuleAddress, user.Bytes, coins)
 
-	// ACT: Attempt to send to blocklisted address.
-	_, err = keeper.SendRestrictionFn(ctx, utils.TestAccount().Bytes, user.Bytes, coins)
-	// ASSERT: The action should've failed due to blocked recipient.
-	require.ErrorContains(t, err, "blocked from receiving")
+			// ASSERT: Send restriction correctly handled test case.
+			if testCase.err != nil {
+				require.ErrorContains(t, err, testCase.err.Error())
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestSendRestrictionTransfer(t *testing.T) {
+	alice, bob := utils.TestAccount(), utils.TestAccount()
+	keeper, ctx := mocks.AuraKeeper(t)
+	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
+
+	testCases := []struct {
+		name             string
+		paused           bool
+		senderBlocked    bool
+		recipientBlocked bool
+		coins            sdk.Coins
+		err              error
+	}{
+		{
+			name:             "NonUSDYTransfer",
+			paused:           true,
+			senderBlocked:    true,
+			recipientBlocked: true,
+			coins:            sdk.NewCoins(sdk.NewCoin("uusdc", math.NewInt(1_000_000))),
+			err:              nil,
+		},
+		{
+			name:             "PausedAndSenderBlockedAndRecipientBlocked",
+			paused:           true,
+			senderBlocked:    true,
+			recipientBlocked: true,
+			coins:            coins,
+			err:              errors.New("transfers are paused"),
+		},
+		{
+			name:             "PausedAndSenderBlockedAndRecipientUnblocked",
+			paused:           true,
+			senderBlocked:    true,
+			recipientBlocked: false,
+			coins:            coins,
+			err:              errors.New("transfers are paused"),
+		},
+		{
+			name:             "PausedAndSenderUnblockedAndRecipientBlocked",
+			paused:           true,
+			senderBlocked:    false,
+			recipientBlocked: true,
+			coins:            coins,
+			err:              errors.New("transfers are paused"),
+		},
+		{
+			name:             "PausedAndSenderUnblockedAndRecipientUnblocked",
+			paused:           true,
+			senderBlocked:    false,
+			recipientBlocked: false,
+			coins:            coins,
+			err:              errors.New("transfers are paused"),
+		},
+		{
+			name:             "UnpausedAndSenderBlockedAndRecipientBlocked",
+			paused:           false,
+			senderBlocked:    true,
+			recipientBlocked: true,
+			coins:            coins,
+			err:              errors.New("blocked from sending"),
+		},
+		{
+			name:             "UnpausedAndSenderBlockedAndRecipientUnblocked",
+			paused:           false,
+			senderBlocked:    true,
+			recipientBlocked: false,
+			coins:            coins,
+			err:              errors.New("blocked from sending"),
+		},
+		{
+			name:             "UnpausedAndSenderUnblockedAndRecipientBlocked",
+			paused:           false,
+			senderBlocked:    false,
+			recipientBlocked: true,
+			coins:            coins,
+			err:              errors.New("blocked from receiving"),
+		},
+		{
+			name:             "UnpausedAndSenderUnblockedAndRecipientUnblocked",
+			paused:           false,
+			senderBlocked:    false,
+			recipientBlocked: false,
+			coins:            coins,
+			err:              nil,
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			// ARRANGE: Set paused state.
+			require.NoError(t, keeper.Paused.Set(ctx, testCase.paused))
+			// ARRANGE: Set sender blocked state.
+			if testCase.senderBlocked {
+				require.NoError(t, keeper.BlockedAddresses.Set(ctx, alice.Bytes, true))
+			} else {
+				require.NoError(t, keeper.BlockedAddresses.Remove(ctx, alice.Bytes))
+			}
+			// ARRANGE: Set recipient blocked state.
+			if testCase.recipientBlocked {
+				require.NoError(t, keeper.BlockedAddresses.Set(ctx, bob.Bytes, true))
+			} else {
+				require.NoError(t, keeper.BlockedAddresses.Remove(ctx, bob.Bytes))
+			}
+
+			// ACT: Attempt to transfer.
+			_, err := keeper.SendRestrictionFn(ctx, alice.Bytes, bob.Bytes, testCase.coins)
+
+			// ASSERT: Send restriction correctly handled test case.
+			if testCase.err != nil {
+				require.ErrorContains(t, err, testCase.err.Error())
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
 }

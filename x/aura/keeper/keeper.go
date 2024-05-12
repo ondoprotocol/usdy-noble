@@ -7,7 +7,6 @@ import (
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/event"
 	"cosmossdk.io/core/store"
-	"cosmossdk.io/errors"
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"
 
@@ -88,34 +87,28 @@ func NewKeeper(
 // SendRestrictionFn executes necessary checks against all USDY transfers.
 func (k *Keeper) SendRestrictionFn(ctx context.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error) {
 	if amount := amt.AmountOf(k.Denom); !amount.IsZero() {
+		burning := !fromAddr.Equals(types.ModuleAddress) && toAddr.Equals(types.ModuleAddress)
+		if burning {
+			return toAddr, nil
+		}
+
 		paused, _ := k.Paused.Get(ctx)
 		if paused {
 			return toAddr, fmt.Errorf("%s transfers are paused", k.Denom)
 		}
 
-		burning := !fromAddr.Equals(types.ModuleAddress) && toAddr.Equals(types.ModuleAddress)
 		minting := fromAddr.Equals(types.ModuleAddress) && !toAddr.Equals(types.ModuleAddress)
 
-		if burning {
-			return toAddr, nil
-		}
-
 		if !minting {
-			has, err := k.BlockedAddresses.Has(ctx, fromAddr)
-			if err != nil {
-				return toAddr, errors.Wrap(err, "unable to retrieve blocked address")
-			}
-			if has {
+			blocked, _ := k.BlockedAddresses.Get(ctx, fromAddr)
+			if blocked {
 				address, _ := k.accountKeeper.AddressCodec().BytesToString(fromAddr)
 				return toAddr, fmt.Errorf("%s is blocked from sending %s", address, k.Denom)
 			}
 		}
 
-		has, err := k.BlockedAddresses.Has(ctx, toAddr)
-		if err != nil {
-			return toAddr, errors.Wrap(err, "unable to retrieve blocked address")
-		}
-		if has {
+		blocked, _ := k.BlockedAddresses.Get(ctx, toAddr)
+		if blocked {
 			address, _ := k.accountKeeper.AddressCodec().BytesToString(toAddr)
 			return toAddr, fmt.Errorf("%s is blocked from receiving %s", address, k.Denom)
 		}
