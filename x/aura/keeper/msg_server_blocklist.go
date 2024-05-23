@@ -33,8 +33,8 @@ func (k blocklistMsgServer) TransferOwnership(ctx context.Context, msg *blocklis
 	}
 
 	return &blocklist.MsgTransferOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.OwnershipTransferStarted{
-		OldOwner: owner,
-		NewOwner: msg.NewOwner,
+		PreviousOwner: owner,
+		NewOwner:      msg.NewOwner,
 	})
 }
 
@@ -47,6 +47,8 @@ func (k blocklistMsgServer) AcceptOwnership(ctx context.Context, msg *blocklist.
 		return nil, sdkerrors.Wrapf(blocklist.ErrInvalidPendingOwner, "expected %s, got %s", pendingOwner, msg.Signer)
 	}
 
+	owner, _ := k.BlocklistOwner.Get(ctx)
+
 	err = k.BlocklistOwner.Set(ctx, pendingOwner)
 	if err != nil {
 		return nil, errors.New("unable to set blocklist owner state")
@@ -56,7 +58,10 @@ func (k blocklistMsgServer) AcceptOwnership(ctx context.Context, msg *blocklist.
 		return nil, errors.New("unable to remove blocklist pending owner state")
 	}
 
-	return &blocklist.MsgAcceptOwnershipResponse{}, nil
+	return &blocklist.MsgAcceptOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.OwnershipTransferred{
+		PreviousOwner: owner,
+		NewOwner:      msg.Signer,
+	})
 }
 
 func (k blocklistMsgServer) AddToBlocklist(ctx context.Context, msg *blocklist.MsgAddToBlocklist) (*blocklist.MsgAddToBlocklistResponse, error) {

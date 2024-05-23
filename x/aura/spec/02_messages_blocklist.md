@@ -41,7 +41,7 @@ signatures: []
 
 ### Events Emitted
 
-- [`OwnershipTransferStarted`](./03_events_blocklist#ownershiptransferstarted)
+- [`aura.blocklist.v1.OwnershipTransferStarted`](./03_events_blocklist#ownershiptransferstarted)
 
 ## Accept Ownership
 
@@ -88,7 +88,7 @@ This message takes no arguments.
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.blocklist.v1.OwnershipTransferred`](./03_events_blocklist.md#ownershiptransferred)
 
 ## Add To Blocklist
 
@@ -134,7 +134,7 @@ signatures: []
 
 ### Events Emitted
 
-- [`BlockedAddressesAdded`](./03_events_blocklist#blockedaddressesadded)
+- [`aura.blocklist.v1.BlockedAddressesAdded`](./03_events_blocklist#blockedaddressesadded)
 
 ## Remove From Blocklist
 
@@ -180,4 +180,4 @@ signatures: []
 
 ### Events Emitted
 
-- [`BlockedAddressesRemoved`](./03_events_blocklist#blockedaddressesremoved)
+- [`aura.blocklist.v1.BlockedAddressesRemoved`](./03_events_blocklist#blockedaddressesremoved)

@@ -254,14 +254,14 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 		Query: &autocliv1.ServiceCommandDescriptor{
 			Service:           aurav1.Query_ServiceDesc.ServiceName,
 			RpcCommandOptions: []*autocliv1.RpcCommandOptions{
-				// NOTE(@john): Queries are simple, so no need to configure.
+				// NOTE: Queries are simple, so no need to configure.
 			},
 			SubCommands: map[string]*autocliv1.ServiceCommandDescriptor{
 				"blocklist": {
 					Service:           blocklistv1.Query_ServiceDesc.ServiceName,
 					Short:             "Querying commands for the blocklist submodule",
 					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
-						// NOTE(@john): Queries are simple, so no need to configure.
+						// NOTE: Queries are simple, so no need to configure.
 					},
 				},
 			},

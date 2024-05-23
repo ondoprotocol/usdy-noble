@@ -2,7 +2,7 @@
 
 ## OwnershipTransferStarted
 
-This event is emitted when an ownership transfer process is started.
+This event is emitted when an ownership transfer is started.
 
 ```shell
 - attributes:
@@ -10,7 +10,7 @@ This event is emitted when an ownership transfer process is started.
     key: new_owner
     value: '"noble1owner"'
   - index: true
-    key: old_owner
+    key: previous_owner
     value: '"noble1signer"'
   - index: true
     key: msg_index
@@ -21,6 +21,28 @@ This event is emitted when an ownership transfer process is started.
 This event is emitted by the following transactions:
 
 - [`aura.blocklist.v1.MsgTransferOwnership`](./02_messages_blocklist.md#transfer-ownership)
+
+## OwnershipTransferred
+
+This event is emitted when an ownership transfer is finalized.
+
+```shell
+- attributes:
+  - index: true
+    key: new_owner
+    value: '"noble1owner"'
+  - index: true
+    key: previous_owner
+    value: '"noble1signer"'
+  - index: true
+    key: msg_index
+    value: "0"
+  type: aura.blocklist.v1.OwnershipTransferred
+```
+
+This event is emitted by the following transactions:
+
+- [`aura.blocklist.v1.MsgAcceptOwnership`](./02_messages_blocklist.md#accept-ownership)
 
 ## BlockedAddressesAdded
 

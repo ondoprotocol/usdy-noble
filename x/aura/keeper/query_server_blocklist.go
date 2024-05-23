@@ -3,7 +3,8 @@ package keeper
 import (
 	"context"
 
-	"github.com/cosmos/cosmos-sdk/types/errors"
+	"cosmossdk.io/errors"
+	errorstypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/noble-assets/aura/x/aura/types/blocklist"
 )
@@ -20,10 +21,10 @@ func NewBlocklistQueryServer(keeper *Keeper) blocklist.QueryServer {
 
 func (k blocklistQueryServer) Owner(ctx context.Context, req *blocklist.QueryOwner) (*blocklist.QueryOwnerResponse, error) {
 	if req == nil {
-		return nil, errors.ErrInvalidRequest
+		return nil, errorstypes.ErrInvalidRequest
 	}
 
-	owner, err := k.Keeper.BlocklistOwner.Get(ctx)
+	owner, err := k.BlocklistOwner.Get(ctx)
 	pendingOwner, _ := k.BlocklistPendingOwner.Get(ctx)
 
 	return &blocklist.QueryOwnerResponse{
@@ -34,7 +35,7 @@ func (k blocklistQueryServer) Owner(ctx context.Context, req *blocklist.QueryOwn
 
 func (k blocklistQueryServer) Addresses(ctx context.Context, req *blocklist.QueryAddresses) (*blocklist.QueryAddressesResponse, error) {
 	if req == nil {
-		return nil, errors.ErrInvalidRequest
+		return nil, errorstypes.ErrInvalidRequest
 	}
 
 	addresses, pagination, err := query.CollectionPaginate(
@@ -48,4 +49,18 @@ func (k blocklistQueryServer) Addresses(ctx context.Context, req *blocklist.Quer
 		Addresses:  addresses,
 		Pagination: pagination,
 	}, err
+}
+
+func (k blocklistQueryServer) Address(ctx context.Context, req *blocklist.QueryAddress) (*blocklist.QueryAddressResponse, error) {
+	if req == nil {
+		return nil, errorstypes.ErrInvalidRequest
+	}
+
+	address, err := k.accountKeeper.AddressCodec().StringToBytes(req.Address)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to decode address %s", req.Address)
+	}
+
+	blocked, err := k.BlockedAddresses.Has(ctx, address)
+	return &blocklist.QueryAddressResponse{Blocked: blocked}, err
 }

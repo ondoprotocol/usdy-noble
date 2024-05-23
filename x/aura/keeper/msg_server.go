@@ -55,7 +55,7 @@ func (k msgServer) Burn(ctx context.Context, msg *types.MsgBurn) (*types.MsgBurn
 		return nil, sdkerrors.Wrapf(err, "unable to update burner's allowance")
 	}
 
-	// TODO(@john): Do we emit an event here?
+	// NOTE: The bank module emits an event for us.
 	return &types.MsgBurnResponse{}, nil
 }
 
@@ -92,7 +92,7 @@ func (k msgServer) Mint(ctx context.Context, msg *types.MsgMint) (*types.MsgMint
 		return nil, sdkerrors.Wrapf(err, "unable to update minter's allowance")
 	}
 
-	// TODO(@john): Do we emit an event here?
+	// NOTE: The bank module emits an event for us.
 	return &types.MsgMintResponse{}, nil
 }
 
@@ -157,8 +157,8 @@ func (k msgServer) TransferOwnership(ctx context.Context, msg *types.MsgTransfer
 	}
 
 	return &types.MsgTransferOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.OwnershipTransferStarted{
-		OldOwner: owner,
-		NewOwner: msg.NewOwner,
+		PreviousOwner: owner,
+		NewOwner:      msg.NewOwner,
 	})
 }
 
@@ -171,6 +171,8 @@ func (k msgServer) AcceptOwnership(ctx context.Context, msg *types.MsgAcceptOwne
 		return nil, sdkerrors.Wrapf(types.ErrInvalidPendingOwner, "expected %s, got %s", pendingOwner, msg.Signer)
 	}
 
+	owner, _ := k.Owner.Get(ctx)
+
 	err = k.Owner.Set(ctx, pendingOwner)
 	if err != nil {
 		return nil, errors.New("unable to set owner state")
@@ -180,7 +182,10 @@ func (k msgServer) AcceptOwnership(ctx context.Context, msg *types.MsgAcceptOwne
 		return nil, errors.New("unable to remove pending owner state")
 	}
 
-	return &types.MsgAcceptOwnershipResponse{}, nil
+	return &types.MsgAcceptOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.OwnershipTransferred{
+		PreviousOwner: owner,
+		NewOwner:      msg.Signer,
+	})
 }
 
 func (k msgServer) AddBurner(ctx context.Context, msg *types.MsgAddBurner) (*types.MsgAddBurnerResponse, error) {
@@ -197,15 +202,19 @@ func (k msgServer) AddBurner(ctx context.Context, msg *types.MsgAddBurner) (*typ
 		return nil, fmt.Errorf("%s is already a burner", msg.Burner)
 	}
 
-	// TODO(@john): Validate allowance?
+	if msg.Allowance.IsNegative() {
+		return nil, errors.New("allowance cannot be negative")
+	}
 
 	err = k.Burners.Set(ctx, msg.Burner, msg.Allowance)
 	if err != nil {
 		return nil, errors.New("unable to set burner in state")
 	}
 
-	// TODO(@john): Do we emit an event here?
-	return &types.MsgAddBurnerResponse{}, nil
+	return &types.MsgAddBurnerResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerAdded{
+		Address:   msg.Burner,
+		Allowance: msg.Allowance,
+	})
 }
 
 func (k msgServer) RemoveBurner(ctx context.Context, msg *types.MsgRemoveBurner) (*types.MsgRemoveBurnerResponse, error) {
@@ -227,8 +236,9 @@ func (k msgServer) RemoveBurner(ctx context.Context, msg *types.MsgRemoveBurner)
 		return nil, errors.New("unable to remove burner from state")
 	}
 
-	// TODO(@john): Do we emit an event here?
-	return &types.MsgRemoveBurnerResponse{}, nil
+	return &types.MsgRemoveBurnerResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerRemoved{
+		Address: msg.Burner,
+	})
 }
 
 func (k msgServer) SetBurnerAllowance(ctx context.Context, msg *types.MsgSetBurnerAllowance) (*types.MsgSetBurnerAllowanceResponse, error) {
@@ -245,15 +255,22 @@ func (k msgServer) SetBurnerAllowance(ctx context.Context, msg *types.MsgSetBurn
 		return nil, fmt.Errorf("%s is not a burner", msg.Burner)
 	}
 
-	// TODO(@john): Validate allowance?
+	if msg.Allowance.IsNegative() {
+		return nil, errors.New("allowance cannot be negative")
+	}
+
+	allowance, _ := k.Burners.Get(ctx, msg.Burner)
 
 	err = k.Burners.Set(ctx, msg.Burner, msg.Allowance)
 	if err != nil {
 		return nil, errors.New("unable to set burner allowance in state")
 	}
 
-	// TODO(@john): Do we emit an event here?
-	return &types.MsgSetBurnerAllowanceResponse{}, nil
+	return &types.MsgSetBurnerAllowanceResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerUpdated{
+		Address:           msg.Burner,
+		PreviousAllowance: allowance,
+		NewAllowance:      msg.Allowance,
+	})
 }
 
 func (k msgServer) AddMinter(ctx context.Context, msg *types.MsgAddMinter) (*types.MsgAddMinterResponse, error) {
@@ -270,15 +287,19 @@ func (k msgServer) AddMinter(ctx context.Context, msg *types.MsgAddMinter) (*typ
 		return nil, fmt.Errorf("%s is already a minter", msg.Minter)
 	}
 
-	// TODO(@john): Validate allowance?
+	if msg.Allowance.IsNegative() {
+		return nil, errors.New("allowance cannot be negative")
+	}
 
 	err = k.Minters.Set(ctx, msg.Minter, msg.Allowance)
 	if err != nil {
 		return nil, errors.New("unable to set minter in state")
 	}
 
-	// TODO(@john): Do we emit an event here?
-	return &types.MsgAddMinterResponse{}, nil
+	return &types.MsgAddMinterResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterAdded{
+		Address:   msg.Minter,
+		Allowance: msg.Allowance,
+	})
 }
 
 func (k msgServer) RemoveMinter(ctx context.Context, msg *types.MsgRemoveMinter) (*types.MsgRemoveMinterResponse, error) {
@@ -300,8 +321,9 @@ func (k msgServer) RemoveMinter(ctx context.Context, msg *types.MsgRemoveMinter)
 		return nil, errors.New("unable to remove minter from state")
 	}
 
-	// TODO(@john): Do we emit an event here?
-	return &types.MsgRemoveMinterResponse{}, nil
+	return &types.MsgRemoveMinterResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterRemoved{
+		Address: msg.Minter,
+	})
 }
 
 func (k msgServer) SetMinterAllowance(ctx context.Context, msg *types.MsgSetMinterAllowance) (*types.MsgSetMinterAllowanceResponse, error) {
@@ -318,15 +340,22 @@ func (k msgServer) SetMinterAllowance(ctx context.Context, msg *types.MsgSetMint
 		return nil, fmt.Errorf("%s is not a minter", msg.Minter)
 	}
 
-	// TODO(@john): Validate allowance?
+	if msg.Allowance.IsNegative() {
+		return nil, errors.New("allowance cannot be negative")
+	}
+
+	allowance, _ := k.Minters.Get(ctx, msg.Minter)
 
 	err = k.Minters.Set(ctx, msg.Minter, msg.Allowance)
 	if err != nil {
 		return nil, errors.New("unable to set minter allowance in state")
 	}
 
-	// TODO(@john): Do we emit an event here?
-	return &types.MsgSetMinterAllowanceResponse{}, nil
+	return &types.MsgSetMinterAllowanceResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterUpdated{
+		Address:           msg.Minter,
+		PreviousAllowance: allowance,
+		NewAllowance:      msg.Allowance,
+	})
 }
 
 func (k msgServer) AddPauser(ctx context.Context, msg *types.MsgAddPauser) (*types.MsgAddPauserResponse, error) {
@@ -348,8 +377,9 @@ func (k msgServer) AddPauser(ctx context.Context, msg *types.MsgAddPauser) (*typ
 		return nil, errors.New("unable to set pauser in state")
 	}
 
-	// TODO(@john): Do we emit an event here?
-	return &types.MsgAddPauserResponse{}, nil
+	return &types.MsgAddPauserResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.PauserAdded{
+		Address: msg.Pauser,
+	})
 }
 
 func (k msgServer) RemovePauser(ctx context.Context, msg *types.MsgRemovePauser) (*types.MsgRemovePauserResponse, error) {
@@ -371,6 +401,7 @@ func (k msgServer) RemovePauser(ctx context.Context, msg *types.MsgRemovePauser)
 		return nil, errors.New("unable to remove pauser from state")
 	}
 
-	// TODO(@john): Do we emit an event here?
-	return &types.MsgRemovePauserResponse{}, nil
+	return &types.MsgRemovePauserResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.PauserRemoved{
+		Address: msg.Pauser,
+	})
 }

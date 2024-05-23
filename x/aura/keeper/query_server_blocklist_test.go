@@ -79,3 +79,40 @@ func TestBlocklistAddressesQuery(t *testing.T) {
 	require.Contains(t, res.Addresses, user1.Address)
 	require.Contains(t, res.Addresses, user2.Address)
 }
+
+func TestBlocklistAddressQuery(t *testing.T) {
+	k, ctx := mocks.AuraKeeper(t)
+	server := keeper.NewBlocklistQueryServer(k)
+
+	// ACT: Attempt to query blocked state with invalid request.
+	_, err := server.Address(ctx, nil)
+	// ASSERT: The query should've failed due to invalid request.
+	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
+
+	// ACT: Attempt to query blocked state with invalid address.
+	_, err = server.Address(ctx, &blocklist.QueryAddress{
+		Address: "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn",
+	})
+	// ASSERT: The action should've failed due to invalid address.
+	require.ErrorContains(t, err, "unable to decode address")
+
+	// ACT: Attempt to query blocked state of unblocked address.
+	res, err := server.Address(ctx, &blocklist.QueryAddress{
+		Address: utils.TestAccount().Address,
+	})
+	// ASSERT: The query should've succeeded.
+	require.NoError(t, err)
+	require.False(t, res.Blocked)
+
+	// ARRANGE: Set blocklist address in state.
+	user := utils.TestAccount()
+	require.NoError(t, k.BlockedAddresses.Set(ctx, user.Bytes, true))
+
+	// ACT: Attempt to query blocked state of blocked address.
+	res, err = server.Address(ctx, &blocklist.QueryAddress{
+		Address: user.Address,
+	})
+	// ASSERT: The query should've succeeded.
+	require.NoError(t, err)
+	require.True(t, res.Blocked)
+}

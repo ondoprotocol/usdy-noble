@@ -2,24 +2,121 @@ syntax = "proto3";
 
 package aura.v1;
 
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
 option go_package = "github.com/noble-assets/aura/x/aura/types";
 
 // Paused is emitted whenever the module is paused.
 message Paused {
   // account is the address of the account that paused the module.
-  string account = 1;
+  string account = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // Unpaused is emitted whenever the module is unpaused.
 message Unpaused {
   // account is the address of the account that unpaused the module.
-  string account = 1;
+  string account = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // OwnershipTransferStarted is emitted whenever an ownership transfer is started.
 message OwnershipTransferStarted {
-  // old_owner is the address of the old owner account.
-  string old_owner = 1;
-  // new_owner is the address of the new owner account.
-  string new_owner = 2;
+  // previous_owner is the address of the previous owner.
+  string previous_owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // new_owner is the address of the new owner.
+  string new_owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// OwnershipTransferStarted is emitted whenever an ownership transfer is finalized.
+message OwnershipTransferred {
+  // previous_owner is the address of the previous owner.
+  string previous_owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // new_owner is the address of the new owner.
+  string new_owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// BurnerAdded is emitted whenever a new burner is added.
+message BurnerAdded {
+  // address is the address of the burner.
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // allowance is the allowance of the burner.
+  string allowance = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// BurnerRemoved is emitted whenever a burner is removed.
+message BurnerRemoved {
+  // address is the address of the burner.
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// BurnerUpdated is emitted whenever a burner's allowance is set.
+message BurnerUpdated {
+  // address is the address of the burner.
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // previous_allowance is the previous allowance of the burner.
+  string previous_allowance = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // new_allowance is the new allowance of the burner.
+  string new_allowance = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// MinterAdded is emitted whenever a new minter is added.
+message MinterAdded {
+  // address is the address of the minter.
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // allowance is the allowance of the minter.
+  string allowance = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// MinterRemoved is emitted whenever a minter is removed.
+message MinterRemoved {
+  // address is the address of the minter.
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MinterUpdated is emitted whenever a minter's allowance is set.
+message MinterUpdated {
+  // address is the address of the minter.
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // previous_allowance is the previous allowance of the minter.
+  string previous_allowance = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // new_allowance is the new allowance of the minter.
+  string new_allowance = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// PauserAdded is emitted whenever a new pauser is added.
+message PauserAdded {
+  // address is the address of the pauser.
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// PauserRemoved is emitted whenever a pauser is removed.
+message PauserRemoved {
+  // address is the address of the pauser.
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }

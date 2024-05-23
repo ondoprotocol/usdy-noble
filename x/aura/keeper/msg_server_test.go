@@ -318,6 +318,15 @@ func TestAddBurner(t *testing.T) {
 	// ASSERT: The action should've failed due to existing burner.
 	require.ErrorContains(t, err, "is already a burner")
 
+	// ACT: Attempt to add burner with invalid allowance.
+	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
+		Signer:    owner.Address,
+		Burner:    burner1.Address,
+		Allowance: ONE.Neg(),
+	})
+	// ASSERT: The action should've failed due to negative allowance.
+	require.ErrorContains(t, err, "allowance cannot be negative")
+
 	// ACT: Attempt to add burner.
 	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
 		Signer:    owner.Address,
@@ -412,6 +421,15 @@ func TestSetBurnerAllowance(t *testing.T) {
 	// ARRANGE: Set burner in state.
 	require.NoError(t, k.Burners.Set(ctx, burner.Address, math.ZeroInt()))
 
+	// ACT: Attempt to set burner allowance with invalid allowance.
+	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
+		Signer:    owner.Address,
+		Burner:    burner.Address,
+		Allowance: ONE.Neg(),
+	})
+	// ASSERT: The action should've failed due to negative allowance.
+	require.ErrorContains(t, err, "allowance cannot be negative")
+
 	// ACT: Attempt to set burner allowance.
 	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
 		Signer:    owner.Address,
@@ -457,6 +475,15 @@ func TestAddMinter(t *testing.T) {
 	})
 	// ASSERT: The action should've failed due to existing minter.
 	require.ErrorContains(t, err, "is already a minter")
+
+	// ACT: Attempt to add minter with invalid allowance.
+	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
+		Signer:    owner.Address,
+		Minter:    minter1.Address,
+		Allowance: ONE.Neg(),
+	})
+	// ASSERT: The action should've failed due to negative allowance.
+	require.ErrorContains(t, err, "allowance cannot be negative")
 
 	// ACT: Attempt to add minter.
 	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
@@ -551,6 +578,15 @@ func TestSetMinterAllowance(t *testing.T) {
 
 	// ARRANGE: Set minters in state.
 	require.NoError(t, k.Minters.Set(ctx, minter.Address, math.ZeroInt()))
+
+	// ACT: Attempt to set minter allowance with invalid allowance.
+	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{
+		Signer:    owner.Address,
+		Minter:    minter.Address,
+		Allowance: ONE.Neg(),
+	})
+	// ASSERT: The action should've failed due to negative allowance.
+	require.ErrorContains(t, err, "allowance cannot be negative")
 
 	// ACT: Attempt to set minter allowance.
 	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{

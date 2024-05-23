@@ -4,7 +4,10 @@
 package types
 
 import (
+	cosmossdk_io_math "cosmossdk.io/math"
 	fmt "fmt"
+	_ "github.com/cosmos/cosmos-proto"
+	_ "github.com/cosmos/gogoproto/gogoproto"
 	proto "github.com/cosmos/gogoproto/proto"
 	io "io"
 	math "math"
@@ -116,9 +119,9 @@ func (m *Unpaused) GetAccount() string {
 
 // OwnershipTransferStarted is emitted whenever an ownership transfer is started.
 type OwnershipTransferStarted struct {
-	// old_owner is the address of the old owner account.
-	OldOwner string `protobuf:"bytes,1,opt,name=old_owner,json=oldOwner,proto3" json:"old_owner,omitempty"`
-	// new_owner is the address of the new owner account.
+	// previous_owner is the address of the previous owner.
+	PreviousOwner string `protobuf:"bytes,1,opt,name=previous_owner,json=previousOwner,proto3" json:"previous_owner,omitempty"`
+	// new_owner is the address of the new owner.
 	NewOwner string `protobuf:"bytes,2,opt,name=new_owner,json=newOwner,proto3" json:"new_owner,omitempty"`
 }
 
@@ -155,9 +158,9 @@ func (m *OwnershipTransferStarted) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_OwnershipTransferStarted proto.InternalMessageInfo
 
-func (m *OwnershipTransferStarted) GetOldOwner() string {
+func (m *OwnershipTransferStarted) GetPreviousOwner() string {
 	if m != nil {
-		return m.OldOwner
+		return m.PreviousOwner
 	}
 	return ""
 }
@@ -169,30 +172,488 @@ func (m *OwnershipTransferStarted) GetNewOwner() string {
 	return ""
 }
 
+// OwnershipTransferStarted is emitted whenever an ownership transfer is finalized.
+type OwnershipTransferred struct {
+	// previous_owner is the address of the previous owner.
+	PreviousOwner string `protobuf:"bytes,1,opt,name=previous_owner,json=previousOwner,proto3" json:"previous_owner,omitempty"`
+	// new_owner is the address of the new owner.
+	NewOwner string `protobuf:"bytes,2,opt,name=new_owner,json=newOwner,proto3" json:"new_owner,omitempty"`
+}
+
+func (m *OwnershipTransferred) Reset()         { *m = OwnershipTransferred{} }
+func (m *OwnershipTransferred) String() string { return proto.CompactTextString(m) }
+func (*OwnershipTransferred) ProtoMessage()    {}
+func (*OwnershipTransferred) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{3}
+}
+func (m *OwnershipTransferred) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *OwnershipTransferred) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_OwnershipTransferred.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *OwnershipTransferred) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_OwnershipTransferred.Merge(m, src)
+}
+func (m *OwnershipTransferred) XXX_Size() int {
+	return m.Size()
+}
+func (m *OwnershipTransferred) XXX_DiscardUnknown() {
+	xxx_messageInfo_OwnershipTransferred.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_OwnershipTransferred proto.InternalMessageInfo
+
+func (m *OwnershipTransferred) GetPreviousOwner() string {
+	if m != nil {
+		return m.PreviousOwner
+	}
+	return ""
+}
+
+func (m *OwnershipTransferred) GetNewOwner() string {
+	if m != nil {
+		return m.NewOwner
+	}
+	return ""
+}
+
+// BurnerAdded is emitted whenever a new burner is added.
+type BurnerAdded struct {
+	// address is the address of the burner.
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	// allowance is the allowance of the burner.
+	Allowance cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=allowance,proto3,customtype=cosmossdk.io/math.Int" json:"allowance"`
+}
+
+func (m *BurnerAdded) Reset()         { *m = BurnerAdded{} }
+func (m *BurnerAdded) String() string { return proto.CompactTextString(m) }
+func (*BurnerAdded) ProtoMessage()    {}
+func (*BurnerAdded) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{4}
+}
+func (m *BurnerAdded) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *BurnerAdded) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_BurnerAdded.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *BurnerAdded) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BurnerAdded.Merge(m, src)
+}
+func (m *BurnerAdded) XXX_Size() int {
+	return m.Size()
+}
+func (m *BurnerAdded) XXX_DiscardUnknown() {
+	xxx_messageInfo_BurnerAdded.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BurnerAdded proto.InternalMessageInfo
+
+func (m *BurnerAdded) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// BurnerRemoved is emitted whenever a burner is removed.
+type BurnerRemoved struct {
+	// address is the address of the burner.
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *BurnerRemoved) Reset()         { *m = BurnerRemoved{} }
+func (m *BurnerRemoved) String() string { return proto.CompactTextString(m) }
+func (*BurnerRemoved) ProtoMessage()    {}
+func (*BurnerRemoved) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{5}
+}
+func (m *BurnerRemoved) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *BurnerRemoved) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_BurnerRemoved.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *BurnerRemoved) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BurnerRemoved.Merge(m, src)
+}
+func (m *BurnerRemoved) XXX_Size() int {
+	return m.Size()
+}
+func (m *BurnerRemoved) XXX_DiscardUnknown() {
+	xxx_messageInfo_BurnerRemoved.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BurnerRemoved proto.InternalMessageInfo
+
+func (m *BurnerRemoved) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// BurnerUpdated is emitted whenever a burner's allowance is set.
+type BurnerUpdated struct {
+	// address is the address of the burner.
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	// previous_allowance is the previous allowance of the burner.
+	PreviousAllowance cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=previous_allowance,json=previousAllowance,proto3,customtype=cosmossdk.io/math.Int" json:"previous_allowance"`
+	// new_allowance is the new allowance of the burner.
+	NewAllowance cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=new_allowance,json=newAllowance,proto3,customtype=cosmossdk.io/math.Int" json:"new_allowance"`
+}
+
+func (m *BurnerUpdated) Reset()         { *m = BurnerUpdated{} }
+func (m *BurnerUpdated) String() string { return proto.CompactTextString(m) }
+func (*BurnerUpdated) ProtoMessage()    {}
+func (*BurnerUpdated) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{6}
+}
+func (m *BurnerUpdated) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *BurnerUpdated) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_BurnerUpdated.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *BurnerUpdated) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BurnerUpdated.Merge(m, src)
+}
+func (m *BurnerUpdated) XXX_Size() int {
+	return m.Size()
+}
+func (m *BurnerUpdated) XXX_DiscardUnknown() {
+	xxx_messageInfo_BurnerUpdated.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BurnerUpdated proto.InternalMessageInfo
+
+func (m *BurnerUpdated) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// MinterAdded is emitted whenever a new minter is added.
+type MinterAdded struct {
+	// address is the address of the minter.
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	// allowance is the allowance of the minter.
+	Allowance cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=allowance,proto3,customtype=cosmossdk.io/math.Int" json:"allowance"`
+}
+
+func (m *MinterAdded) Reset()         { *m = MinterAdded{} }
+func (m *MinterAdded) String() string { return proto.CompactTextString(m) }
+func (*MinterAdded) ProtoMessage()    {}
+func (*MinterAdded) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{7}
+}
+func (m *MinterAdded) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MinterAdded) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MinterAdded.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MinterAdded) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MinterAdded.Merge(m, src)
+}
+func (m *MinterAdded) XXX_Size() int {
+	return m.Size()
+}
+func (m *MinterAdded) XXX_DiscardUnknown() {
+	xxx_messageInfo_MinterAdded.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MinterAdded proto.InternalMessageInfo
+
+func (m *MinterAdded) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// MinterRemoved is emitted whenever a minter is removed.
+type MinterRemoved struct {
+	// address is the address of the minter.
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *MinterRemoved) Reset()         { *m = MinterRemoved{} }
+func (m *MinterRemoved) String() string { return proto.CompactTextString(m) }
+func (*MinterRemoved) ProtoMessage()    {}
+func (*MinterRemoved) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{8}
+}
+func (m *MinterRemoved) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MinterRemoved) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MinterRemoved.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MinterRemoved) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MinterRemoved.Merge(m, src)
+}
+func (m *MinterRemoved) XXX_Size() int {
+	return m.Size()
+}
+func (m *MinterRemoved) XXX_DiscardUnknown() {
+	xxx_messageInfo_MinterRemoved.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MinterRemoved proto.InternalMessageInfo
+
+func (m *MinterRemoved) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// MinterUpdated is emitted whenever a minter's allowance is set.
+type MinterUpdated struct {
+	// address is the address of the minter.
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	// previous_allowance is the previous allowance of the minter.
+	PreviousAllowance cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=previous_allowance,json=previousAllowance,proto3,customtype=cosmossdk.io/math.Int" json:"previous_allowance"`
+	// new_allowance is the new allowance of the minter.
+	NewAllowance cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=new_allowance,json=newAllowance,proto3,customtype=cosmossdk.io/math.Int" json:"new_allowance"`
+}
+
+func (m *MinterUpdated) Reset()         { *m = MinterUpdated{} }
+func (m *MinterUpdated) String() string { return proto.CompactTextString(m) }
+func (*MinterUpdated) ProtoMessage()    {}
+func (*MinterUpdated) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{9}
+}
+func (m *MinterUpdated) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MinterUpdated) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MinterUpdated.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MinterUpdated) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MinterUpdated.Merge(m, src)
+}
+func (m *MinterUpdated) XXX_Size() int {
+	return m.Size()
+}
+func (m *MinterUpdated) XXX_DiscardUnknown() {
+	xxx_messageInfo_MinterUpdated.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MinterUpdated proto.InternalMessageInfo
+
+func (m *MinterUpdated) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// PauserAdded is emitted whenever a new pauser is added.
+type PauserAdded struct {
+	// address is the address of the pauser.
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *PauserAdded) Reset()         { *m = PauserAdded{} }
+func (m *PauserAdded) String() string { return proto.CompactTextString(m) }
+func (*PauserAdded) ProtoMessage()    {}
+func (*PauserAdded) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{10}
+}
+func (m *PauserAdded) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *PauserAdded) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_PauserAdded.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *PauserAdded) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PauserAdded.Merge(m, src)
+}
+func (m *PauserAdded) XXX_Size() int {
+	return m.Size()
+}
+func (m *PauserAdded) XXX_DiscardUnknown() {
+	xxx_messageInfo_PauserAdded.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PauserAdded proto.InternalMessageInfo
+
+func (m *PauserAdded) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// PauserRemoved is emitted whenever a pauser is removed.
+type PauserRemoved struct {
+	// address is the address of the pauser.
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *PauserRemoved) Reset()         { *m = PauserRemoved{} }
+func (m *PauserRemoved) String() string { return proto.CompactTextString(m) }
+func (*PauserRemoved) ProtoMessage()    {}
+func (*PauserRemoved) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2e649e32a11ca0c4, []int{11}
+}
+func (m *PauserRemoved) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *PauserRemoved) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_PauserRemoved.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *PauserRemoved) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PauserRemoved.Merge(m, src)
+}
+func (m *PauserRemoved) XXX_Size() int {
+	return m.Size()
+}
+func (m *PauserRemoved) XXX_DiscardUnknown() {
+	xxx_messageInfo_PauserRemoved.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PauserRemoved proto.InternalMessageInfo
+
+func (m *PauserRemoved) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Paused)(nil), "aura.v1.Paused")
 	proto.RegisterType((*Unpaused)(nil), "aura.v1.Unpaused")
 	proto.RegisterType((*OwnershipTransferStarted)(nil), "aura.v1.OwnershipTransferStarted")
+	proto.RegisterType((*OwnershipTransferred)(nil), "aura.v1.OwnershipTransferred")
+	proto.RegisterType((*BurnerAdded)(nil), "aura.v1.BurnerAdded")
+	proto.RegisterType((*BurnerRemoved)(nil), "aura.v1.BurnerRemoved")
+	proto.RegisterType((*BurnerUpdated)(nil), "aura.v1.BurnerUpdated")
+	proto.RegisterType((*MinterAdded)(nil), "aura.v1.MinterAdded")
+	proto.RegisterType((*MinterRemoved)(nil), "aura.v1.MinterRemoved")
+	proto.RegisterType((*MinterUpdated)(nil), "aura.v1.MinterUpdated")
+	proto.RegisterType((*PauserAdded)(nil), "aura.v1.PauserAdded")
+	proto.RegisterType((*PauserRemoved)(nil), "aura.v1.PauserRemoved")
 }
 
 func init() { proto.RegisterFile("aura/v1/events.proto", fileDescriptor_2e649e32a11ca0c4) }
 
 var fileDescriptor_2e649e32a11ca0c4 = []byte{
-	// 221 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x49, 0x2c, 0x2d, 0x4a,
-	0xd4, 0x2f, 0x33, 0xd4, 0x4f, 0x2d, 0x4b, 0xcd, 0x2b, 0x29, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9,
-	0x17, 0x62, 0x07, 0x89, 0xea, 0x95, 0x19, 0x2a, 0x29, 0x71, 0xb1, 0x05, 0x24, 0x96, 0x16, 0xa7,
-	0xa6, 0x08, 0x49, 0x70, 0xb1, 0x27, 0x26, 0x27, 0xe7, 0x97, 0xe6, 0x95, 0x48, 0x30, 0x2a, 0x30,
-	0x6a, 0x70, 0x06, 0xc1, 0xb8, 0x4a, 0x2a, 0x5c, 0x1c, 0xa1, 0x79, 0x05, 0x84, 0x54, 0x85, 0x70,
-	0x49, 0xf8, 0x97, 0xe7, 0xa5, 0x16, 0x15, 0x67, 0x64, 0x16, 0x84, 0x14, 0x25, 0xe6, 0x15, 0xa7,
-	0xa5, 0x16, 0x05, 0x97, 0x24, 0x16, 0x95, 0xa4, 0xa6, 0x08, 0x49, 0x73, 0x71, 0xe6, 0xe7, 0xa4,
-	0xc4, 0xe7, 0x83, 0xe4, 0xa1, 0xfa, 0x38, 0xf2, 0x73, 0x52, 0xc0, 0xea, 0x41, 0x92, 0x79, 0xa9,
-	0xe5, 0x50, 0x49, 0x26, 0x88, 0x64, 0x5e, 0x6a, 0x39, 0x58, 0xd2, 0xc9, 0xf9, 0xc4, 0x23, 0x39,
-	0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0xe1, 0xc2, 0x63,
-	0x39, 0x86, 0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0x34, 0xd3, 0x33, 0x4b, 0x32, 0x4a, 0x93, 0xf4, 0x92,
-	0xf3, 0x73, 0xf5, 0xf3, 0xf2, 0x93, 0x72, 0x52, 0x75, 0x13, 0x8b, 0x8b, 0x53, 0x4b, 0x8a, 0xf5,
-	0xc1, 0x1e, 0xae, 0x80, 0x50, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c, 0x60, 0x4f, 0x1b, 0x03,
-	0x02, 0x00, 0x00, 0xff, 0xff, 0xfc, 0x7f, 0x68, 0xe5, 0x0c, 0x01, 0x00, 0x00,
+	// 443 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x94, 0x41, 0x8b, 0xd3, 0x40,
+	0x14, 0xc7, 0x33, 0x0a, 0xbb, 0xdb, 0x59, 0x2b, 0x18, 0x22, 0xd4, 0x05, 0xb3, 0x92, 0x93, 0x1e,
+	0x36, 0x61, 0x15, 0x4f, 0x8a, 0x92, 0xec, 0x49, 0x50, 0x94, 0xae, 0xbd, 0x78, 0x29, 0xd3, 0xcc,
+	0x33, 0x0d, 0x36, 0x33, 0x61, 0x66, 0x92, 0xe8, 0xc5, 0x8f, 0x20, 0xe2, 0x67, 0xf1, 0x43, 0xf4,
+	0x58, 0x04, 0x41, 0x3c, 0x14, 0x69, 0xbf, 0x88, 0x24, 0x93, 0xb4, 0x07, 0x0f, 0xad, 0xe9, 0xa1,
+	0xb0, 0xa7, 0x64, 0x1e, 0xff, 0xff, 0x6f, 0xde, 0xbc, 0x3f, 0x3c, 0x6c, 0x91, 0x4c, 0x10, 0x2f,
+	0x3f, 0xf7, 0x20, 0x07, 0xa6, 0xa4, 0x9b, 0x0a, 0xae, 0xb8, 0x79, 0x58, 0x56, 0xdd, 0xfc, 0xfc,
+	0xe4, 0x4e, 0xc8, 0x65, 0xc2, 0xe5, 0xb0, 0x2a, 0x7b, 0xfa, 0xa0, 0x35, 0x27, 0x56, 0xc4, 0x23,
+	0xae, 0xeb, 0xe5, 0x9f, 0xae, 0x3a, 0x4f, 0xf1, 0xc1, 0x1b, 0x92, 0x49, 0xa0, 0xe6, 0x43, 0x7c,
+	0x48, 0xc2, 0x90, 0x67, 0x4c, 0xf5, 0xd0, 0x3d, 0x74, 0xbf, 0x13, 0xf4, 0x7e, 0x7c, 0x3f, 0xb3,
+	0x6a, 0x84, 0x4f, 0xa9, 0x00, 0x29, 0x2f, 0x95, 0x88, 0x59, 0xd4, 0x6f, 0x84, 0xce, 0x33, 0x7c,
+	0x34, 0x60, 0x69, 0x7b, 0xff, 0x37, 0x84, 0x7b, 0xaf, 0x0b, 0x06, 0x42, 0x8e, 0xe3, 0xf4, 0xad,
+	0x20, 0x4c, 0xbe, 0x07, 0x71, 0xa9, 0x88, 0x50, 0x40, 0xcd, 0xe7, 0xf8, 0x66, 0x2a, 0x20, 0x8f,
+	0x79, 0x26, 0x87, 0xbc, 0x14, 0x6d, 0xe4, 0x76, 0x1b, 0x7d, 0xc5, 0x34, 0x1f, 0xe3, 0x0e, 0x83,
+	0xa2, 0xf6, 0x5e, 0xdb, 0xe0, 0x3d, 0x62, 0x50, 0x54, 0x36, 0xe7, 0x0b, 0xc2, 0xd6, 0x3f, 0x4d,
+	0x89, 0x3d, 0x36, 0xf4, 0x19, 0x1f, 0x07, 0x99, 0x60, 0x20, 0x7c, 0x4a, 0xeb, 0x41, 0x6b, 0xe5,
+	0x16, 0x83, 0xd6, 0x47, 0xf3, 0x09, 0xee, 0x90, 0xc9, 0x84, 0x17, 0x84, 0x85, 0x50, 0xdf, 0x7c,
+	0x77, 0x3a, 0x3f, 0x35, 0x7e, 0xcf, 0x4f, 0x6f, 0x6b, 0xa7, 0xa4, 0x1f, 0xdc, 0x98, 0x7b, 0x09,
+	0x51, 0x63, 0xf7, 0x05, 0x53, 0xfd, 0xb5, 0xde, 0xb9, 0xc0, 0x5d, 0x7d, 0x7f, 0x1f, 0x12, 0x9e,
+	0xb7, 0xeb, 0xc0, 0xf9, 0x89, 0x1a, 0xca, 0x20, 0xa5, 0x44, 0xb5, 0x7c, 0xc7, 0x4b, 0x6c, 0xae,
+	0x22, 0xf8, 0xcf, 0x07, 0xdd, 0x6a, 0x8c, 0x7e, 0xe3, 0x33, 0x03, 0xdc, 0x2d, 0xf3, 0x58, 0x83,
+	0xae, 0x6f, 0x03, 0xba, 0xc1, 0xa0, 0x58, 0x31, 0xca, 0x70, 0x5e, 0xc5, 0x4c, 0xed, 0x33, 0x1c,
+	0x7d, 0xff, 0xae, 0xe1, 0x68, 0xca, 0xd5, 0x0a, 0xc7, 0xc7, 0xc7, 0xd5, 0x76, 0x6b, 0x1f, 0x4e,
+	0x39, 0x5f, 0x8d, 0xd8, 0x61, 0xbe, 0xc1, 0xc5, 0x74, 0x61, 0xa3, 0xd9, 0xc2, 0x46, 0x7f, 0x16,
+	0x36, 0xfa, 0xba, 0xb4, 0x8d, 0xd9, 0xd2, 0x36, 0x7e, 0x2d, 0x6d, 0xe3, 0xdd, 0x83, 0x28, 0x56,
+	0xe3, 0x6c, 0xe4, 0x86, 0x3c, 0xf1, 0x18, 0x1f, 0x4d, 0xe0, 0x8c, 0x48, 0x09, 0x4a, 0x7a, 0xd5,
+	0x9e, 0xff, 0xa8, 0x3f, 0xea, 0x53, 0x0a, 0x72, 0x74, 0x50, 0x6d, 0xec, 0x47, 0x7f, 0x03, 0x00,
+	0x00, 0xff, 0xff, 0x6f, 0x8b, 0xd4, 0xb2, 0x03, 0x06, 0x00, 0x00,
 }
 
 func (m *Paused) Marshal() (dAtA []byte, err error) {
@@ -282,10 +743,347 @@ func (m *OwnershipTransferStarted) MarshalToSizedBuffer(dAtA []byte) (int, error
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.OldOwner) > 0 {
-		i -= len(m.OldOwner)
-		copy(dAtA[i:], m.OldOwner)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.OldOwner)))
+	if len(m.PreviousOwner) > 0 {
+		i -= len(m.PreviousOwner)
+		copy(dAtA[i:], m.PreviousOwner)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.PreviousOwner)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *OwnershipTransferred) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *OwnershipTransferred) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *OwnershipTransferred) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.NewOwner) > 0 {
+		i -= len(m.NewOwner)
+		copy(dAtA[i:], m.NewOwner)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.NewOwner)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.PreviousOwner) > 0 {
+		i -= len(m.PreviousOwner)
+		copy(dAtA[i:], m.PreviousOwner)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.PreviousOwner)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *BurnerAdded) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BurnerAdded) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *BurnerAdded) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.Allowance.Size()
+		i -= size
+		if _, err := m.Allowance.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintEvents(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *BurnerRemoved) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BurnerRemoved) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *BurnerRemoved) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *BurnerUpdated) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BurnerUpdated) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *BurnerUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.NewAllowance.Size()
+		i -= size
+		if _, err := m.NewAllowance.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintEvents(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	{
+		size := m.PreviousAllowance.Size()
+		i -= size
+		if _, err := m.PreviousAllowance.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintEvents(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MinterAdded) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MinterAdded) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MinterAdded) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.Allowance.Size()
+		i -= size
+		if _, err := m.Allowance.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintEvents(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MinterRemoved) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MinterRemoved) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MinterRemoved) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MinterUpdated) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MinterUpdated) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MinterUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.NewAllowance.Size()
+		i -= size
+		if _, err := m.NewAllowance.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintEvents(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	{
+		size := m.PreviousAllowance.Size()
+		i -= size
+		if _, err := m.PreviousAllowance.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintEvents(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *PauserAdded) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PauserAdded) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *PauserAdded) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *PauserRemoved) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PauserRemoved) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *PauserRemoved) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -335,11 +1133,144 @@ func (m *OwnershipTransferStarted) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.OldOwner)
+	l = len(m.PreviousOwner)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
 	l = len(m.NewOwner)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	return n
+}
+
+func (m *OwnershipTransferred) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.PreviousOwner)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = len(m.NewOwner)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	return n
+}
+
+func (m *BurnerAdded) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = m.Allowance.Size()
+	n += 1 + l + sovEvents(uint64(l))
+	return n
+}
+
+func (m *BurnerRemoved) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	return n
+}
+
+func (m *BurnerUpdated) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = m.PreviousAllowance.Size()
+	n += 1 + l + sovEvents(uint64(l))
+	l = m.NewAllowance.Size()
+	n += 1 + l + sovEvents(uint64(l))
+	return n
+}
+
+func (m *MinterAdded) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = m.Allowance.Size()
+	n += 1 + l + sovEvents(uint64(l))
+	return n
+}
+
+func (m *MinterRemoved) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	return n
+}
+
+func (m *MinterUpdated) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = m.PreviousAllowance.Size()
+	n += 1 + l + sovEvents(uint64(l))
+	l = m.NewAllowance.Size()
+	n += 1 + l + sovEvents(uint64(l))
+	return n
+}
+
+func (m *PauserAdded) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	return n
+}
+
+func (m *PauserRemoved) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
@@ -547,7 +1478,7 @@ func (m *OwnershipTransferStarted) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field OldOwner", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousOwner", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -575,7 +1506,7 @@ func (m *OwnershipTransferStarted) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.OldOwner = string(dAtA[iNdEx:postIndex])
+			m.PreviousOwner = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -608,6 +1539,980 @@ func (m *OwnershipTransferStarted) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.NewOwner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *OwnershipTransferred) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: OwnershipTransferred: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: OwnershipTransferred: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousOwner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PreviousOwner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewOwner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NewOwner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BurnerAdded) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BurnerAdded: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BurnerAdded: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Allowance", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Allowance.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BurnerRemoved) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BurnerRemoved: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BurnerRemoved: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BurnerUpdated) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BurnerUpdated: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BurnerUpdated: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousAllowance", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.PreviousAllowance.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewAllowance", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.NewAllowance.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MinterAdded) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MinterAdded: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MinterAdded: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Allowance", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Allowance.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MinterRemoved) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MinterRemoved: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MinterRemoved: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MinterUpdated) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MinterUpdated: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MinterUpdated: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousAllowance", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.PreviousAllowance.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewAllowance", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.NewAllowance.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PauserAdded) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PauserAdded: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PauserAdded: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PauserRemoved) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PauserRemoved: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PauserRemoved: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

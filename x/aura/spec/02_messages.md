@@ -266,7 +266,7 @@ This message takes no arguments.
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.v1.OwnershipTransferred`](./03_events.md#ownershiptransferred)
 
 ## Add Burner
 
@@ -311,7 +311,7 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.v1.BurnerAdded`](./03_events.md#burneradded)
 
 ## Remove Burner
 
@@ -354,7 +354,7 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.v1.BurnerRemoved`](./03_events.md#burnerremoved)
 
 ## Set Burner Allowance
 
@@ -376,7 +376,7 @@ body:
   memo: ""
   messages:
   - '@type': /aura.v1.MsgSetBurnerAllowance
-    allowance: "0"
+    allowance: "1000000000000000000"
     burner: noble1burner
     signer: noble1signer
   non_critical_extension_options: []
@@ -399,7 +399,7 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.v1.BurnerUpdated`](./03_events.md#burnerupdated)
 
 ## Add Minter
 
@@ -444,7 +444,7 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.v1.MinterAdded`](./03_events.md#minteradded)
 
 ## Remove Minter
 
@@ -487,7 +487,7 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.v1.MinterRemoved`](./03_events.md#minterremoved)
 
 ## Set Minter Allowance
 
@@ -509,7 +509,7 @@ body:
   memo: ""
   messages:
   - '@type': /aura.v1.MsgSetMinterAllowance
-    allowance: "0"
+    allowance: "1000000000000000000"
     minter: noble1minter
     signer: noble1signer
   non_critical_extension_options: []
@@ -532,7 +532,7 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.v1.MinterUpdated`](./03_events.md#minterupdated)
 
 ## Add Pauser
 
@@ -575,7 +575,7 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.v1.PauserAdded`](./03_events.md#pauseradded)
 
 ## Remove Pauser
 
@@ -618,4 +618,4 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`aura.v1.PauserRemoved`](./03_events.md#pauserremoved)

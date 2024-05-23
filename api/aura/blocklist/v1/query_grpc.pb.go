@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Query_Owner_FullMethodName     = "/aura.blocklist.v1.Query/Owner"
 	Query_Addresses_FullMethodName = "/aura.blocklist.v1.Query/Addresses"
+	Query_Address_FullMethodName   = "/aura.blocklist.v1.Query/Address"
 )
 
 // QueryClient is the client API for Query service.
@@ -28,8 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QueryClient interface {
 	Owner(ctx context.Context, in *QueryOwner, opts ...grpc.CallOption) (*QueryOwnerResponse, error)
-	// TODO(@john): Implement more blocklist queries.
 	Addresses(ctx context.Context, in *QueryAddresses, opts ...grpc.CallOption) (*QueryAddressesResponse, error)
+	Address(ctx context.Context, in *QueryAddress, opts ...grpc.CallOption) (*QueryAddressResponse, error)
 }
 
 type queryClient struct {
@@ -58,13 +59,22 @@ func (c *queryClient) Addresses(ctx context.Context, in *QueryAddresses, opts ..
 	return out, nil
 }
 
+func (c *queryClient) Address(ctx context.Context, in *QueryAddress, opts ...grpc.CallOption) (*QueryAddressResponse, error) {
+	out := new(QueryAddressResponse)
+	err := c.cc.Invoke(ctx, Query_Address_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility
 type QueryServer interface {
 	Owner(context.Context, *QueryOwner) (*QueryOwnerResponse, error)
-	// TODO(@john): Implement more blocklist queries.
 	Addresses(context.Context, *QueryAddresses) (*QueryAddressesResponse, error)
+	Address(context.Context, *QueryAddress) (*QueryAddressResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -77,6 +87,9 @@ func (UnimplementedQueryServer) Owner(context.Context, *QueryOwner) (*QueryOwner
 }
 func (UnimplementedQueryServer) Addresses(context.Context, *QueryAddresses) (*QueryAddressesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Addresses not implemented")
+}
+func (UnimplementedQueryServer) Address(context.Context, *QueryAddress) (*QueryAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Address not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 
@@ -127,6 +140,24 @@ func _Query_Addresses_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Address_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAddress)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Address(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Address_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Address(ctx, req.(*QueryAddress))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -141,6 +172,10 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Addresses",
 			Handler:    _Query_Addresses_Handler,
+		},
+		{
+			MethodName: "Address",
+			Handler:    _Query_Address_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
