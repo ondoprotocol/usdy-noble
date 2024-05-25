@@ -6,25 +6,32 @@
 
 A message that initiates an ownership transfer to a provided address.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.blocklist.v1.MsgTransferOwnership
-    new_owner: noble1owner
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.blocklist.v1.MsgTransferOwnership",
+        "signer": "noble1signer",
+        "new_owner": "noble1owner"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -49,24 +56,31 @@ signatures: []
 
 A message that finalizes an ownership transfer.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.blocklist.v1.MsgAcceptOwnership
-    signer: noble1demo # Noble address of new owner.
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.blocklist.v1.MsgAcceptOwnership",
+        "signer": "noble1owner"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -96,28 +110,36 @@ This message takes no arguments.
 
 A message that adds addresses to Aura's blocklist.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.blocklist.v1.MsgAddToBlocklist
-    accounts:
-    - noble1alice
-    - noble1bob
-    - noble1charlie
-    signer: noble1demo
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.blocklist.v1.MsgAddToBlocklist",
+        "signer": "noble1signer",
+        "accounts": [
+          "noble1alice",
+          "noble1bob",
+          "noble1charlie"
+        ]
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -142,28 +164,36 @@ signatures: []
 
 A message that removes addresses from Aura's blocklist.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.blocklist.v1.MsgRemoveFromBlocklist
-    accounts:
-    - noble1alice
-    - noble1bob
-    - noble1charlie
-    signer: noble1demo
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.blocklist.v1.MsgRemoveFromBlocklist",
+        "signer": "noble1signer",
+        "accounts": [
+          "noble1alice",
+          "noble1bob",
+          "noble1charlie"
+        ]
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments

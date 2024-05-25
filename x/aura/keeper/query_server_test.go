@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"testing"
 
-	"cosmossdk.io/collections"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/noble-assets/aura/utils"
 	"github.com/noble-assets/aura/utils/mocks"
@@ -14,15 +14,16 @@ import (
 
 func TestDenomQuery(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
 	server := keeper.NewQueryServer(k)
 
 	// ACT: Attempt to query denom with invalid request.
-	_, err := server.Denom(ctx, nil)
+	_, err := server.Denom(goCtx, nil)
 	// ASSERT: The query should've failed due to invalid request.
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
 	// ACT: Attempt to query denom.
-	res, err := server.Denom(ctx, &types.QueryDenom{})
+	res, err := server.Denom(goCtx, &types.QueryDenom{})
 	// ASSERT: The query should've succeeded.
 	require.NoError(t, err)
 	require.Equal(t, "ausdy", res.Denom)
@@ -30,24 +31,25 @@ func TestDenomQuery(t *testing.T) {
 
 func TestPausedQuery(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
 	server := keeper.NewQueryServer(k)
 
 	// ACT: Attempt to query paused state with invalid request.
-	_, err := server.Paused(ctx, nil)
+	_, err := server.Paused(goCtx, nil)
 	// ASSERT: The query should've failed due to invalid request.
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
 	// ACT: Attempt to query paused state with no state.
-	res, err := server.Paused(ctx, &types.QueryPaused{})
+	res, err := server.Paused(goCtx, &types.QueryPaused{})
 	// ASSERT: The query should've succeeded, and returned false.
 	require.NoError(t, err)
 	require.False(t, res.Paused)
 
 	// ARRANGE: Set paused state to true.
-	require.NoError(t, k.Paused.Set(ctx, true))
+	k.SetPaused(ctx, true)
 
 	// ACT: Attempt to query paused state with state.
-	res, err = server.Paused(ctx, &types.QueryPaused{})
+	res, err = server.Paused(goCtx, &types.QueryPaused{})
 	// ASSERT: The query should've succeeded, and returned true.
 	require.NoError(t, err)
 	require.True(t, res.Paused)
@@ -55,24 +57,20 @@ func TestPausedQuery(t *testing.T) {
 
 func TestOwnerQuery(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
 	server := keeper.NewQueryServer(k)
 
 	// ACT: Attempt to query owner with invalid request.
-	_, err := server.Owner(ctx, nil)
+	_, err := server.Owner(goCtx, nil)
 	// ASSERT: The query should've failed due to invalid request.
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
-	// ACT: Attempt to query owner with no state.
-	_, err = server.Owner(ctx, &types.QueryOwner{})
-	// ASSERT: The query should've failed.
-	require.ErrorContains(t, err, collections.ErrNotFound.Error())
-
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	require.NoError(t, k.Owner.Set(ctx, owner.Address))
+	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to query owner with state.
-	res, err := server.Owner(ctx, &types.QueryOwner{})
+	res, err := server.Owner(goCtx, &types.QueryOwner{})
 	// ASSERT: The query should've succeeded, with empty pending owner.
 	require.NoError(t, err)
 	require.Equal(t, owner.Address, res.Owner)
@@ -80,10 +78,10 @@ func TestOwnerQuery(t *testing.T) {
 
 	// ARRANGE: Set pending owner in state.
 	pendingOwner := utils.TestAccount()
-	require.NoError(t, k.PendingOwner.Set(ctx, pendingOwner.Address))
+	k.SetPendingOwner(ctx, pendingOwner.Address)
 
 	// ACT: Attempt to query owner with state.
-	res, err = server.Owner(ctx, &types.QueryOwner{})
+	res, err = server.Owner(goCtx, &types.QueryOwner{})
 	// ASSERT: The query should've succeeded, with pending owner.
 	require.NoError(t, err)
 	require.Equal(t, owner.Address, res.Owner)
@@ -92,26 +90,27 @@ func TestOwnerQuery(t *testing.T) {
 
 func TestBurnersQuery(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
 	server := keeper.NewQueryServer(k)
 
 	// ACT: Attempt to query burners with invalid request.
-	_, err := server.Burners(ctx, nil)
+	_, err := server.Burners(goCtx, nil)
 	// ASSERT: The query should've failed due to invalid request.
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
 	// ACT: Attempt to query burners with no state.
-	res, err := server.Burners(ctx, &types.QueryBurners{})
+	res, err := server.Burners(goCtx, &types.QueryBurners{})
 	// ASSERT: The query should've succeeded, and returned no burners.
 	require.NoError(t, err)
 	require.Empty(t, res.Burners)
 
 	// ARRANGE: Set burners in state.
 	burner1, burner2 := utils.TestAccount(), utils.TestAccount()
-	require.NoError(t, k.Burners.Set(ctx, burner1.Address, ONE))
-	require.NoError(t, k.Burners.Set(ctx, burner2.Address, ONE.MulRaw(2)))
+	k.SetBurner(ctx, burner1.Address, ONE)
+	k.SetBurner(ctx, burner2.Address, ONE.MulRaw(2))
 
 	// ACT: Attempt to query burners with state.
-	res, err = server.Burners(ctx, &types.QueryBurners{})
+	res, err = server.Burners(goCtx, &types.QueryBurners{})
 	// ASSERT: The query should've succeeded, and returned burners.
 	require.NoError(t, err)
 	require.Len(t, res.Burners, 2)
@@ -127,26 +126,27 @@ func TestBurnersQuery(t *testing.T) {
 
 func TestMintersQuery(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
 	server := keeper.NewQueryServer(k)
 
 	// ACT: Attempt to query minters with invalid request.
-	_, err := server.Minters(ctx, nil)
+	_, err := server.Minters(goCtx, nil)
 	// ASSERT: The query should've failed due to invalid request.
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
 	// ACT: Attempt to query minters with no state.
-	res, err := server.Minters(ctx, &types.QueryMinters{})
+	res, err := server.Minters(goCtx, &types.QueryMinters{})
 	// ASSERT: The query should've succeeded, and returned no minters.
 	require.NoError(t, err)
 	require.Empty(t, res.Minters)
 
 	// ARRANGE: Set minters in state.
 	minter1, minter2 := utils.TestAccount(), utils.TestAccount()
-	require.NoError(t, k.Minters.Set(ctx, minter1.Address, ONE))
-	require.NoError(t, k.Minters.Set(ctx, minter2.Address, ONE.MulRaw(2)))
+	k.SetMinter(ctx, minter1.Address, ONE)
+	k.SetMinter(ctx, minter2.Address, ONE.MulRaw(2))
 
 	// ACT: Attempt to query minters with state.
-	res, err = server.Minters(ctx, &types.QueryMinters{})
+	res, err = server.Minters(goCtx, &types.QueryMinters{})
 	// ASSERT: The query should've succeeded, and returned minters.
 	require.NoError(t, err)
 	require.Len(t, res.Minters, 2)
@@ -162,26 +162,27 @@ func TestMintersQuery(t *testing.T) {
 
 func TestPausersQuery(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
 	server := keeper.NewQueryServer(k)
 
 	// ACT: Attempt to query pausers with invalid request.
-	_, err := server.Pausers(ctx, nil)
+	_, err := server.Pausers(goCtx, nil)
 	// ASSERT: The query should've failed due to invalid request.
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
 	// ACT: Attempt to query pausers with no state.
-	res, err := server.Pausers(ctx, &types.QueryPausers{})
+	res, err := server.Pausers(goCtx, &types.QueryPausers{})
 	// ASSERT: The query should've succeeded, and returned no pausers.
 	require.NoError(t, err)
 	require.Empty(t, res.Pausers)
 
 	// ARRANGE: Set pausers in state.
 	pauser1, pauser2 := utils.TestAccount(), utils.TestAccount()
-	require.NoError(t, k.Pausers.Set(ctx, pauser1.Address))
-	require.NoError(t, k.Pausers.Set(ctx, pauser2.Address))
+	k.SetPauser(ctx, pauser1.Address)
+	k.SetPauser(ctx, pauser2.Address)
 
 	// ACT: Attempt to query pausers with state.
-	res, err = server.Pausers(ctx, &types.QueryPausers{})
+	res, err = server.Pausers(goCtx, &types.QueryPausers{})
 	// ASSERT: The query should've succeeded, and returned pausers.
 	require.NoError(t, err)
 	require.Len(t, res.Pausers, 2)

@@ -2,16 +2,14 @@ syntax = "proto3";
 
 package aura.blocklist.v1;
 
-import "cosmos_proto/cosmos.proto";
-
 option go_package = "github.com/noble-assets/aura/x/aura/types/blocklist";
 
 message GenesisState {
   // owner is the address that can control this submodule.
-  string owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string owner = 1;
   // pending_owner is the address of the new owner during an ownership transfer.
-  string pending_owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string pending_owner = 2;
 
-  // blocked_addresses is a mapping between user addresses and blocked state.
-  map<string, bool> blocked_addresses = 3;
+  // blocked_addresses is a list of blocked user addresses.
+  repeated string blocked_addresses = 3;
 }

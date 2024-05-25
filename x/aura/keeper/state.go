@@ -1,49 +1,177 @@
 package keeper
 
 import (
-	"context"
-
-	"cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/store/prefix"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/noble-assets/aura/x/aura/types"
 )
 
-func (k *Keeper) GetBurners(ctx context.Context) ([]types.Burner, error) {
-	var burners []types.Burner
+//
 
-	err := k.Burners.Walk(ctx, nil, func(address string, allowance math.Int) (stop bool, err error) {
+func (k *Keeper) GetPaused(ctx sdk.Context) bool {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.PausedKey)
+	if len(bz) == 1 && bz[0] == 1 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func (k *Keeper) SetPaused(ctx sdk.Context, paused bool) {
+	store := ctx.KVStore(k.storeKey)
+	if paused {
+		store.Set(types.PausedKey, []byte{0x1})
+	} else {
+		store.Set(types.PausedKey, []byte{0x0})
+	}
+}
+
+//
+
+func (k *Keeper) GetOwner(ctx sdk.Context) string {
+	store := ctx.KVStore(k.storeKey)
+	return string(store.Get(types.OwnerKey))
+}
+
+func (k *Keeper) SetOwner(ctx sdk.Context, owner string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.OwnerKey, []byte(owner))
+}
+
+//
+
+func (k *Keeper) DeletePendingOwner(ctx sdk.Context) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.PendingOwnerKey)
+}
+
+func (k *Keeper) GetPendingOwner(ctx sdk.Context) string {
+	store := ctx.KVStore(k.storeKey)
+	return string(store.Get(types.PendingOwnerKey))
+}
+
+func (k *Keeper) SetPendingOwner(ctx sdk.Context, pendingOwner string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.PendingOwnerKey, []byte(pendingOwner))
+}
+
+//
+
+func (k *Keeper) DeleteBurner(ctx sdk.Context, burner string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.BurnerKey(burner))
+}
+
+func (k *Keeper) GetBurner(ctx sdk.Context, burner string) (allowance sdk.Int) {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.BurnerKey(burner))
+
+	_ = allowance.Unmarshal(bz)
+	return
+}
+
+func (k *Keeper) GetBurners(ctx sdk.Context) (burners []types.Burner) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BurnerPrefix)
+	itr := store.Iterator(nil, nil)
+
+	defer itr.Close()
+
+	for ; itr.Valid(); itr.Next() {
+		var allowance sdk.Int
+		_ = allowance.Unmarshal(itr.Value())
+
 		burners = append(burners, types.Burner{
-			Address:   address,
+			Address:   string(itr.Key()),
 			Allowance: allowance,
 		})
+	}
 
-		return false, nil
-	})
-
-	return burners, err
+	return
 }
 
-func (k *Keeper) GetMinters(ctx context.Context) ([]types.Minter, error) {
-	var minters []types.Minter
+func (k *Keeper) HasBurner(ctx sdk.Context, burner string) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.BurnerKey(burner))
+}
 
-	err := k.Minters.Walk(ctx, nil, func(address string, allowance math.Int) (stop bool, err error) {
+func (k *Keeper) SetBurner(ctx sdk.Context, burner string, allowance sdk.Int) {
+	store := ctx.KVStore(k.storeKey)
+	bz, _ := allowance.Marshal()
+	store.Set(types.BurnerKey(burner), bz)
+}
+
+//
+
+func (k *Keeper) DeleteMinter(ctx sdk.Context, minter string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.MinterKey(minter))
+}
+
+func (k *Keeper) GetMinter(ctx sdk.Context, minter string) (allowance sdk.Int) {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.MinterKey(minter))
+
+	_ = allowance.Unmarshal(bz)
+	return
+}
+
+func (k *Keeper) GetMinters(ctx sdk.Context) (minters []types.Minter) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.MinterPrefix)
+	itr := store.Iterator(nil, nil)
+
+	defer itr.Close()
+
+	for ; itr.Valid(); itr.Next() {
+		var allowance sdk.Int
+		_ = allowance.Unmarshal(itr.Value())
+
 		minters = append(minters, types.Minter{
-			Address:   address,
+			Address:   string(itr.Key()),
 			Allowance: allowance,
 		})
+	}
 
-		return false, nil
-	})
-
-	return minters, err
+	return
 }
 
-func (k *Keeper) GetPausers(ctx context.Context) ([]string, error) {
-	var pausers []string
+func (k *Keeper) HasMinter(ctx sdk.Context, minter string) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.MinterKey(minter))
+}
 
-	err := k.Pausers.Walk(ctx, nil, func(pauser string) (stop bool, err error) {
-		pausers = append(pausers, pauser)
-		return false, nil
-	})
+func (k *Keeper) SetMinter(ctx sdk.Context, minter string, allowance sdk.Int) {
+	store := ctx.KVStore(k.storeKey)
+	bz, _ := allowance.Marshal()
+	store.Set(types.MinterKey(minter), bz)
+}
 
-	return pausers, err
+//
+
+func (k *Keeper) DeletePauser(ctx sdk.Context, pauser string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.PauserKey(pauser))
+}
+
+func (k *Keeper) GetPausers(ctx sdk.Context) (pausers []string) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PauserPrefix)
+	itr := store.Iterator(nil, nil)
+
+	defer itr.Close()
+
+	for ; itr.Valid(); itr.Next() {
+		pausers = append(pausers, string(itr.Key()))
+	}
+
+	return
+}
+
+func (k *Keeper) HasPauser(ctx sdk.Context, pauser string) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.PauserKey(pauser))
+}
+
+func (k *Keeper) SetPauser(ctx sdk.Context, pauser string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.PauserKey(pauser), []byte{})
 }

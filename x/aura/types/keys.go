@@ -14,3 +14,15 @@ var (
 	MinterPrefix    = []byte("minter/")
 	PauserPrefix    = []byte("pauser/")
 )
+
+func BurnerKey(address string) []byte {
+	return append(BurnerPrefix, []byte(address)...)
+}
+
+func MinterKey(address string) []byte {
+	return append(MinterPrefix, []byte(address)...)
+}
+
+func PauserKey(address string) []byte {
+	return append(PauserPrefix, []byte(address)...)
+}

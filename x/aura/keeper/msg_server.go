@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	"cosmossdk.io/collections"
 	sdkerrors "cosmossdk.io/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -22,22 +21,24 @@ func NewMsgServer(keeper *Keeper) types.MsgServer {
 	return &msgServer{Keeper: keeper}
 }
 
-func (k msgServer) Burn(ctx context.Context, msg *types.MsgBurn) (*types.MsgBurnResponse, error) {
-	allowance, err := k.Burners.Get(ctx, msg.Signer)
-	if err != nil {
-		if errors.Is(err, collections.ErrNotFound) {
-			return nil, types.ErrInvalidBurner
-		}
+func (k msgServer) Burn(goCtx context.Context, msg *types.MsgBurn) (*types.MsgBurnResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve burner from state")
+	if !k.HasBurner(ctx, msg.Signer) {
+		return nil, types.ErrInvalidBurner
 	}
+	allowance := k.GetBurner(ctx, msg.Signer)
 	if allowance.LT(msg.Amount) {
 		return nil, sdkerrors.Wrapf(types.ErrInsufficientAllowance, "burner %s has an allowance of %s", msg.Signer, allowance.String())
 	}
 
-	from, err := k.accountKeeper.AddressCodec().StringToBytes(msg.From)
+	from, err := sdk.AccAddressFromBech32(msg.From)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to decode account address %s", msg.From)
+	}
+
+	if !msg.Amount.IsPositive() {
+		return nil, errors.New("amount must be positive")
 	}
 
 	coins := sdk.NewCoins(sdk.NewCoin(k.Denom, msg.Amount))
@@ -50,31 +51,30 @@ func (k msgServer) Burn(ctx context.Context, msg *types.MsgBurn) (*types.MsgBurn
 		return nil, sdkerrors.Wrapf(err, "unable to burn from module")
 	}
 
-	err = k.Burners.Set(ctx, msg.Signer, allowance.Sub(msg.Amount))
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to update burner's allowance")
-	}
+	k.SetBurner(ctx, msg.Signer, allowance.Sub(msg.Amount))
 
 	// NOTE: The bank module emits an event for us.
 	return &types.MsgBurnResponse{}, nil
 }
 
-func (k msgServer) Mint(ctx context.Context, msg *types.MsgMint) (*types.MsgMintResponse, error) {
-	allowance, err := k.Minters.Get(ctx, msg.Signer)
-	if err != nil {
-		if errors.Is(err, collections.ErrNotFound) {
-			return nil, types.ErrInvalidMinter
-		}
+func (k msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMintResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve minter from state")
+	if !k.HasMinter(ctx, msg.Signer) {
+		return nil, types.ErrInvalidMinter
 	}
+	allowance := k.GetMinter(ctx, msg.Signer)
 	if allowance.LT(msg.Amount) {
 		return nil, sdkerrors.Wrapf(types.ErrInsufficientAllowance, "minter %s has an allowance of %s", msg.Signer, allowance.String())
 	}
 
-	to, err := k.accountKeeper.AddressCodec().StringToBytes(msg.To)
+	to, err := sdk.AccAddressFromBech32(msg.To)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to decode account address %s", msg.To)
+	}
+
+	if !msg.Amount.IsPositive() {
+		return nil, errors.New("amount must be positive")
 	}
 
 	coins := sdk.NewCoins(sdk.NewCoin(k.Denom, msg.Amount))
@@ -87,118 +87,104 @@ func (k msgServer) Mint(ctx context.Context, msg *types.MsgMint) (*types.MsgMint
 		return nil, sdkerrors.Wrapf(err, "unable to transfer from module to user")
 	}
 
-	err = k.Minters.Set(ctx, msg.Signer, allowance.Sub(msg.Amount))
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to update minter's allowance")
-	}
+	k.SetMinter(ctx, msg.Signer, allowance.Sub(msg.Amount))
 
 	// NOTE: The bank module emits an event for us.
 	return &types.MsgMintResponse{}, nil
 }
 
-func (k msgServer) Pause(ctx context.Context, msg *types.MsgPause) (*types.MsgPauseResponse, error) {
-	has, err := k.Pausers.Has(ctx, msg.Signer)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve pauser from state")
-	}
-	if !has {
+func (k msgServer) Pause(goCtx context.Context, msg *types.MsgPause) (*types.MsgPauseResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	if !k.HasPauser(ctx, msg.Signer) {
 		return nil, types.ErrInvalidPauser
 	}
-
-	if paused, _ := k.Paused.Get(ctx); paused {
+	if k.GetPaused(ctx) {
 		return nil, errors.New("module is already paused")
 	}
 
-	err = k.Paused.Set(ctx, true)
-	if err != nil {
-		return nil, errors.New("unable to set paused state")
-	}
+	k.SetPaused(ctx, true)
 
-	return &types.MsgPauseResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.Paused{
+	return &types.MsgPauseResponse{}, ctx.EventManager().EmitTypedEvent(&types.Paused{
 		Account: msg.Signer,
 	})
 }
 
-func (k msgServer) Unpause(ctx context.Context, msg *types.MsgUnpause) (*types.MsgUnpauseResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) Unpause(goCtx context.Context, msg *types.MsgUnpause) (*types.MsgUnpauseResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	if paused, _ := k.Paused.Get(ctx); !paused {
+	if !k.GetPaused(ctx) {
 		return nil, errors.New("module is already unpaused")
 	}
 
-	err = k.Paused.Set(ctx, false)
-	if err != nil {
-		return nil, errors.New("unable to set paused state")
-	}
+	k.SetPaused(ctx, false)
 
-	return &types.MsgUnpauseResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.Unpaused{
+	return &types.MsgUnpauseResponse{}, ctx.EventManager().EmitTypedEvent(&types.Unpaused{
 		Account: msg.Signer,
 	})
 }
 
-func (k msgServer) TransferOwnership(ctx context.Context, msg *types.MsgTransferOwnership) (*types.MsgTransferOwnershipResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) TransferOwnership(goCtx context.Context, msg *types.MsgTransferOwnership) (*types.MsgTransferOwnershipResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	err = k.PendingOwner.Set(ctx, msg.NewOwner)
-	if err != nil {
-		return nil, errors.New("unable to set pending owner state")
-	}
+	k.SetPendingOwner(ctx, msg.NewOwner)
 
-	return &types.MsgTransferOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.OwnershipTransferStarted{
+	return &types.MsgTransferOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&types.OwnershipTransferStarted{
 		PreviousOwner: owner,
 		NewOwner:      msg.NewOwner,
 	})
 }
 
-func (k msgServer) AcceptOwnership(ctx context.Context, msg *types.MsgAcceptOwnership) (*types.MsgAcceptOwnershipResponse, error) {
-	pendingOwner, err := k.PendingOwner.Get(ctx)
-	if err != nil {
-		return nil, errors.New("there is no pending owner")
+func (k msgServer) AcceptOwnership(goCtx context.Context, msg *types.MsgAcceptOwnership) (*types.MsgAcceptOwnershipResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	pendingOwner := k.GetPendingOwner(ctx)
+	if pendingOwner == "" {
+		return nil, types.ErrNoPendingOwner
 	}
 	if msg.Signer != pendingOwner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidPendingOwner, "expected %s, got %s", pendingOwner, msg.Signer)
 	}
 
-	owner, _ := k.Owner.Get(ctx)
+	owner := k.GetOwner(ctx)
 
-	err = k.Owner.Set(ctx, pendingOwner)
-	if err != nil {
-		return nil, errors.New("unable to set owner state")
-	}
-	err = k.PendingOwner.Remove(ctx)
-	if err != nil {
-		return nil, errors.New("unable to remove pending owner state")
-	}
+	k.SetOwner(ctx, msg.Signer)
+	k.DeletePendingOwner(ctx)
 
-	return &types.MsgAcceptOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.OwnershipTransferred{
+	return &types.MsgAcceptOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&types.OwnershipTransferred{
 		PreviousOwner: owner,
 		NewOwner:      msg.Signer,
 	})
 }
 
-func (k msgServer) AddBurner(ctx context.Context, msg *types.MsgAddBurner) (*types.MsgAddBurnerResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) AddBurner(goCtx context.Context, msg *types.MsgAddBurner) (*types.MsgAddBurnerResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	has, err := k.Burners.Has(ctx, msg.Burner)
-	if err != nil || has {
+	if k.HasBurner(ctx, msg.Burner) {
 		return nil, fmt.Errorf("%s is already a burner", msg.Burner)
 	}
 
@@ -206,52 +192,48 @@ func (k msgServer) AddBurner(ctx context.Context, msg *types.MsgAddBurner) (*typ
 		return nil, errors.New("allowance cannot be negative")
 	}
 
-	err = k.Burners.Set(ctx, msg.Burner, msg.Allowance)
-	if err != nil {
-		return nil, errors.New("unable to set burner in state")
-	}
+	k.SetBurner(ctx, msg.Burner, msg.Allowance)
 
-	return &types.MsgAddBurnerResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerAdded{
+	return &types.MsgAddBurnerResponse{}, ctx.EventManager().EmitTypedEvent(&types.BurnerAdded{
 		Address:   msg.Burner,
 		Allowance: msg.Allowance,
 	})
 }
 
-func (k msgServer) RemoveBurner(ctx context.Context, msg *types.MsgRemoveBurner) (*types.MsgRemoveBurnerResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) RemoveBurner(goCtx context.Context, msg *types.MsgRemoveBurner) (*types.MsgRemoveBurnerResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	has, err := k.Burners.Has(ctx, msg.Burner)
-	if err != nil || !has {
+	if !k.HasBurner(ctx, msg.Burner) {
 		return nil, fmt.Errorf("%s is not a burner", msg.Burner)
 	}
 
-	err = k.Burners.Remove(ctx, msg.Burner)
-	if err != nil {
-		return nil, errors.New("unable to remove burner from state")
-	}
+	k.DeleteBurner(ctx, msg.Burner)
 
-	return &types.MsgRemoveBurnerResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerRemoved{
+	return &types.MsgRemoveBurnerResponse{}, ctx.EventManager().EmitTypedEvent(&types.BurnerRemoved{
 		Address: msg.Burner,
 	})
 }
 
-func (k msgServer) SetBurnerAllowance(ctx context.Context, msg *types.MsgSetBurnerAllowance) (*types.MsgSetBurnerAllowanceResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) SetBurnerAllowance(goCtx context.Context, msg *types.MsgSetBurnerAllowance) (*types.MsgSetBurnerAllowanceResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	has, err := k.Burners.Has(ctx, msg.Burner)
-	if err != nil || !has {
+	if !k.HasBurner(ctx, msg.Burner) {
 		return nil, fmt.Errorf("%s is not a burner", msg.Burner)
 	}
 
@@ -259,31 +241,28 @@ func (k msgServer) SetBurnerAllowance(ctx context.Context, msg *types.MsgSetBurn
 		return nil, errors.New("allowance cannot be negative")
 	}
 
-	allowance, _ := k.Burners.Get(ctx, msg.Burner)
+	allowance := k.GetBurner(ctx, msg.Burner)
+	k.SetBurner(ctx, msg.Burner, msg.Allowance)
 
-	err = k.Burners.Set(ctx, msg.Burner, msg.Allowance)
-	if err != nil {
-		return nil, errors.New("unable to set burner allowance in state")
-	}
-
-	return &types.MsgSetBurnerAllowanceResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerUpdated{
+	return &types.MsgSetBurnerAllowanceResponse{}, ctx.EventManager().EmitTypedEvent(&types.BurnerUpdated{
 		Address:           msg.Burner,
 		PreviousAllowance: allowance,
 		NewAllowance:      msg.Allowance,
 	})
 }
 
-func (k msgServer) AddMinter(ctx context.Context, msg *types.MsgAddMinter) (*types.MsgAddMinterResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) AddMinter(goCtx context.Context, msg *types.MsgAddMinter) (*types.MsgAddMinterResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	has, err := k.Minters.Has(ctx, msg.Minter)
-	if err != nil || has {
+	if k.HasMinter(ctx, msg.Minter) {
 		return nil, fmt.Errorf("%s is already a minter", msg.Minter)
 	}
 
@@ -291,52 +270,48 @@ func (k msgServer) AddMinter(ctx context.Context, msg *types.MsgAddMinter) (*typ
 		return nil, errors.New("allowance cannot be negative")
 	}
 
-	err = k.Minters.Set(ctx, msg.Minter, msg.Allowance)
-	if err != nil {
-		return nil, errors.New("unable to set minter in state")
-	}
+	k.SetMinter(ctx, msg.Minter, msg.Allowance)
 
-	return &types.MsgAddMinterResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterAdded{
+	return &types.MsgAddMinterResponse{}, ctx.EventManager().EmitTypedEvent(&types.MinterAdded{
 		Address:   msg.Minter,
 		Allowance: msg.Allowance,
 	})
 }
 
-func (k msgServer) RemoveMinter(ctx context.Context, msg *types.MsgRemoveMinter) (*types.MsgRemoveMinterResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) RemoveMinter(goCtx context.Context, msg *types.MsgRemoveMinter) (*types.MsgRemoveMinterResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	has, err := k.Minters.Has(ctx, msg.Minter)
-	if err != nil || !has {
+	if !k.HasMinter(ctx, msg.Minter) {
 		return nil, fmt.Errorf("%s is not a minter", msg.Minter)
 	}
 
-	err = k.Minters.Remove(ctx, msg.Minter)
-	if err != nil {
-		return nil, errors.New("unable to remove minter from state")
-	}
+	k.DeleteMinter(ctx, msg.Minter)
 
-	return &types.MsgRemoveMinterResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterRemoved{
+	return &types.MsgRemoveMinterResponse{}, ctx.EventManager().EmitTypedEvent(&types.MinterRemoved{
 		Address: msg.Minter,
 	})
 }
 
-func (k msgServer) SetMinterAllowance(ctx context.Context, msg *types.MsgSetMinterAllowance) (*types.MsgSetMinterAllowanceResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) SetMinterAllowance(goCtx context.Context, msg *types.MsgSetMinterAllowance) (*types.MsgSetMinterAllowanceResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	has, err := k.Minters.Has(ctx, msg.Minter)
-	if err != nil || !has {
+	if !k.HasMinter(ctx, msg.Minter) {
 		return nil, fmt.Errorf("%s is not a minter", msg.Minter)
 	}
 
@@ -344,64 +319,56 @@ func (k msgServer) SetMinterAllowance(ctx context.Context, msg *types.MsgSetMint
 		return nil, errors.New("allowance cannot be negative")
 	}
 
-	allowance, _ := k.Minters.Get(ctx, msg.Minter)
+	allowance := k.GetMinter(ctx, msg.Minter)
+	k.SetMinter(ctx, msg.Minter, msg.Allowance)
 
-	err = k.Minters.Set(ctx, msg.Minter, msg.Allowance)
-	if err != nil {
-		return nil, errors.New("unable to set minter allowance in state")
-	}
-
-	return &types.MsgSetMinterAllowanceResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterUpdated{
+	return &types.MsgSetMinterAllowanceResponse{}, ctx.EventManager().EmitTypedEvent(&types.MinterUpdated{
 		Address:           msg.Minter,
 		PreviousAllowance: allowance,
 		NewAllowance:      msg.Allowance,
 	})
 }
 
-func (k msgServer) AddPauser(ctx context.Context, msg *types.MsgAddPauser) (*types.MsgAddPauserResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) AddPauser(goCtx context.Context, msg *types.MsgAddPauser) (*types.MsgAddPauserResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	has, err := k.Pausers.Has(ctx, msg.Pauser)
-	if err != nil || has {
+	if k.HasPauser(ctx, msg.Pauser) {
 		return nil, fmt.Errorf("%s is already a pauser", msg.Pauser)
 	}
 
-	err = k.Pausers.Set(ctx, msg.Pauser)
-	if err != nil {
-		return nil, errors.New("unable to set pauser in state")
-	}
+	k.SetPauser(ctx, msg.Pauser)
 
-	return &types.MsgAddPauserResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.PauserAdded{
+	return &types.MsgAddPauserResponse{}, ctx.EventManager().EmitTypedEvent(&types.PauserAdded{
 		Address: msg.Pauser,
 	})
 }
 
-func (k msgServer) RemovePauser(ctx context.Context, msg *types.MsgRemovePauser) (*types.MsgRemovePauserResponse, error) {
-	owner, err := k.Owner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve owner from state")
+func (k msgServer) RemovePauser(goCtx context.Context, msg *types.MsgRemovePauser) (*types.MsgRemovePauserResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
 	}
 	if msg.Signer != owner {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	has, err := k.Pausers.Has(ctx, msg.Pauser)
-	if err != nil || !has {
+	if !k.HasPauser(ctx, msg.Pauser) {
 		return nil, fmt.Errorf("%s is not a pauser", msg.Pauser)
 	}
 
-	err = k.Pausers.Remove(ctx, msg.Pauser)
-	if err != nil {
-		return nil, errors.New("unable to remove pauser from state")
-	}
+	k.DeletePauser(ctx, msg.Pauser)
 
-	return &types.MsgRemovePauserResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.PauserRemoved{
+	return &types.MsgRemovePauserResponse{}, ctx.EventManager().EmitTypedEvent(&types.PauserRemoved{
 		Address: msg.Pauser,
 	})
 }

@@ -2,26 +2,24 @@ syntax = "proto3";
 
 package aura.blocklist.v1;
 
-import "cosmos_proto/cosmos.proto";
-
 option go_package = "github.com/noble-assets/aura/x/aura/types/blocklist";
 
 // OwnershipTransferStarted is emitted whenever an ownership transfer is started.
 message OwnershipTransferStarted {
   // previous_owner is the address of the previous owner.
-  string previous_owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string previous_owner = 1;
 
   // new_owner is the address of the new owner.
-  string new_owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string new_owner = 2;
 }
 
 // OwnershipTransferStarted is emitted whenever an ownership transfer is finalized.
 message OwnershipTransferred {
   // previous_owner is the address of the previous owner.
-  string previous_owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string previous_owner = 1;
 
   // new_owner is the address of the new owner.
-  string new_owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string new_owner = 2;
 }
 
 // BlockedAddressesAdded is emitted whenever addresses are added to the blocklist.

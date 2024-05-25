@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/noble-assets/aura/x/aura/types"
 )
@@ -25,56 +26,55 @@ func (k queryServer) Denom(_ context.Context, req *types.QueryDenom) (*types.Que
 	return &types.QueryDenomResponse{Denom: k.Keeper.Denom}, nil
 }
 
-func (k queryServer) Paused(ctx context.Context, req *types.QueryPaused) (*types.QueryPausedResponse, error) {
+func (k queryServer) Paused(goCtx context.Context, req *types.QueryPaused) (*types.QueryPausedResponse, error) {
 	if req == nil {
 		return nil, errors.ErrInvalidRequest
 	}
 
-	paused, _ := k.Keeper.Paused.Get(ctx)
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	return &types.QueryPausedResponse{Paused: paused}, nil
+	return &types.QueryPausedResponse{Paused: k.GetPaused(ctx)}, nil
 }
 
-func (k queryServer) Owner(ctx context.Context, req *types.QueryOwner) (*types.QueryOwnerResponse, error) {
+func (k queryServer) Owner(goCtx context.Context, req *types.QueryOwner) (*types.QueryOwnerResponse, error) {
 	if req == nil {
 		return nil, errors.ErrInvalidRequest
 	}
 
-	owner, err := k.Keeper.Owner.Get(ctx)
-	pendingOwner, _ := k.PendingOwner.Get(ctx)
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	return &types.QueryOwnerResponse{
-		Owner:        owner,
-		PendingOwner: pendingOwner,
-	}, err
+		Owner:        k.GetOwner(ctx),
+		PendingOwner: k.GetPendingOwner(ctx),
+	}, nil
 }
 
-func (k queryServer) Burners(ctx context.Context, req *types.QueryBurners) (*types.QueryBurnersResponse, error) {
+func (k queryServer) Burners(goCtx context.Context, req *types.QueryBurners) (*types.QueryBurnersResponse, error) {
 	if req == nil {
 		return nil, errors.ErrInvalidRequest
 	}
 
-	burners, err := k.GetBurners(ctx)
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	return &types.QueryBurnersResponse{Burners: burners}, err
+	return &types.QueryBurnersResponse{Burners: k.GetBurners(ctx)}, nil
 }
 
-func (k queryServer) Minters(ctx context.Context, req *types.QueryMinters) (*types.QueryMintersResponse, error) {
+func (k queryServer) Minters(goCtx context.Context, req *types.QueryMinters) (*types.QueryMintersResponse, error) {
 	if req == nil {
 		return nil, errors.ErrInvalidRequest
 	}
 
-	minters, err := k.GetMinters(ctx)
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	return &types.QueryMintersResponse{Minters: minters}, err
+	return &types.QueryMintersResponse{Minters: k.GetMinters(ctx)}, nil
 }
 
-func (k queryServer) Pausers(ctx context.Context, req *types.QueryPausers) (*types.QueryPausersResponse, error) {
+func (k queryServer) Pausers(goCtx context.Context, req *types.QueryPausers) (*types.QueryPausersResponse, error) {
 	if req == nil {
 		return nil, errors.ErrInvalidRequest
 	}
 
-	pausers, err := k.GetPausers(ctx)
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	return &types.QueryPausersResponse{Pausers: pausers}, err
+	return &types.QueryPausersResponse{Pausers: k.GetPausers(ctx)}, nil
 }

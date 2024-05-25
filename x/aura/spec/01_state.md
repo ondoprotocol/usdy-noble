@@ -2,7 +2,7 @@
 
 ## Paused
 
-The paused field is of type boolean, stored via an [`collections.Item`][item].
+The paused field is of type boolean.
 It is used to store the current paused state of USDY.
 
 ```go
@@ -16,9 +16,8 @@ It is updated by the following messages:
 
 ## Owner
 
-The owner field is of type string, specifically a Noble encoded address, stored
-via an [`collections.Item`][item]. It is used to store the current owner of the
-module.
+The owner field is of type string, specifically a Noble encoded address.
+It is used to store the current owner of the module.
 
 ```go
 var OwnerKey = []byte("owner")
@@ -30,9 +29,8 @@ It is updated by the following messages:
 
 ## Pending Owner
 
-The pending owner field is of type string, specifically a Noble encoded address,
-stored via an [`collections.Item`][item]. It is used to store the current
-pending owner of the module.
+The pending owner field is of type string, specifically a Noble encoded address.
+It is used to store the current pending owner of the module.
 
 ```go
 var PendingOwnerKey = []byte("pending_owner")
@@ -45,9 +43,8 @@ It is updated by the following messages:
 
 ## Burners
 
-The burners field is a mapping between string (a Noble encoded address)
-and `math.Int`, stored via a [`collections.Map`][map]. It is used to store all
-burners of USDY, and their current burn allowance.
+The burners field is a mapping between string (a Noble encoded address) and `math.Int`.
+It is used to store all burners of USDY, and their current burn allowance.
 
 ```go
 var BurnerPrefix = []byte("burner/")
@@ -62,9 +59,8 @@ It is updated by the following messages:
 
 ## Minters
 
-The minters field is a mapping between string (a Noble encoded address)
-and `math.Int`, stored via a [`collections.Map`][map]. It is used to store all
-minters of USDY, and their current mint allowance.
+The minters field is a mapping between string (a Noble encoded address) and `math.Int`.
+It is used to store all minters of USDY, and their current mint allowance.
 
 ```go
 var MinterPrefix = []byte("minter/")
@@ -79,9 +75,8 @@ It is updated by the following messages:
 
 ## Pausers
 
-The pausers field is a unique set of strings, specifically Noble encoded
-addresses, stored via a [`collections.KeySet`][set]. It is used to store all
-pausers of USDY.
+The pausers field is a unique set of strings, specifically Noble encoded addresses.
+It is used to store all pausers of USDY.
 
 ```go
 var PauserPrefix = []byte("pauser/")
@@ -91,9 +86,3 @@ It is updated by the following messages:
 
 - [`aura.v1.MsgAddPauser`](./02_messages.md#add-pauser)
 - [`aura.v1.MsgRemovePauser`](./02_messages.md#remove-pauser)
-
-[item]: https://docs.cosmos.network/main/build/packages/collections#item
-
-[map]: https://docs.cosmos.network/main/build/packages/collections#map
-
-[set]: https://docs.cosmos.network/main/build/packages/collections#keyset

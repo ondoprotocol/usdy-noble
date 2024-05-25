@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"testing"
 
-	"cosmossdk.io/collections"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/noble-assets/aura/utils"
 	"github.com/noble-assets/aura/utils/mocks"
@@ -14,24 +14,20 @@ import (
 
 func TestBlocklistOwnerQuery(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
 	server := keeper.NewBlocklistQueryServer(k)
 
 	// ACT: Attempt to query blocklist owner with invalid request.
-	_, err := server.Owner(ctx, nil)
+	_, err := server.Owner(goCtx, nil)
 	// ASSERT: The query should've failed due to invalid request.
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
-	// ACT: Attempt to query blocklist owner with no state.
-	_, err = server.Owner(ctx, &blocklist.QueryOwner{})
-	// ASSERT: The query should've failed.
-	require.ErrorContains(t, err, collections.ErrNotFound.Error())
-
 	// ARRANGE: Set blocklist owner in state.
 	owner := utils.TestAccount()
-	require.NoError(t, k.BlocklistOwner.Set(ctx, owner.Address))
+	k.SetBlocklistOwner(ctx, owner.Address)
 
 	// ACT: Attempt to query blocklist owner with state.
-	res, err := server.Owner(ctx, &blocklist.QueryOwner{})
+	res, err := server.Owner(goCtx, &blocklist.QueryOwner{})
 	// ASSERT: The query should've succeeded, with empty pending owner.
 	require.NoError(t, err)
 	require.Equal(t, owner.Address, res.Owner)
@@ -39,10 +35,10 @@ func TestBlocklistOwnerQuery(t *testing.T) {
 
 	// ARRANGE: Set blocklist pending owner in state.
 	pendingOwner := utils.TestAccount()
-	require.NoError(t, k.BlocklistPendingOwner.Set(ctx, pendingOwner.Address))
+	k.SetBlocklistPendingOwner(ctx, pendingOwner.Address)
 
 	// ACT: Attempt to query blocklist owner with state.
-	res, err = server.Owner(ctx, &blocklist.QueryOwner{})
+	res, err = server.Owner(goCtx, &blocklist.QueryOwner{})
 	// ASSERT: The query should've succeeded, with pending owner.
 	require.NoError(t, err)
 	require.Equal(t, owner.Address, res.Owner)
@@ -53,26 +49,27 @@ func TestBlocklistAddressesQuery(t *testing.T) {
 	// NOTE: Query pagination is assumed working, so isn't testing here.
 
 	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
 	server := keeper.NewBlocklistQueryServer(k)
 
 	// ACT: Attempt to query blocklist addresses with invalid request.
-	_, err := server.Addresses(ctx, nil)
+	_, err := server.Addresses(goCtx, nil)
 	// ASSERT: The query should've failed due to invalid request.
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
 	// ACT: Attempt to query blocklist addresses with no state.
-	res, err := server.Addresses(ctx, &blocklist.QueryAddresses{})
+	res, err := server.Addresses(goCtx, &blocklist.QueryAddresses{})
 	// ASSERT: The query should've succeeded, with empty addresses.
 	require.NoError(t, err)
 	require.Empty(t, res.Addresses)
 
 	// ARRANGE: Set blocklist addresses in state.
 	user1, user2 := utils.TestAccount(), utils.TestAccount()
-	require.NoError(t, k.BlockedAddresses.Set(ctx, user1.Bytes, true))
-	require.NoError(t, k.BlockedAddresses.Set(ctx, user2.Bytes, true))
+	k.SetBlockedAddress(ctx, user1.Bytes)
+	k.SetBlockedAddress(ctx, user2.Bytes)
 
 	// ACT: Attempt to query blocklist addresses with state.
-	res, err = server.Addresses(ctx, &blocklist.QueryAddresses{})
+	res, err = server.Addresses(goCtx, &blocklist.QueryAddresses{})
 	// ASSERT: The query should've succeeded, with addresses.
 	require.NoError(t, err)
 	require.Len(t, res.Addresses, 2)
@@ -82,22 +79,23 @@ func TestBlocklistAddressesQuery(t *testing.T) {
 
 func TestBlocklistAddressQuery(t *testing.T) {
 	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
 	server := keeper.NewBlocklistQueryServer(k)
 
 	// ACT: Attempt to query blocked state with invalid request.
-	_, err := server.Address(ctx, nil)
+	_, err := server.Address(goCtx, nil)
 	// ASSERT: The query should've failed due to invalid request.
 	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
 
 	// ACT: Attempt to query blocked state with invalid address.
-	_, err = server.Address(ctx, &blocklist.QueryAddress{
+	_, err = server.Address(goCtx, &blocklist.QueryAddress{
 		Address: "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn",
 	})
 	// ASSERT: The action should've failed due to invalid address.
 	require.ErrorContains(t, err, "unable to decode address")
 
 	// ACT: Attempt to query blocked state of unblocked address.
-	res, err := server.Address(ctx, &blocklist.QueryAddress{
+	res, err := server.Address(goCtx, &blocklist.QueryAddress{
 		Address: utils.TestAccount().Address,
 	})
 	// ASSERT: The query should've succeeded.
@@ -106,10 +104,10 @@ func TestBlocklistAddressQuery(t *testing.T) {
 
 	// ARRANGE: Set blocklist address in state.
 	user := utils.TestAccount()
-	require.NoError(t, k.BlockedAddresses.Set(ctx, user.Bytes, true))
+	k.SetBlockedAddress(ctx, user.Bytes)
 
 	// ACT: Attempt to query blocked state of blocked address.
-	res, err = server.Address(ctx, &blocklist.QueryAddress{
+	res, err = server.Address(goCtx, &blocklist.QueryAddress{
 		Address: user.Address,
 	})
 	// ASSERT: The query should've succeeded.

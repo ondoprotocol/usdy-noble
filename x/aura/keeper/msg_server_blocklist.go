@@ -2,9 +2,9 @@ package keeper
 
 import (
 	"context"
-	"errors"
 
-	sdkerrors "cosmossdk.io/errors"
+	"cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/noble-assets/aura/x/aura/types/blocklist"
 )
 
@@ -18,100 +18,92 @@ func NewBlocklistMsgServer(keeper *Keeper) blocklist.MsgServer {
 	return &blocklistMsgServer{Keeper: keeper}
 }
 
-func (k blocklistMsgServer) TransferOwnership(ctx context.Context, msg *blocklist.MsgTransferOwnership) (*blocklist.MsgTransferOwnershipResponse, error) {
-	owner, err := k.BlocklistOwner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve blocklist owner from state")
+func (k blocklistMsgServer) TransferOwnership(goCtx context.Context, msg *blocklist.MsgTransferOwnership) (*blocklist.MsgTransferOwnershipResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetBlocklistOwner(ctx)
+	if owner == "" {
+		return nil, blocklist.ErrNoOwner
 	}
 	if msg.Signer != owner {
-		return nil, sdkerrors.Wrapf(blocklist.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
+		return nil, errors.Wrapf(blocklist.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
-	err = k.BlocklistPendingOwner.Set(ctx, msg.NewOwner)
-	if err != nil {
-		return nil, errors.New("unable to set blocklist pending owner state")
-	}
+	k.SetBlocklistPendingOwner(ctx, msg.NewOwner)
 
-	return &blocklist.MsgTransferOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.OwnershipTransferStarted{
+	return &blocklist.MsgTransferOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&blocklist.OwnershipTransferStarted{
 		PreviousOwner: owner,
 		NewOwner:      msg.NewOwner,
 	})
 }
 
-func (k blocklistMsgServer) AcceptOwnership(ctx context.Context, msg *blocklist.MsgAcceptOwnership) (*blocklist.MsgAcceptOwnershipResponse, error) {
-	pendingOwner, err := k.BlocklistPendingOwner.Get(ctx)
-	if err != nil {
-		return nil, errors.New("there is no blocklist pending owner")
+func (k blocklistMsgServer) AcceptOwnership(goCtx context.Context, msg *blocklist.MsgAcceptOwnership) (*blocklist.MsgAcceptOwnershipResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	pendingOwner := k.GetBlocklistPendingOwner(ctx)
+	if pendingOwner == "" {
+		return nil, blocklist.ErrNoPendingOwner
 	}
 	if msg.Signer != pendingOwner {
-		return nil, sdkerrors.Wrapf(blocklist.ErrInvalidPendingOwner, "expected %s, got %s", pendingOwner, msg.Signer)
+		return nil, errors.Wrapf(blocklist.ErrInvalidPendingOwner, "expected %s, got %s", pendingOwner, msg.Signer)
 	}
 
-	owner, _ := k.BlocklistOwner.Get(ctx)
+	owner := k.GetBlocklistOwner(ctx)
+	k.SetBlocklistOwner(ctx, msg.Signer)
+	k.DeleteBlocklistPendingOwner(ctx)
 
-	err = k.BlocklistOwner.Set(ctx, pendingOwner)
-	if err != nil {
-		return nil, errors.New("unable to set blocklist owner state")
-	}
-	err = k.BlocklistPendingOwner.Remove(ctx)
-	if err != nil {
-		return nil, errors.New("unable to remove blocklist pending owner state")
-	}
-
-	return &blocklist.MsgAcceptOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.OwnershipTransferred{
+	return &blocklist.MsgAcceptOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&blocklist.OwnershipTransferred{
 		PreviousOwner: owner,
 		NewOwner:      msg.Signer,
 	})
 }
 
-func (k blocklistMsgServer) AddToBlocklist(ctx context.Context, msg *blocklist.MsgAddToBlocklist) (*blocklist.MsgAddToBlocklistResponse, error) {
-	owner, err := k.BlocklistOwner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve blocklist owner from state")
+func (k blocklistMsgServer) AddToBlocklist(goCtx context.Context, msg *blocklist.MsgAddToBlocklist) (*blocklist.MsgAddToBlocklistResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetBlocklistOwner(ctx)
+	if owner == "" {
+		return nil, blocklist.ErrNoOwner
 	}
 	if msg.Signer != owner {
-		return nil, sdkerrors.Wrapf(blocklist.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
+		return nil, errors.Wrapf(blocklist.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
 	for _, account := range msg.Accounts {
-		address, err := k.accountKeeper.AddressCodec().StringToBytes(account)
+		address, err := sdk.AccAddressFromBech32(account)
 		if err != nil {
-			return nil, sdkerrors.Wrapf(err, "unable to decode account address %s", account)
+			return nil, errors.Wrapf(err, "unable to decode account address %s", account)
 		}
 
-		err = k.BlockedAddresses.Set(ctx, address, true)
-		if err != nil {
-			return nil, errors.New("unable to set blocked address state")
-		}
+		k.SetBlockedAddress(ctx, address)
 	}
 
-	return &blocklist.MsgAddToBlocklistResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.BlockedAddressesAdded{
+	return &blocklist.MsgAddToBlocklistResponse{}, ctx.EventManager().EmitTypedEvent(&blocklist.BlockedAddressesAdded{
 		Accounts: msg.Accounts,
 	})
 }
 
-func (k blocklistMsgServer) RemoveFromBlocklist(ctx context.Context, msg *blocklist.MsgRemoveFromBlocklist) (*blocklist.MsgRemoveFromBlocklistResponse, error) {
-	owner, err := k.BlocklistOwner.Get(ctx)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(err, "unable to retrieve blocklist owner from state")
+func (k blocklistMsgServer) RemoveFromBlocklist(goCtx context.Context, msg *blocklist.MsgRemoveFromBlocklist) (*blocklist.MsgRemoveFromBlocklistResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetBlocklistOwner(ctx)
+	if owner == "" {
+		return nil, blocklist.ErrNoOwner
 	}
 	if msg.Signer != owner {
-		return nil, sdkerrors.Wrapf(blocklist.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
+		return nil, errors.Wrapf(blocklist.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
 	for _, account := range msg.Accounts {
-		address, err := k.accountKeeper.AddressCodec().StringToBytes(account)
+		address, err := sdk.AccAddressFromBech32(account)
 		if err != nil {
-			return nil, sdkerrors.Wrapf(err, "unable to decode account address %s", account)
+			return nil, errors.Wrapf(err, "unable to decode account address %s", account)
 		}
 
-		err = k.BlockedAddresses.Remove(ctx, address)
-		if err != nil {
-			return nil, errors.New("unable to remove blocked address state")
-		}
+		k.DeleteBlockedAddress(ctx, address)
 	}
 
-	return &blocklist.MsgRemoveFromBlocklistResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.BlockedAddressesRemoved{
+	return &blocklist.MsgRemoveFromBlocklistResponse{}, ctx.EventManager().EmitTypedEvent(&blocklist.BlockedAddressesRemoved{
 		Accounts: msg.Accounts,
 	})
 }

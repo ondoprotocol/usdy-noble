@@ -1,67 +1,95 @@
 package mocks
 
 import (
-	"context"
-
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/cosmos/cosmos-sdk/x/auth/codec"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/noble-assets/aura/x/aura/types"
 )
-
-var cdc = codec.NewBech32Codec("noble")
 
 var _ types.BankKeeper = BankKeeper{}
 
 type BankKeeper struct {
-	Balances map[string]sdk.Coins
+	Balances    map[string]sdk.Coins
+	Restriction SendRestrictionFn
 }
 
-func (k BankKeeper) BurnCoins(ctx context.Context, moduleName string, amt sdk.Coins) error {
-	balance := k.Balances[moduleName]
-	newBalance, negative := balance.SafeSub(amt...)
+func (k BankKeeper) BurnCoins(ctx sdk.Context, moduleName string, amt sdk.Coins) error {
+	address := authtypes.NewModuleAddress(moduleName).String()
+
+	balance := k.Balances[address]
+	newBalance, negative := balance.SafeSub(amt)
 	if negative {
-		return sdkerrors.Wrapf(errors.ErrInsufficientFunds, "spendable balance %s is smaller than %s", balance, amt)
+		return sdkerrors.Wrapf(errors.ErrInsufficientFunds, "%s is smaller than %s", balance, amt)
 	}
 
-	k.Balances[moduleName] = newBalance
+	k.Balances[address] = newBalance
 
 	return nil
 }
 
-func (k BankKeeper) MintCoins(ctx context.Context, moduleName string, amt sdk.Coins) error {
-	k.Balances[moduleName] = k.Balances[moduleName].Add(amt...)
+func (k BankKeeper) MintCoins(ctx sdk.Context, moduleName string, amt sdk.Coins) error {
+	address := authtypes.NewModuleAddress(moduleName).String()
+	k.Balances[address] = k.Balances[address].Add(amt...)
 
 	return nil
 }
 
-func (k BankKeeper) SendCoinsFromAccountToModule(ctx context.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error {
-	sender, _ := cdc.BytesToString(senderAddr)
+func (k BankKeeper) SendCoinsFromAccountToModule(ctx sdk.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error {
+	recipientAddr := authtypes.NewModuleAddress(recipientModule)
 
-	balance := k.Balances[sender]
-	newBalance, negative := balance.SafeSub(amt...)
-	if negative {
-		return sdkerrors.Wrapf(errors.ErrInsufficientFunds, "spendable balance %s is smaller than %s", balance, amt)
+	return k.SendCoins(ctx, senderAddr, recipientAddr, amt)
+}
+
+func (k BankKeeper) SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error {
+	senderAddr := authtypes.NewModuleAddress(senderModule)
+
+	return k.SendCoins(ctx, senderAddr, recipientAddr, amt)
+}
+
+//
+
+type SendRestrictionFn func(ctx sdk.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error)
+
+func NoOpSendRestrictionFn(_ sdk.Context, _, toAddr sdk.AccAddress, _ sdk.Coins) (sdk.AccAddress, error) {
+	return toAddr, nil
+}
+
+func (k BankKeeper) WithSendCoinsRestriction(check SendRestrictionFn) BankKeeper {
+	oldRestriction := k.Restriction
+	k.Restriction = func(ctx sdk.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error) {
+		newToAddr, err = check(ctx, fromAddr, toAddr, amt)
+		if err != nil {
+			return newToAddr, err
+		}
+		return oldRestriction(ctx, fromAddr, toAddr, amt)
+	}
+	return k
+}
+
+func (k BankKeeper) SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error {
+	toAddr, err := k.Restriction(ctx, fromAddr, toAddr, amt)
+	if err != nil {
+		return err
 	}
 
-	k.Balances[sender] = newBalance
-	k.Balances[recipientModule] = k.Balances[recipientModule].Add(amt...)
+	balance := k.Balances[fromAddr.String()]
+	newBalance, negative := balance.SafeSub(amt)
+	if negative {
+		return sdkerrors.Wrapf(errors.ErrInsufficientFunds, "%s is smaller than %s", balance, amt)
+	}
+
+	k.Balances[fromAddr.String()] = newBalance
+	k.Balances[toAddr.String()] = k.Balances[toAddr.String()].Add(amt...)
 
 	return nil
 }
 
-func (k BankKeeper) SendCoinsFromModuleToAccount(ctx context.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error {
-	recipient, _ := cdc.BytesToString(recipientAddr)
+//
 
-	balance := k.Balances[senderModule]
-	newBalance, negative := balance.SafeSub(amt...)
-	if negative {
-		return sdkerrors.Wrapf(errors.ErrInsufficientFunds, "spendable balance %s is smaller than %s", balance, amt)
-	}
-
-	k.Balances[senderModule] = newBalance
-	k.Balances[recipient] = k.Balances[recipient].Add(amt...)
-
-	return nil
+func init() {
+	config := sdk.GetConfig()
+	config.SetBech32PrefixForAccount("noble", "noblepub")
+	config.Seal()
 }

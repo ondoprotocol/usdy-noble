@@ -3,11 +3,9 @@ package mocks
 import (
 	"testing"
 
-	"cosmossdk.io/log"
-	storetypes "cosmossdk.io/store/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/runtime"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/noble-assets/aura/x/aura/keeper"
@@ -15,23 +13,24 @@ import (
 )
 
 func AuraKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
-	return AuraKeeperWithBank(t, BankKeeper{})
+	return AuraKeeperWithBank(t, BankKeeper{
+		Restriction: NoOpSendRestrictionFn,
+	})
 }
 
-func AuraKeeperWithBank(t testing.TB, bank types.BankKeeper) (*keeper.Keeper, sdk.Context) {
-	logger := log.NewNopLogger()
-
+func AuraKeeperWithBank(_ testing.TB, bank BankKeeper) (*keeper.Keeper, sdk.Context) {
 	key := storetypes.NewKVStoreKey(types.ModuleName)
 	tkey := storetypes.NewTransientStoreKey("transient_aura")
-	wrapper := testutil.DefaultContextWithDB(t, key, tkey)
 
-	return keeper.NewKeeper(
+	k := keeper.NewKeeper(
 		codec.NewProtoCodec(codectypes.NewInterfaceRegistry()),
-		logger,
-		runtime.NewKVStoreService(key),
-		runtime.ProvideEventService(),
+		key,
 		"ausdy",
-		AccountKeeper{},
-		bank,
-	), wrapper.Ctx
+		nil,
+	)
+
+	bank = bank.WithSendCoinsRestriction(k.SendRestrictionFn)
+	k.SetBankKeeper(bank)
+
+	return k, testutil.DefaultContext(key, tkey)
 }

@@ -1,18 +1,67 @@
 # Events
 
+## `burn`
+
+This event is emitted by the bank module whenever coins are burned (including USDY).
+
+```json
+{
+  "type": "burn",
+  "attributes": [
+    {
+      "key": "burner",
+      "value": "noble1d47qadpqs5kjuc5ghc5uglyhtlc4mq0wmc3n33"
+    },
+    {
+      "key": "amount",
+      "value": "1000000000000000000ausdy"
+    }
+  ]
+}
+```
+
+This event is emitted by the following transactions:
+
+- [`aura.v1.MsgBurn`](./02_messages.md#burn)
+
+## `coinbase`
+
+This event is emitted by the bank module whenever coins are minted (including USDY).
+
+```json
+{
+  "type": "coinbase",
+  "attributes": [
+    {
+      "key": "minter",
+      "value": "noble1d47qadpqs5kjuc5ghc5uglyhtlc4mq0wmc3n33"
+    },
+    {
+      "key": "amount",
+      "value": "1000000000000000000ausdy"
+    }
+  ]
+}
+```
+
+This event is emitted by the following transactions:
+
+- [`aura.v1.MsgMint`](./02_messages.md#mint)
+
 ## Paused
 
 This event is emitted whenever USDY is paused.
 
-```shell
-- attributes:
-  - index: true
-    key: account
-    value: '"noble1signer"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.Paused
+```json
+{
+  "type": "aura.v1.Paused",
+  "attributes": [
+    {
+      "key": "account",
+      "value": "noble1signer"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -23,15 +72,16 @@ This event is emitted by the following transactions:
 
 This event is emitted whenever USDY is unpaused.
 
-```shell
-- attributes:
-  - index: true
-    key: account
-    value: '"noble1signer"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.Unpaused
+```json
+{
+  "type": "aura.v1.Unpaused",
+  "attributes": [
+    {
+      "key": "account",
+      "value": "noble1signer"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -42,18 +92,20 @@ This event is emitted by the following transactions:
 
 This event is emitted when an ownership transfer is started.
 
-```shell
-- attributes:
-  - index: true
-    key: new_owner
-    value: '"noble1owner"'
-  - index: true
-    key: previous_owner
-    value: '"noble1signer"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.OwnershipTransferStarted
+```json
+{
+  "type": "aura.v1.OwnershipTransferStarted",
+  "attributes": [
+    {
+      "key": "new_owner",
+      "value": "noble1owner"
+    },
+    {
+      "key": "previous_owner",
+      "value": "noble1signer"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -64,18 +116,20 @@ This event is emitted by the following transactions:
 
 This event is emitted when an ownership transfer is finalized.
 
-```shell
-- attributes:
-  - index: true
-    key: new_owner
-    value: '"noble1owner"'
-  - index: true
-    key: previous_owner
-    value: '"noble1signer"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.OwnershipTransferred
+```json
+{
+  "type": "aura.v1.OwnershipTransferred",
+  "attributes": [
+    {
+      "key": "new_owner",
+      "value": "noble1owner"
+    },
+    {
+      "key": "previous_owner",
+      "value": "noble1signer"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -86,18 +140,20 @@ This event is emitted by the following transactions:
 
 This event is emitted when a new burner is added.
 
-```shell
-- attributes:
-  - index: true
-    key: address
-    value: '"noble1burner"'
-  - index: true
-    key: allowance
-    value: '"0"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.BurnerAdded
+```json
+{
+  "type": "aura.v1.BurnerAdded",
+  "attributes": [
+    {
+      "key": "address",
+      "value": "noble1burner"
+    },
+    {
+      "key": "allowance",
+      "value": "0"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -108,15 +164,16 @@ This event is emitted by the following transactions:
 
 This event is emitted when a burner is removed.
 
-```shell
-- attributes:
-  - index: true
-    key: address
-    value: '"noble1burner"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.BurnerRemoved
+```json
+{
+  "type": "aura.v1.BurnerRemoved",
+  "attributes": [
+    {
+      "key": "address",
+      "value": "noble1burner"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -127,21 +184,24 @@ This event is emitted by the following transactions:
 
 This event is emitted when a burner's allowance is updated.
 
-```shell
-- attributes:
-  - index: true
-    key: address
-    value: '"noble1burner"'
-  - index: true
-    key: new_allowance
-    value: '"1000000000000000000"'
-  - index: true
-    key: previous_allowance
-    value: '"0"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.BurnerUpdated
+```json
+{
+  "type": "aura.v1.BurnerUpdated",
+  "attributes": [
+    {
+      "key": "address",
+      "value": "noble1burner"
+    },
+    {
+      "key": "new_allowance",
+      "value": "1000000000000000000"
+    },
+    {
+      "key": "previous_allowance",
+      "value": "0"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -152,18 +212,20 @@ This event is emitted by the following transactions:
 
 This event is emitted when a new minter is added.
 
-```shell
-- attributes:
-  - index: true
-    key: address
-    value: '"noble1minter"'
-  - index: true
-    key: allowance
-    value: '"0"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.MinterAdded
+```json
+{
+  "type": "aura.v1.MinterAdded",
+  "attributes": [
+    {
+      "key": "address",
+      "value": "noble1minter"
+    },
+    {
+      "key": "allowance",
+      "value": "0"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -174,15 +236,16 @@ This event is emitted by the following transactions:
 
 This event is emitted when a minter is removed.
 
-```shell
-- attributes:
-  - index: true
-    key: address
-    value: '"noble1minter"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.MinterRemoved
+```json
+{
+  "type": "aura.v1.MinterRemoved",
+  "attributes": [
+    {
+      "key": "address",
+      "value": "noble1minter"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -193,21 +256,24 @@ This event is emitted by the following transactions:
 
 This event is emitted when a minter's allowance is updated.
 
-```shell
-- attributes:
-  - index: true
-    key: address
-    value: '"noble1minter"'
-  - index: true
-    key: new_allowance
-    value: '"1000000000000000000"'
-  - index: true
-    key: previous_allowance
-    value: '"0"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.MinterUpdated
+```json
+{
+  "type": "aura.v1.MinterUpdated",
+  "attributes": [
+    {
+      "key": "address",
+      "value": "noble1minter"
+    },
+    {
+      "key": "new_allowance",
+      "value": "1000000000000000000"
+    },
+    {
+      "key": "previous_allowance",
+      "value": "0"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -218,15 +284,16 @@ This event is emitted by the following transactions:
 
 This event is emitted when a new pauser is added.
 
-```shell
-- attributes:
-  - index: true
-    key: address
-    value: '"noble1pauser"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.PauserAdded
+```json
+{
+  "type": "aura.v1.PauserAdded",
+  "attributes": [
+    {
+      "key": "address",
+      "value": "noble1pauser"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:
@@ -237,15 +304,16 @@ This event is emitted by the following transactions:
 
 This event is emitted when a pauser is removed.
 
-```shell
-- attributes:
-  - index: true
-    key: address
-    value: '"noble1pauser"'
-  - index: true
-    key: msg_index
-    value: "0"
-  type: aura.v1.PauserRemoved
+```json
+{
+  "type": "aura.v1.PauserRemoved",
+  "attributes": [
+    {
+      "key": "address",
+      "value": "noble1pauser"
+    }
+  ]
+}
 ```
 
 This event is emitted by the following transactions:

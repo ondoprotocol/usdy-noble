@@ -6,26 +6,33 @@
 
 A message that burns USDY from a user.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgBurn
-    amount: "1000000000000000000"
-    from: noble1user
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgBurn",
+        "signer": "noble1signer",
+        "from": "noble1user",
+        "amount": "1000000000000000000"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -45,7 +52,7 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`burn`](./03_events.md#burn)
 
 ## Mint
 
@@ -53,26 +60,33 @@ This message emits no events.
 
 A message that mints USDY to a user.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgMint
-    amount: "1000000000000000000"
-    signer: noble1signer
-    to: noble1user
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgMint",
+        "signer": "noble1signer",
+        "to": "noble1user",
+        "amount": "1000000000000000000"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -92,7 +106,7 @@ signatures: []
 
 ### Events Emitted
 
-This message emits no events.
+- [`coinbase`](./03_events.md#coinbase)
 
 ## Pause
 
@@ -100,24 +114,31 @@ This message emits no events.
 
 A message that pauses USDY.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgPause
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgPause",
+        "signer": "noble1signer"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -142,24 +163,31 @@ This message takes no arguments.
 
 A message that unpauses USDY.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgUnpause
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgUnpause",
+        "signer": "noble1signer"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -184,25 +212,32 @@ This message takes no arguments.
 
 A message that initiates an ownership transfer to a provided address.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgTransferOwnership
-    new_owner: noble1owner
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgTransferOwnership",
+        "signer": "noble1signer",
+        "new_owner": "noble1owner"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -227,24 +262,31 @@ signatures: []
 
 A message that finalizes an ownership transfer.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgAcceptOwnership
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgAcceptOwnership",
+        "signer": "noble1owner"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -274,26 +316,33 @@ This message takes no arguments.
 
 A message that adds a new burner, with an initial allowance.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgAddBurner
-    allowance: "0"
-    burner: noble1burner
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgAddBurner",
+        "signer": "noble1signer",
+        "burner": "noble1burner",
+        "allowance": "0"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -319,25 +368,32 @@ signatures: []
 
 A message that removes a burner.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgRemoveBurner
-    burner: noble1burner
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgRemoveBurner",
+        "signer": "noble1signer",
+        "burner": "noble1burner"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -362,26 +418,33 @@ signatures: []
 
 A message that sets the allowance of a burner.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgSetBurnerAllowance
-    allowance: "1000000000000000000"
-    burner: noble1burner
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgSetBurnerAllowance",
+        "signer": "noble1signer",
+        "burner": "noble1burner",
+        "allowance": "1000000000000000000"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -407,26 +470,33 @@ signatures: []
 
 A message that adds a new minter, with an initial allowance.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgAddMinter
-    allowance: "0"
-    minter: noble1minter
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgAddMinter",
+        "signer": "noble1signer",
+        "minter": "noble1minter",
+        "allowance": "0"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -452,25 +522,32 @@ signatures: []
 
 A message that removes a minter.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgRemoveMinter
-    minter: noble1minter
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgRemoveMinter",
+        "signer": "noble1signer",
+        "minter": "noble1minter"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -495,26 +572,33 @@ signatures: []
 
 A message that sets the allowance of a minter.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgSetMinterAllowance
-    allowance: "1000000000000000000"
-    minter: noble1minter
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgSetMinterAllowance",
+        "signer": "noble1signer",
+        "minter": "noble1minter",
+        "allowance": "1000000000000000000"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -540,25 +624,32 @@ signatures: []
 
 A message that adds a new pauser.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgAddPauser
-    pauser: noble1pauser
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgAddPauser",
+        "signer": "noble1signer",
+        "pauser": "noble1pauser"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments
@@ -583,25 +674,32 @@ signatures: []
 
 A message that removes a pauser.
 
-```shell
-auth_info:
-  fee:
-    amount: []
-    gas_limit: "200000"
-    granter: ""
-    payer: ""
-  signer_infos: []
-  tip: null
-body:
-  extension_options: []
-  memo: ""
-  messages:
-  - '@type': /aura.v1.MsgRemovePauser
-    pauser: noble1pauser
-    signer: noble1signer
-  non_critical_extension_options: []
-  timeout_height: "0"
-signatures: []
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgRemovePauser",
+        "signer": "noble1signer",
+        "pauser": "noble1pauser"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
 ```
 
 ### Arguments

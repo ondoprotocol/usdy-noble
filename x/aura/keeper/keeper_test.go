@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/noble-assets/aura/utils"
 	"github.com/noble-assets/aura/utils/mocks"
@@ -52,12 +51,12 @@ func TestSendRestrictionBurn(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			// ARRANGE: Set paused state.
-			require.NoError(t, keeper.Paused.Set(ctx, testCase.paused))
+			keeper.SetPaused(ctx, testCase.paused)
 			// ARRANGE: Set blocked state.
 			if testCase.blocked {
-				require.NoError(t, keeper.BlockedAddresses.Set(ctx, user.Bytes, true))
+				keeper.SetBlockedAddress(ctx, user.Bytes)
 			} else {
-				require.NoError(t, keeper.BlockedAddresses.Remove(ctx, user.Bytes))
+				keeper.DeleteBlockedAddress(ctx, user.Bytes)
 			}
 
 			// ACT: Attempt to burn.
@@ -113,12 +112,12 @@ func TestSendRestrictionMint(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			// ARRANGE: Set paused state.
-			require.NoError(t, keeper.Paused.Set(ctx, testCase.paused))
+			keeper.SetPaused(ctx, testCase.paused)
 			// ARRANGE: Set blocked state.
 			if testCase.blocked {
-				require.NoError(t, keeper.BlockedAddresses.Set(ctx, user.Bytes, true))
+				keeper.SetBlockedAddress(ctx, user.Bytes)
 			} else {
-				require.NoError(t, keeper.BlockedAddresses.Remove(ctx, user.Bytes))
+				keeper.DeleteBlockedAddress(ctx, user.Bytes)
 			}
 
 			// ACT: Attempt to mint.
@@ -152,7 +151,7 @@ func TestSendRestrictionTransfer(t *testing.T) {
 			paused:           true,
 			senderBlocked:    true,
 			recipientBlocked: true,
-			coins:            sdk.NewCoins(sdk.NewCoin("uusdc", math.NewInt(1_000_000))),
+			coins:            sdk.NewCoins(sdk.NewCoin("uusdc", sdk.NewInt(1_000_000))),
 			err:              nil,
 		},
 		{
@@ -224,18 +223,18 @@ func TestSendRestrictionTransfer(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			// ARRANGE: Set paused state.
-			require.NoError(t, keeper.Paused.Set(ctx, testCase.paused))
+			keeper.SetPaused(ctx, testCase.paused)
 			// ARRANGE: Set sender blocked state.
 			if testCase.senderBlocked {
-				require.NoError(t, keeper.BlockedAddresses.Set(ctx, alice.Bytes, true))
+				keeper.SetBlockedAddress(ctx, alice.Bytes)
 			} else {
-				require.NoError(t, keeper.BlockedAddresses.Remove(ctx, alice.Bytes))
+				keeper.DeleteBlockedAddress(ctx, alice.Bytes)
 			}
 			// ARRANGE: Set recipient blocked state.
 			if testCase.recipientBlocked {
-				require.NoError(t, keeper.BlockedAddresses.Set(ctx, bob.Bytes, true))
+				keeper.SetBlockedAddress(ctx, bob.Bytes)
 			} else {
-				require.NoError(t, keeper.BlockedAddresses.Remove(ctx, bob.Bytes))
+				keeper.DeleteBlockedAddress(ctx, bob.Bytes)
 			}
 
 			// ACT: Attempt to transfer.
