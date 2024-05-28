@@ -22,8 +22,12 @@ func AuraKeeperWithBank(_ testing.TB, bank BankKeeper) (*keeper.Keeper, sdk.Cont
 	key := storetypes.NewKVStoreKey(types.ModuleName)
 	tkey := storetypes.NewTransientStoreKey("transient_aura")
 
+	registry := codectypes.NewInterfaceRegistry()
+	types.RegisterInterfaces(registry)
+	cdc := codec.NewProtoCodec(registry)
+
 	k := keeper.NewKeeper(
-		codec.NewProtoCodec(codectypes.NewInterfaceRegistry()),
+		cdc,
 		key,
 		"ausdy",
 		nil,

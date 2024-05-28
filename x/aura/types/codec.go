@@ -6,10 +6,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 	"github.com/noble-assets/aura/x/aura/types/blocklist"
+	"github.com/noble-assets/aura/x/aura/types/bridge"
 )
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	blocklist.RegisterLegacyAminoCodec(cdc)
+	bridge.RegisterLegacyAminoCodec(cdc)
 
 	cdc.RegisterConcrete(&MsgBurn{}, "aura/Burn", nil)
 	cdc.RegisterConcrete(&MsgMint{}, "aura/Mint", nil)
@@ -34,6 +36,7 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	blocklist.RegisterInterfaces(registry)
+	bridge.RegisterInterfaces(registry)
 
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgBurn{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgMint{})

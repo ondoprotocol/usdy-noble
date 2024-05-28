@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package aura.bridge.source.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/noble-assets/aura/x/aura/types/bridge/source";
+
+service Msg {
+  rpc BurnAndCallAxelar(MsgBurnAndCallAxelar) returns (MsgBurnAndCallAxelarResponse);
+
+  rpc Pause(MsgPause) returns (MsgPauseResponse);
+  rpc Unpause(MsgUnpause) returns (MsgUnpauseResponse);
+
+  rpc TransferOwnership(MsgTransferOwnership) returns (MsgTransferOwnershipResponse);
+
+  // TODO: setDestinationChainContractAddress (0x98b3653c)
+  // TODO: removeDestinationChainContractAddress (0x3297a126)
+}
+
+//
+
+// MsgBurnAndCallAxelar implements the burnAndCallAxelar (0x771cb6a8) method.
+message MsgBurnAndCallAxelar {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1;
+  string destination = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // TODO: How are fees handled? And are they taken in USDC or USDY?
+  reserved 4;
+  reserved "fee";
+}
+
+// MsgBurnAndCallAxelarResponse is the response of the BurnAndCallAxelar action.
+message MsgBurnAndCallAxelarResponse {}
+
+// MsgPause implements the pause (0x8456cb59) method.
+message MsgPause {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1;
+}
+
+// MsgPauseResponse is the response of the Pause action.
+message MsgPauseResponse {}
+
+// MsgUnpause implements the unpause (0x3f4ba83a) method.
+message MsgUnpause {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1;
+}
+
+// MsgUnpauseResponse is the response of the Unpause action.
+message MsgUnpauseResponse {}
+
+// MsgTransferOwnership implements the transferOwnership (0xf2fde38b) method.
+message MsgTransferOwnership {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1;
+  string new_owner = 2;
+}
+
+// MsgTransferOwnershipResponse is the response of the TransferOwnership action.
+message MsgTransferOwnershipResponse {}

@@ -5,6 +5,8 @@ import (
 	"github.com/noble-assets/aura/x/aura/keeper"
 	"github.com/noble-assets/aura/x/aura/types"
 	"github.com/noble-assets/aura/x/aura/types/blocklist"
+	"github.com/noble-assets/aura/x/aura/types/bridge"
+	"github.com/noble-assets/aura/x/aura/types/bridge/source"
 )
 
 func InitGenesis(ctx sdk.Context, k *keeper.Keeper, genesis types.GenesisState) {
@@ -13,6 +15,13 @@ func InitGenesis(ctx sdk.Context, k *keeper.Keeper, genesis types.GenesisState) 
 	for _, account := range genesis.BlocklistState.BlockedAddresses {
 		address, _ := sdk.AccAddressFromBech32(account)
 		k.SetBlockedAddress(ctx, address)
+	}
+
+	k.SetBridgeSourcePaused(ctx, genesis.BridgeState.SourceState.Paused)
+	k.SetBridgeSourceOwner(ctx, genesis.BridgeState.SourceState.Owner)
+	k.SetBridgeSourceNonce(ctx, genesis.BridgeState.SourceState.Nonce)
+	for chain, destination := range genesis.BridgeState.SourceState.Destinations {
+		k.SetBridgeDestination(ctx, chain, destination)
 	}
 
 	k.SetPaused(ctx, genesis.Paused)
@@ -35,6 +44,14 @@ func ExportGenesis(ctx sdk.Context, k *keeper.Keeper) *types.GenesisState {
 			Owner:            k.GetBlocklistOwner(ctx),
 			PendingOwner:     k.GetBlocklistPendingOwner(ctx),
 			BlockedAddresses: k.GetBlockedAddresses(ctx),
+		},
+		BridgeState: bridge.GenesisState{
+			SourceState: source.GenesisState{
+				Paused:       k.GetBridgeSourcePaused(ctx),
+				Owner:        k.GetBridgeSourceOwner(ctx),
+				Nonce:        k.GetBridgeSourceNonce(ctx),
+				Destinations: k.GetBridgeDestinations(ctx),
+			},
 		},
 		Paused:       k.GetPaused(ctx),
 		Owner:        k.GetOwner(ctx),

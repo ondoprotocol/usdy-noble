@@ -3,6 +3,7 @@ syntax = "proto3";
 package aura.v1;
 
 import "aura/blocklist/v1/genesis.proto";
+import "aura/bridge/v1/genesis.proto";
 import "gogoproto/gogo.proto";
 
 option go_package = "github.com/noble-assets/aura/x/aura/types";
@@ -10,21 +11,23 @@ option go_package = "github.com/noble-assets/aura/x/aura/types";
 message GenesisState {
   // blocklist_state is the genesis state of the blocklist submodule.
   aura.blocklist.v1.GenesisState blocklist_state = 1 [(gogoproto.nullable) = false];
+  // bridge_state is the genesis state of the bridge submodule.
+  aura.bridge.v1.GenesisState bridge_state = 2 [(gogoproto.nullable) = false];
 
   // paused is the paused state of this module.
-  bool paused = 2;
+  bool paused = 3;
 
   // owner is the address that can control this module.
-  string owner = 3;
+  string owner = 4;
   // pending_owner is the address of the new owner during an ownership transfer.
-  string pending_owner = 4;
+  string pending_owner = 5;
 
   // burners is the list of addresses that can burn USDY.
-  repeated Burner burners = 5 [(gogoproto.nullable) = false];
+  repeated Burner burners = 6 [(gogoproto.nullable) = false];
   // minters is the list of addresses that can mint USDY.
-  repeated Minter minters = 6 [(gogoproto.nullable) = false];
+  repeated Minter minters = 7 [(gogoproto.nullable) = false];
   // pausers is the list of addresses that can pause USDY.
-  repeated string pausers = 7;
+  repeated string pausers = 8;
 }
 
 //

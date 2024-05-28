@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package aura.bridge.source.v1;
+
+option go_package = "github.com/noble-assets/aura/x/aura/types/bridge/source";
+
+message GenesisState {
+  // paused is the paused state of this submodule.
+  bool paused = 1;
+
+  // owner is the address that can control this submodule.
+  string owner = 2;
+
+  // nonce is the monotonically increasing nonce for each transfer.
+  uint64 nonce = 3;
+
+  // destinations is a mapping between a destination chain and its bridge address.
+  map<string, string> destinations = 4;
+}

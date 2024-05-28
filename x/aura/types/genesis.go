@@ -5,16 +5,26 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/noble-assets/aura/x/aura/types/blocklist"
+	"github.com/noble-assets/aura/x/aura/types/bridge"
 )
 
 func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
 		BlocklistState: blocklist.DefaultGenesisState(),
+		BridgeState:    bridge.DefaultGenesisState(),
 		Paused:         false,
 	}
 }
 
 func (gs *GenesisState) Validate() error {
+	if err := gs.BlocklistState.Validate(); err != nil {
+		return err
+	}
+
+	if err := gs.BridgeState.Validate(); err != nil {
+		return err
+	}
+
 	if _, err := sdk.AccAddressFromBech32(gs.Owner); err != nil {
 		return fmt.Errorf("invalid owner address (%s): %s", gs.Owner, err)
 	}
@@ -51,5 +61,5 @@ func (gs *GenesisState) Validate() error {
 		}
 	}
 
-	return gs.BlocklistState.Validate()
+	return nil
 }

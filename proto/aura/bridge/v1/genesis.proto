@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package aura.bridge.v1;
+
+import "aura/bridge/source/v1/genesis.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/noble-assets/aura/x/aura/types/bridge";
+
+message GenesisState {
+  // source_state is the genesis state of the bridge source submodule.
+  aura.bridge.source.v1.GenesisState source_state = 1 [(gogoproto.nullable) = false];
+
+  // destination_state is the genesis state of the bridge destination submodule.
+  reserved 2;
+  reserved "destination_state";
+}
