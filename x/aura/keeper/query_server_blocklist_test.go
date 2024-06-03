@@ -91,7 +91,7 @@ func TestBlocklistAddressQuery(t *testing.T) {
 	_, err = server.Address(goCtx, &blocklist.QueryAddress{
 		Address: "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn",
 	})
-	// ASSERT: The action should've failed due to invalid address.
+	// ASSERT: The query should've failed due to invalid address.
 	require.ErrorContains(t, err, "unable to decode address")
 
 	// ACT: Attempt to query blocked state of unblocked address.
