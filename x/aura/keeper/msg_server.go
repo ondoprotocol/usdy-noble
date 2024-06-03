@@ -143,6 +143,10 @@ func (k msgServer) TransferOwnership(goCtx context.Context, msg *types.MsgTransf
 		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
+	if msg.NewOwner == owner {
+		return nil, types.ErrSameOwner
+	}
+
 	k.SetPendingOwner(ctx, msg.NewOwner)
 
 	return &types.MsgTransferOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&types.OwnershipTransferStarted{

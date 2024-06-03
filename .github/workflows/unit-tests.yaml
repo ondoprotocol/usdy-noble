@@ -2,6 +2,9 @@ name: Unit Tests
 
 on:
   push:
+    branches:
+      - main
+      - v*
   pull_request:
 
 jobs:
@@ -14,7 +17,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: '1.21'
 
       - name: Run Tests
         run: make test-unit

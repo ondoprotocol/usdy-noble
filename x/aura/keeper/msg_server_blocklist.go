@@ -29,6 +29,10 @@ func (k blocklistMsgServer) TransferOwnership(goCtx context.Context, msg *blockl
 		return nil, errors.Wrapf(blocklist.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
 	}
 
+	if msg.NewOwner == owner {
+		return nil, blocklist.ErrSameOwner
+	}
+
 	k.SetBlocklistPendingOwner(ctx, msg.NewOwner)
 
 	return &blocklist.MsgTransferOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&blocklist.OwnershipTransferStarted{
