@@ -40,6 +40,19 @@ It is updated by the following messages:
 
 - `aura.bridge.source.v1.MsgBurnAndCallAxelar`
 
+## Channel
+
+The channel field is of type string.
+It is used to store the enshrined IBC connection to Axelar.
+
+```go
+var ChannelKey = []byte("bridge/source/channel")
+```
+
+It is updated by the following message:
+
+- TODO
+
 ## Destinations
 
 The destinations field is a mapping between string and string.

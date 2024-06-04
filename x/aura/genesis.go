@@ -20,6 +20,7 @@ func InitGenesis(ctx sdk.Context, k *keeper.Keeper, genesis types.GenesisState) 
 	k.SetBridgeSourcePaused(ctx, genesis.BridgeState.SourceState.Paused)
 	k.SetBridgeSourceOwner(ctx, genesis.BridgeState.SourceState.Owner)
 	k.SetBridgeSourceNonce(ctx, genesis.BridgeState.SourceState.Nonce)
+	k.SetBridgeChannel(ctx, genesis.BridgeState.SourceState.Channel)
 	for chain, destination := range genesis.BridgeState.SourceState.Destinations {
 		k.SetBridgeDestination(ctx, chain, destination)
 	}
@@ -50,6 +51,7 @@ func ExportGenesis(ctx sdk.Context, k *keeper.Keeper) *types.GenesisState {
 				Paused:       k.GetBridgeSourcePaused(ctx),
 				Owner:        k.GetBridgeSourceOwner(ctx),
 				Nonce:        k.GetBridgeSourceNonce(ctx),
+				Channel:      k.GetBridgeChannel(ctx),
 				Destinations: k.GetBridgeDestinations(ctx),
 			},
 		},

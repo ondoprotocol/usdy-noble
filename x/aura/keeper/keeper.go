@@ -13,8 +13,9 @@ type Keeper struct {
 	cdc      codec.Codec
 	storeKey storetypes.StoreKey
 
-	Denom      string
-	bankKeeper types.BankKeeper
+	Denom          string
+	bankKeeper     types.BankKeeper
+	transferKeeper types.TransferKeeper
 }
 
 func NewKeeper(
@@ -22,13 +23,15 @@ func NewKeeper(
 	storeKey storetypes.StoreKey,
 	denom string,
 	bankKeeper types.BankKeeper,
+	transferKeeper types.TransferKeeper,
 ) *Keeper {
 	return &Keeper{
 		cdc:      cdc,
 		storeKey: storeKey,
 
-		Denom:      denom,
-		bankKeeper: bankKeeper,
+		Denom:          denom,
+		bankKeeper:     bankKeeper,
+		transferKeeper: transferKeeper,
 	}
 }
 

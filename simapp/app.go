@@ -154,7 +154,7 @@ func NewSimApp(
 	)
 
 	app.AuraKeeper = aurakeeper.NewKeeper(
-		appCodec, keys[auratypes.ModuleName], "ausdy", nil,
+		appCodec, keys[auratypes.ModuleName], "ausdy", nil, nil,
 	)
 	app.BankKeeper = bankkeeper.NewBaseKeeper(
 		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.GetSubspace(banktypes.ModuleName), app.ModuleAccountAddrs(),

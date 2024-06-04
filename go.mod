@@ -5,6 +5,7 @@ go 1.21
 require (
 	cosmossdk.io/errors v1.0.0
 	github.com/cosmos/cosmos-sdk v0.45.16
+	github.com/cosmos/ibc-go/v4 v4.6.0
 	github.com/ethereum/go-ethereum v1.14.3
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.4

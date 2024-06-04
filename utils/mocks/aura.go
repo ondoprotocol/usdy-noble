@@ -31,6 +31,7 @@ func AuraKeeperWithBank(_ testing.TB, bank BankKeeper) (*keeper.Keeper, sdk.Cont
 		key,
 		"ausdy",
 		nil,
+		nil,
 	)
 
 	bank = bank.WithSendCoinsRestriction(k.SendRestrictionFn)

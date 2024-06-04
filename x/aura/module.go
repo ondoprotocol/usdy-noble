@@ -16,6 +16,7 @@ import (
 	"github.com/noble-assets/aura/x/aura/keeper"
 	"github.com/noble-assets/aura/x/aura/types"
 	"github.com/noble-assets/aura/x/aura/types/blocklist"
+	"github.com/noble-assets/aura/x/aura/types/bridge/source"
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
@@ -117,6 +118,8 @@ func (m AppModule) RegisterServices(cfg module.Configurator) {
 
 	blocklist.RegisterMsgServer(cfg.MsgServer(), keeper.NewBlocklistMsgServer(m.keeper))
 	blocklist.RegisterQueryServer(cfg.QueryServer(), keeper.NewBlocklistQueryServer(m.keeper))
+
+	source.RegisterMsgServer(cfg.MsgServer(), keeper.NewSourceMsgServer(m.keeper))
 }
 
 func (AppModule) ConsensusVersion() uint64 { return ConsensusVersion }

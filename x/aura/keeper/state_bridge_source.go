@@ -49,11 +49,29 @@ func (k *Keeper) GetBridgeSourceNonce(ctx sdk.Context) uint64 {
 	return binary.BigEndian.Uint64(bz)
 }
 
+func (k *Keeper) IncrementBridgeSourceNonce(ctx sdk.Context) uint64 {
+	nonce := k.GetBridgeSourceNonce(ctx)
+	k.SetBridgeSourceNonce(ctx, nonce+1)
+	return nonce
+}
+
 func (k *Keeper) SetBridgeSourceNonce(ctx sdk.Context, nonce uint64) {
 	store := ctx.KVStore(k.storeKey)
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, nonce)
 	store.Set(source.NonceKey, bz)
+}
+
+//
+
+func (k *Keeper) GetBridgeChannel(ctx sdk.Context) string {
+	store := ctx.KVStore(k.storeKey)
+	return string(store.Get(source.ChannelKey))
+}
+
+func (k *Keeper) SetBridgeChannel(ctx sdk.Context, channel string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(source.ChannelKey, []byte(channel))
 }
 
 //

@@ -14,6 +14,9 @@ message GenesisState {
   // nonce is the monotonically increasing nonce for each transfer.
   uint64 nonce = 3;
 
+  // channel is the enshrined ibc connection with Axelar.
+  string channel = 4;
+
   // destinations is a mapping between a destination chain and its bridge address.
-  map<string, string> destinations = 4;
+  map<string, string> destinations = 5;
 }

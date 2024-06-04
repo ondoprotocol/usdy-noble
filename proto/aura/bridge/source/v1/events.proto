@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package aura.bridge.source.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/noble-assets/aura/x/aura/types/bridge/source";
+
+message BridgeInitiated {
+  string user = 1;
+  uint64 nonce = 2;
+  uint64 chain = 3;
+  string version = 4;
+  string amount = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}

@@ -42,6 +42,7 @@ if ! [ -f .aura/data/priv_validator_state.json ]; then
   touch $TEMP && jq '.app_state.staking.params.bond_denom = "ustake"' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.blocklist_state.owner = '$BLOCKLIST_OWNER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.bridge_state.source_state.owner = '$SOURCE_OWNER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
+  touch $TEMP && jq '.app_state.aura.bridge_state.source_state.channel = "channel-0"' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.owner = '$OWNER'' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.burners = [{"address": '$BURNER', "allowance": "0"}]' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
   touch $TEMP && jq '.app_state.aura.minters = [{"address": '$MINTER', "allowance": "100000000000000000000"}]' .aura/config/genesis.json > $TEMP && mv $TEMP .aura/config/genesis.json
