@@ -23,6 +23,7 @@ jobs:
           tar-export-path: ${{ env.TAR_PATH }} # export a tarball that can be uploaded as an artifact for the e2e jobs
           platform: linux/amd64 # test runner architecture only
           git-ref: ${{ github.head_ref }} # source code ref
+          additional-args: --clone-key ${{ secrets.HEIGHLINER_KEY }}
 
           # Heighliner chains.yaml config
           chain: aura-simd
@@ -49,7 +50,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: '>=1.21'
+          go-version: '1.21'
 
       - name: Generate Matrix
         id: set-matrix
@@ -76,7 +77,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: '>=1.21'
+          go-version: '1.21'
 
       - name: Download Tarball Artifact
         uses: actions/download-artifact@v4
