@@ -11,8 +11,10 @@ func DefaultGenesisState() GenesisState {
 }
 
 func (gs *GenesisState) Validate() error {
-	if _, err := sdk.AccAddressFromBech32(gs.Owner); err != nil {
-		return fmt.Errorf("invalid blocklist owner address (%s): %s", gs.Owner, err)
+	if gs.Owner != "" {
+		if _, err := sdk.AccAddressFromBech32(gs.Owner); err != nil {
+			return fmt.Errorf("invalid blocklist owner address (%s): %s", gs.Owner, err)
+		}
 	}
 
 	if gs.PendingOwner != "" {
