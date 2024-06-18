@@ -247,6 +247,7 @@ A message that initiates an ownership transfer to a provided address.
 ### Requirements
 
 - Signer must be the current [`owner`](./01_state.md#owner).
+- `new_owner` must not be the current [`owner`](./01_state.md#owner).
 
 ### State Changes
 

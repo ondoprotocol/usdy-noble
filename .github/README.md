@@ -6,4 +6,4 @@
 
 This repository includes the `x/aura` Cosmos SDK module implementation.
 
-For more information, refer to the modules [spec](../x/aura/spec) files.
+For more information, refer to the module's [spec](../x/aura/spec) files.

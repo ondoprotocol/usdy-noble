@@ -32,6 +32,14 @@ func TestBlocklistTransferOwnership(t *testing.T) {
 	// ASSERT: The action should've failed due to invalid signer.
 	require.ErrorContains(t, err, blocklist.ErrInvalidOwner.Error())
 
+	// ACT: Attempt to transfer ownership to same owner.
+	_, err = server.TransferOwnership(goCtx, &blocklist.MsgTransferOwnership{
+		Signer:   owner.Address,
+		NewOwner: owner.Address,
+	})
+	// ASSERT: The action should've failed due to same owner.
+	require.ErrorContains(t, err, blocklist.ErrSameOwner.Error())
+
 	// ARRANGE: Generate a pending owner account.
 	pendingOwner := utils.TestAccount()
 
