@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
+	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
 )
 
 //
@@ -400,3 +401,32 @@ func (msg *MsgRemovePauser) GetSignBytes() []byte {
 func (*MsgRemovePauser) Route() string { return ModuleName }
 
 func (*MsgRemovePauser) Type() string { return "aura/RemovePauser" }
+
+//
+
+var _ legacytx.LegacyMsg = &MsgAllowChannel{}
+
+func (msg *MsgAllowChannel) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Signer); err != nil {
+		return fmt.Errorf("invalid signer address (%s): %w", msg.Signer, err)
+	}
+
+	if !channeltypes.IsValidChannelID(msg.Channel) {
+		return fmt.Errorf("invalid channel (%s)", msg.Channel)
+	}
+
+	return nil
+}
+
+func (msg *MsgAllowChannel) GetSigners() []sdk.AccAddress {
+	signer, _ := sdk.AccAddressFromBech32(msg.Signer)
+	return []sdk.AccAddress{signer}
+}
+
+func (msg *MsgAllowChannel) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(msg))
+}
+
+func (*MsgAllowChannel) Route() string { return ModuleName }
+
+func (*MsgAllowChannel) Type() string { return "aura/AllowChannel" }

@@ -13,6 +13,7 @@ var (
 	BurnerPrefix    = []byte("burner/")
 	MinterPrefix    = []byte("minter/")
 	PauserPrefix    = []byte("pauser/")
+	ChannelPrefix   = []byte("channel/")
 )
 
 func BurnerKey(address string) []byte {
@@ -25,4 +26,8 @@ func MinterKey(address string) []byte {
 
 func PauserKey(address string) []byte {
 	return append(PauserPrefix, []byte(address)...)
+}
+
+func ChannelKey(channel string) []byte {
+	return append(ChannelPrefix, []byte(channel)...)
 }

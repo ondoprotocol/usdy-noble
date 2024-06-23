@@ -13,6 +13,7 @@ import (
 	"github.com/strangelove-ventures/interchaintest/v4"
 	"github.com/strangelove-ventures/interchaintest/v4/chain/cosmos"
 	"github.com/strangelove-ventures/interchaintest/v4/ibc"
+	"github.com/strangelove-ventures/interchaintest/v4/relayer/rly"
 	"github.com/strangelove-ventures/interchaintest/v4/testreporter"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zaptest"
@@ -20,6 +21,7 @@ import (
 
 type Wrapper struct {
 	chain *cosmos.CosmosChain
+	gaia  *cosmos.CosmosChain
 
 	owner  ibc.Wallet
 	minter ibc.Wallet
@@ -28,7 +30,7 @@ type Wrapper struct {
 	bob    ibc.Wallet
 }
 
-func Suite(t *testing.T, wrapper *Wrapper) (ctx context.Context) {
+func Suite(t *testing.T, wrapper *Wrapper, ibcEnabled bool) (ctx context.Context) {
 	ctx = context.Background()
 	logger := zaptest.NewLogger(t)
 	reporter := testreporter.NewNopReporter()
@@ -135,6 +137,14 @@ func Suite(t *testing.T, wrapper *Wrapper) (ctx context.Context) {
 			},
 		},
 	}
+	if ibcEnabled {
+		specs = append(specs, &interchaintest.ChainSpec{
+			Name:          "ibc-go-simd",
+			Version:       "v4.5.0",
+			NumValidators: &numValidators,
+			NumFullNodes:  &numFullNodes,
+		})
+	}
 	factory := interchaintest.NewBuiltinChainFactory(logger, specs)
 
 	chains, err := factory.Chains(t.Name())
@@ -144,6 +154,26 @@ func Suite(t *testing.T, wrapper *Wrapper) (ctx context.Context) {
 	wrapper.chain = noble
 
 	interchain := interchaintest.NewInterchain().AddChain(noble)
+	var relayer *rly.CosmosRelayer
+	if ibcEnabled {
+		relayer = interchaintest.NewBuiltinRelayerFactory(
+			ibc.CosmosRly,
+			logger,
+		).Build(t, client, network).(*rly.CosmosRelayer)
+
+		gaia := chains[1].(*cosmos.CosmosChain)
+		wrapper.gaia = gaia
+
+		interchain = interchain.
+			AddChain(gaia).
+			AddRelayer(relayer, "relayer").
+			AddLink(interchaintest.InterchainLink{
+				Chain1:  noble,
+				Chain2:  gaia,
+				Relayer: relayer,
+				Path:    "transfer",
+			})
+	}
 	require.NoError(t, interchain.Build(ctx, execReporter, interchaintest.InterchainBuildOptions{
 		TestName:  t.Name(),
 		Client:    client,
@@ -153,6 +183,10 @@ func Suite(t *testing.T, wrapper *Wrapper) (ctx context.Context) {
 	t.Cleanup(func() {
 		_ = interchain.Close()
 	})
+
+	if ibcEnabled {
+		require.NoError(t, relayer.StartRelayer(ctx, execReporter))
+	}
 
 	return
 }
@@ -193,4 +227,16 @@ func EnsureMinter(t *testing.T, wrapper Wrapper, ctx context.Context, address st
 	require.NoError(t, jsonpb.UnmarshalString(string(raw), &res))
 
 	require.Contains(t, res.Minters, types.Minter{Address: address, Allowance: allowance})
+}
+
+func EnsureChannel(t *testing.T, wrapper Wrapper, ctx context.Context, channel string) {
+	validator := wrapper.chain.Validators[0]
+
+	raw, _, err := validator.ExecQuery(ctx, "aura", "channels")
+	require.NoError(t, err)
+
+	var res types.QueryChannelsResponse
+	require.NoError(t, json.Unmarshal(raw, &res))
+
+	require.Contains(t, res.Channels, channel)
 }

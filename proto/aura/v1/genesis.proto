@@ -25,6 +25,9 @@ message GenesisState {
   repeated Minter minters = 6 [(gogoproto.nullable) = false];
   // pausers is the list of addresses that can pause USDY.
   repeated string pausers = 7;
+
+  // channels is the list of allowed IBC channels.
+  repeated string channels = 8;
 }
 
 //

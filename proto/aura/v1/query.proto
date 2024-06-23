@@ -30,6 +30,10 @@ service Query {
   rpc Pausers(aura.v1.QueryPausers) returns (aura.v1.QueryPausersResponse) {
     option (google.api.http).get = "/aura/v1/pausers";
   }
+
+  rpc Channels(aura.v1.QueryChannels) returns (aura.v1.QueryChannelsResponse) {
+    option (google.api.http).get = "/aura/v1/channels";
+  }
 }
 
 //
@@ -69,4 +73,10 @@ message QueryPausers {}
 
 message QueryPausersResponse {
   repeated string pausers = 1;
+}
+
+message QueryChannels {}
+
+message QueryChannelsResponse {
+  repeated string channels = 1;
 }

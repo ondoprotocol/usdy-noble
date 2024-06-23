@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/cosmos/cosmos-sdk v0.45.16
+	github.com/cosmos/ibc-go/v4 v4.6.0
 	github.com/noble-assets/aura v1.0.0
 	github.com/spf13/cast v1.5.1
 	github.com/spf13/cobra v1.7.0

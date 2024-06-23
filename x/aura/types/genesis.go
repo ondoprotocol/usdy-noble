@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
 	"github.com/noble-assets/aura/x/aura/types/blocklist"
 )
 
@@ -50,6 +51,12 @@ func (gs *GenesisState) Validate() error {
 	for _, pauser := range gs.Pausers {
 		if _, err := sdk.AccAddressFromBech32(pauser); err != nil {
 			return fmt.Errorf("invalid pauser address (%s): %s", pauser, err)
+		}
+	}
+
+	for _, channel := range gs.Channels {
+		if !channeltypes.IsValidChannelID(channel) {
+			return fmt.Errorf("invalid channel (%s)", channel)
 		}
 	}
 

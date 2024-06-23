@@ -37,6 +37,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(TxSetMinterAllowance())
 	cmd.AddCommand(TxAddPauser())
 	cmd.AddCommand(TxRemovePauser())
+	cmd.AddCommand(TxAllowChannel())
 
 	return cmd
 }
@@ -414,6 +415,31 @@ func TxRemovePauser() *cobra.Command {
 			msg := &types.MsgRemovePauser{
 				Signer: clientCtx.GetFromAddress().String(),
 				Pauser: args[0],
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func TxAllowChannel() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "allow-channel [channel]",
+		Short: "Allow a new channel",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			msg := &types.MsgAllowChannel{
+				Signer:  clientCtx.GetFromAddress().String(),
+				Channel: args[0],
 			}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)

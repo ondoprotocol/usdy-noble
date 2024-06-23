@@ -32,6 +32,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	"github.com/cosmos/cosmos-sdk/x/capability"
+	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
+	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/cosmos/cosmos-sdk/x/params"
@@ -40,6 +43,16 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/cosmos/cosmos-sdk/x/upgrade"
+	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/cosmos/ibc-go/v4/modules/apps/transfer"
+	transferkeeper "github.com/cosmos/ibc-go/v4/modules/apps/transfer/keeper"
+	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	ibc "github.com/cosmos/ibc-go/v4/modules/core"
+	porttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
+	host "github.com/cosmos/ibc-go/v4/modules/core/24-host"
+	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
@@ -59,6 +72,10 @@ var (
 		genutil.AppModuleBasic{},
 		params.AppModuleBasic{},
 		staking.AppModuleBasic{},
+		upgrade.AppModuleBasic{},
+		capability.AppModuleBasic{},
+		ibc.AppModuleBasic{},
+		transfer.AppModuleBasic{},
 		aura.AppModuleBasic{},
 	)
 
@@ -66,6 +83,7 @@ var (
 		authtypes.FeeCollectorName:     nil,
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+		transfertypes.ModuleName:       {authtypes.Burner, authtypes.Minter},
 		auratypes.ModuleName:           {authtypes.Burner, authtypes.Minter},
 	}
 )
@@ -87,6 +105,7 @@ type SimApp struct {
 	mm           *module.Manager
 	configurator module.Configurator
 	keys         map[string]*sdk.KVStoreKey
+	mkeys        map[string]*sdk.MemoryStoreKey
 	tkeys        map[string]*sdk.TransientStoreKey
 
 	// Cosmos SDK Modules
@@ -94,6 +113,11 @@ type SimApp struct {
 	BankKeeper    bankkeeper.Keeper
 	ParamsKeeper  paramskeeper.Keeper
 	StakingKeeper stakingkeeper.Keeper
+	UpgradeKeeper upgradekeeper.Keeper
+	// IBC Modules
+	CapabilityKeeper *capabilitykeeper.Keeper
+	IBCKeeper        *ibckeeper.Keeper
+	TransferKeeper   transferkeeper.Keeper
 	// Custom Modules
 	AuraKeeper *aurakeeper.Keeper
 }
@@ -128,8 +152,10 @@ func NewSimApp(
 
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, paramstypes.StoreKey, stakingtypes.StoreKey,
+		upgradetypes.ModuleName, capabilitytypes.StoreKey, host.StoreKey, transfertypes.StoreKey,
 		auratypes.ModuleName,
 	)
+	mkeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 
 	if _, _, err := streaming.LoadStreamingServices(bApp, appOpts, appCodec, keys); err != nil {
@@ -143,6 +169,7 @@ func NewSimApp(
 		appCodec:          appCodec,
 		interfaceRegistry: interfaceRegistry,
 		keys:              keys,
+		mkeys:             mkeys,
 		tkeys:             tkeys,
 	}
 
@@ -165,6 +192,29 @@ func NewSimApp(
 		appCodec, keys[stakingtypes.StoreKey], app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName),
 	)
 
+	app.UpgradeKeeper = upgradekeeper.NewKeeper(
+		make(map[int64]bool), keys[upgradetypes.StoreKey], appCodec, DefaultNodeHome, app.BaseApp,
+	)
+
+	app.CapabilityKeeper = capabilitykeeper.NewKeeper(
+		appCodec, keys[capabilitytypes.StoreKey], mkeys[capabilitytypes.MemStoreKey],
+	)
+
+	scopedIBCKeeper := app.CapabilityKeeper.ScopeToModule(host.ModuleName)
+	app.IBCKeeper = ibckeeper.NewKeeper(
+		appCodec, keys[host.StoreKey], app.GetSubspace(host.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
+	)
+
+	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(transfertypes.ModuleName)
+	app.TransferKeeper = transferkeeper.NewKeeper(
+		appCodec, keys[transfertypes.StoreKey], app.GetSubspace(transfertypes.ModuleName),
+		app.IBCKeeper.ChannelKeeper, app.IBCKeeper.ChannelKeeper, &app.IBCKeeper.PortKeeper,
+		app.AccountKeeper, app.BankKeeper, scopedTransferKeeper,
+	)
+
+	router := porttypes.NewRouter().AddRoute(transfertypes.ModuleName, transfer.NewIBCModule(app.TransferKeeper))
+	app.IBCKeeper.SetRouter(router)
+
 	app.mm = module.NewManager(
 		auth.NewAppModule(appCodec, app.AccountKeeper, nil),
 		bank.NewAppModule(appCodec, app.BankKeeper.(bankkeeper.BaseKeeper), app.AccountKeeper),
@@ -174,20 +224,27 @@ func NewSimApp(
 		),
 		params.NewAppModule(app.ParamsKeeper),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
+		upgrade.NewAppModule(app.UpgradeKeeper),
+		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
+		ibc.NewAppModule(app.IBCKeeper),
+		transfer.NewAppModule(app.TransferKeeper),
 		aura.NewAppModule(app.AuraKeeper),
 	)
 
 	app.mm.SetOrderBeginBlockers(
-		stakingtypes.ModuleName, authtypes.ModuleName, banktypes.ModuleName, genutiltypes.ModuleName, paramstypes.ModuleName,
-		auratypes.ModuleName,
+		upgradetypes.ModuleName, capabilitytypes.ModuleName, stakingtypes.ModuleName,
+		host.ModuleName, transfertypes.ModuleName, authtypes.ModuleName, banktypes.ModuleName,
+		genutiltypes.ModuleName, paramstypes.ModuleName, auratypes.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(
-		stakingtypes.ModuleName, authtypes.ModuleName, banktypes.ModuleName, genutiltypes.ModuleName, paramstypes.ModuleName,
-		auratypes.ModuleName,
+		stakingtypes.ModuleName, host.ModuleName, transfertypes.ModuleName, capabilitytypes.ModuleName,
+		authtypes.ModuleName, banktypes.ModuleName, genutiltypes.ModuleName, paramstypes.ModuleName,
+		upgradetypes.ModuleName, auratypes.ModuleName,
 	)
 	app.mm.SetOrderInitGenesis(
-		authtypes.ModuleName, banktypes.ModuleName, stakingtypes.ModuleName, genutiltypes.ModuleName, paramstypes.ModuleName,
-		auratypes.ModuleName,
+		capabilitytypes.ModuleName, authtypes.ModuleName, banktypes.ModuleName,
+		stakingtypes.ModuleName, host.ModuleName, genutiltypes.ModuleName, transfertypes.ModuleName,
+		paramstypes.ModuleName, upgradetypes.ModuleName, auratypes.ModuleName,
 	)
 
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter(), encodingConfig.Amino)
@@ -195,12 +252,15 @@ func NewSimApp(
 	app.mm.RegisterServices(app.configurator)
 
 	app.MountKVStores(keys)
+	app.MountMemoryStores(mkeys)
 	app.MountTransientStores(tkeys)
 
-	anteHandler, err := ante.NewAnteHandler(
-		ante.HandlerOptions{
+	anteHandler, err := NewAnteHandler(
+		HandlerOptions{
 			AccountKeeper:   app.AccountKeeper,
+			AuraKeeper:      app.AuraKeeper,
 			BankKeeper:      app.BankKeeper,
+			IBCKeeper:       app.IBCKeeper,
 			SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
 			FeegrantKeeper:  nil,
 			SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
@@ -295,6 +355,9 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(authtypes.ModuleName)
 	paramsKeeper.Subspace(banktypes.ModuleName)
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
+	paramsKeeper.Subspace(capabilitytypes.ModuleName)
+	paramsKeeper.Subspace(host.ModuleName)
+	paramsKeeper.Subspace(transfertypes.ModuleName)
 
 	return paramsKeeper
 }

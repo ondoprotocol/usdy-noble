@@ -376,3 +376,25 @@ func (k msgServer) RemovePauser(goCtx context.Context, msg *types.MsgRemovePause
 		Address: msg.Pauser,
 	})
 }
+
+func (k msgServer) AllowChannel(goCtx context.Context, msg *types.MsgAllowChannel) (*types.MsgAllowChannelResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
+	}
+	if msg.Signer != owner {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
+	}
+
+	if k.HasChannel(ctx, msg.Channel) {
+		return nil, fmt.Errorf("%s is already allowed", msg.Channel)
+	}
+
+	k.SetChannel(ctx, msg.Channel)
+
+	return &types.MsgAllowChannelResponse{}, ctx.EventManager().EmitTypedEvent(&types.ChannelAllowed{
+		Channel: msg.Channel,
+	})
+}

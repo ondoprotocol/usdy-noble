@@ -27,6 +27,9 @@ func InitGenesis(ctx sdk.Context, k *keeper.Keeper, genesis types.GenesisState) 
 	for _, pauser := range genesis.Pausers {
 		k.SetPauser(ctx, pauser)
 	}
+	for _, channel := range genesis.Channels {
+		k.SetChannel(ctx, channel)
+	}
 }
 
 func ExportGenesis(ctx sdk.Context, k *keeper.Keeper) *types.GenesisState {
@@ -42,5 +45,6 @@ func ExportGenesis(ctx sdk.Context, k *keeper.Keeper) *types.GenesisState {
 		Burners:      k.GetBurners(ctx),
 		Minters:      k.GetMinters(ctx),
 		Pausers:      k.GetPausers(ctx),
+		Channels:     k.GetChannels(ctx),
 	}
 }

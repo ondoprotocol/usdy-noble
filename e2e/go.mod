@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/cosmos/cosmos-sdk v0.45.16
+	github.com/cosmos/ibc-go/v4 v4.6.0
 	github.com/gogo/protobuf v1.3.3
 	github.com/noble-assets/aura v1.0.0
 	github.com/strangelove-ventures/interchaintest/v4 v4.0.0-20231026153934-334934f17a68
@@ -42,7 +43,6 @@ require (
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gorocksdb v1.2.0 // indirect
 	github.com/cosmos/iavl v0.19.5 // indirect
-	github.com/cosmos/ibc-go/v4 v4.5.1 // indirect
 	github.com/cosmos/ledger-cosmos-go v0.12.2 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

@@ -711,3 +711,46 @@ func TestRemovePauser(t *testing.T) {
 	require.NoError(t, err)
 	require.False(t, k.HasPauser(ctx, pauser.Address))
 }
+
+func TestAllowChannel(t *testing.T) {
+	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
+	server := keeper.NewMsgServer(k)
+
+	// ACT: Attempt to allow channel with no owner set.
+	_, err := server.AllowChannel(goCtx, &types.MsgAllowChannel{})
+	// ASSERT: The action should've failed due to no owner set.
+	require.ErrorContains(t, err, "there is no owner")
+
+	// ARRANGE: Set owner in state.
+	owner := utils.TestAccount()
+	k.SetOwner(ctx, owner.Address)
+
+	// ACT: Attempt to allow channel with invalid signer.
+	_, err = server.AllowChannel(goCtx, &types.MsgAllowChannel{
+		Signer: utils.TestAccount().Address,
+	})
+	// ASSERT: The action should've failed due to invalid signer.
+	require.ErrorContains(t, err, types.ErrInvalidOwner.Error())
+
+	// ARRANGE: Generate two channels, add one to state.
+	channel1, channel2 := "channel-0", "channel-1"
+	k.SetChannel(ctx, channel2)
+
+	// ACT: Attempt to allow channel that is already allowed.
+	_, err = server.AllowChannel(goCtx, &types.MsgAllowChannel{
+		Signer:  owner.Address,
+		Channel: channel2,
+	})
+	// ASSERT: The action should've failed due to allowed channel.
+	require.ErrorContains(t, err, "is already allowed")
+
+	// ACT: Attempt to allow channel.
+	_, err = server.AllowChannel(goCtx, &types.MsgAllowChannel{
+		Signer:  owner.Address,
+		Channel: channel1,
+	})
+	// ASSERT: The action should've succeeded, and set channel in state.
+	require.NoError(t, err)
+	require.True(t, k.HasChannel(ctx, channel1))
+}

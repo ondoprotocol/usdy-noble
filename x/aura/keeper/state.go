@@ -175,3 +175,28 @@ func (k *Keeper) SetPauser(ctx sdk.Context, pauser string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.PauserKey(pauser), []byte{})
 }
+
+//
+
+func (k *Keeper) GetChannels(ctx sdk.Context) (channels []string) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ChannelPrefix)
+	itr := store.Iterator(nil, nil)
+
+	defer itr.Close()
+
+	for ; itr.Valid(); itr.Next() {
+		channels = append(channels, string(itr.Key()))
+	}
+
+	return
+}
+
+func (k *Keeper) HasChannel(ctx sdk.Context, channel string) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.ChannelKey(channel))
+}
+
+func (k *Keeper) SetChannel(ctx sdk.Context, channel string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.ChannelKey(channel), []byte{})
+}

@@ -78,3 +78,13 @@ func (k queryServer) Pausers(goCtx context.Context, req *types.QueryPausers) (*t
 
 	return &types.QueryPausersResponse{Pausers: k.GetPausers(ctx)}, nil
 }
+
+func (k queryServer) Channels(goCtx context.Context, req *types.QueryChannels) (*types.QueryChannelsResponse, error) {
+	if req == nil {
+		return nil, errors.ErrInvalidRequest
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	return &types.QueryChannelsResponse{Channels: k.GetChannels(ctx)}, nil
+}

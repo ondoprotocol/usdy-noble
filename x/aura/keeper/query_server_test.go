@@ -189,3 +189,33 @@ func TestPausersQuery(t *testing.T) {
 	require.Contains(t, res.Pausers, pauser1.Address)
 	require.Contains(t, res.Pausers, pauser2.Address)
 }
+
+func TestChannelsQuery(t *testing.T) {
+	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
+	server := keeper.NewQueryServer(k)
+
+	// ACT: Attempt to query channels with invalid request.
+	_, err := server.Channels(goCtx, nil)
+	// ASSERT: The query should've failed due to invalid request.
+	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
+
+	// ACT: Attempt to query channels with no state.
+	res, err := server.Channels(goCtx, &types.QueryChannels{})
+	// ASSERT: The query should've succeeded, and returned no channels.
+	require.NoError(t, err)
+	require.Empty(t, res.Channels)
+
+	// ARRANGE: Set channels in state.
+	channel1, channel2 := "channel-0", "channel-1"
+	k.SetChannel(ctx, channel1)
+	k.SetChannel(ctx, channel2)
+
+	// ACT: Attempt to query channels with state.
+	res, err = server.Channels(goCtx, &types.QueryChannels{})
+	// ASSERT: The query should've succeeded, and returned channels.
+	require.NoError(t, err)
+	require.Len(t, res.Channels, 2)
+	require.Contains(t, res.Channels, channel1)
+	require.Contains(t, res.Channels, channel2)
+}

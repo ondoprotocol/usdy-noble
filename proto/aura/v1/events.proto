@@ -119,3 +119,9 @@ message PauserRemoved {
   // address is the address of the pauser.
   string address = 1;
 }
+
+// ChannelAllowed is emitted whenever a new channel is allowed.
+message ChannelAllowed {
+  // channel is the id of the allowed channel.
+  string channel = 1;
+}
