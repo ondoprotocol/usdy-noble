@@ -319,3 +319,23 @@ This event is emitted when a pauser is removed.
 This event is emitted by the following transactions:
 
 - [`aura.v1.MsgRemovePauser`](./02_messages.md#remove-pauser)
+
+## ChannelAllowed
+
+This event is emitted when a channel is allowed.
+
+```json
+{
+  "type": "aura.v1.ChannelAllowed",
+  "attributes": [
+    {
+      "key": "channel",
+      "value": "channel-0"
+    }
+  ]
+}
+```
+
+This event is emitted by the following transactions:
+
+- [`aura.v1.MsgAllowChannel`](./02_messages.md#allow-channel)

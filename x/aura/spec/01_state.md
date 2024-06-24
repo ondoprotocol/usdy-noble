@@ -86,3 +86,16 @@ It is updated by the following messages:
 
 - [`aura.v1.MsgAddPauser`](./02_messages.md#add-pauser)
 - [`aura.v1.MsgRemovePauser`](./02_messages.md#remove-pauser)
+
+## Channels
+
+The channels field is a unique set of strings, specifically IBC channels.
+It is used to store all allowed IBC transfer channels for USDY.
+
+```go
+var ChannelPrefix = []byte("channel/")
+```
+
+It is updated by the following messages:
+
+- [`aura.v1.MsgAllowChannel`](./02_messages.md#allow-channel)

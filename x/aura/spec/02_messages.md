@@ -718,3 +718,54 @@ A message that removes a pauser.
 ### Events Emitted
 
 - [`aura.v1.PauserRemoved`](./03_events.md#pauserremoved)
+
+
+## Allow Channel
+
+`aura.v1.MsgAllowChannel`
+
+A message that allows a channel.
+
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgAllowChannel",
+        "signer": "noble1signer",
+        "channel": "channel-0"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
+```
+
+### Arguments
+
+- `channel` — The IBC channel to allow.
+
+### Requirements
+
+- Signer must be the current [`owner`](./01_state.md#owner).
+
+### State Changes
+
+- [`channels`](./01_state.md#channels)
+
+### Events Emitted
+
+- [`aura.v1.ChannelAllowed`](./03_events.md#channelallowed)
