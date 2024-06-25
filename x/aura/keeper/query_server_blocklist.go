@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	errorstypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/noble-assets/aura/x/aura/types/blocklist"
+	"github.com/ondoprotocol/aura/x/aura/types/blocklist"
 )
 
 var _ blocklist.QueryServer = &blocklistQueryServer{}

@@ -1,11 +1,11 @@
-module github.com/noble-assets/aura/e2e
+module github.com/ondoprotocol/aura/e2e
 
 go 1.21
 
 require (
 	github.com/cosmos/cosmos-sdk v0.45.16
 	github.com/gogo/protobuf v1.3.3
-	github.com/noble-assets/aura v1.0.0
+	github.com/ondoprotocol/aura v1.0.0
 	github.com/strangelove-ventures/interchaintest/v4 v4.0.0-20231026153934-334934f17a68
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/zap v1.24.0
@@ -174,8 +174,8 @@ replace (
 	// https://github.com/cosmos/cosmos-sdk/issues/8469
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-	// use local noble-assets/aura
-	github.com/noble-assets/aura => ../
+	// use local aura module
+	github.com/ondoprotocol/aura => ../
 
 	// use noble compatible strangelove-ventures/interchaintest
 	github.com/strangelove-ventures/interchaintest/v4 => github.com/noble-assets/interchaintest/v4 v4.0.0-20240525124701-0c3cc84d04e2

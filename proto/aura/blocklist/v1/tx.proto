@@ -4,7 +4,7 @@ package aura.blocklist.v1;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/noble-assets/aura/x/aura/types/blocklist";
+option go_package = "github.com/ondoprotocol/aura/x/aura/types/blocklist";
 
 service Msg {
   rpc TransferOwnership(MsgTransferOwnership) returns (MsgTransferOwnershipResponse);

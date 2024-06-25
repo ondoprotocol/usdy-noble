@@ -5,7 +5,7 @@ package aura.blocklist.v1;
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "google/api/annotations.proto";
 
-option go_package = "github.com/noble-assets/aura/x/aura/types/blocklist";
+option go_package = "github.com/ondoprotocol/aura/x/aura/types/blocklist";
 
 service Query {
   rpc Owner(QueryOwner) returns (QueryOwnerResponse) {

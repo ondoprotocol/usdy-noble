@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/noble-assets/aura/x/aura/types"
+	"github.com/ondoprotocol/aura/x/aura/types"
 )
 
 type Keeper struct {

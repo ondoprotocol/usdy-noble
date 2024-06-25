@@ -8,8 +8,8 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/noble-assets/aura/x/aura/keeper"
-	"github.com/noble-assets/aura/x/aura/types"
+	"github.com/ondoprotocol/aura/x/aura/keeper"
+	"github.com/ondoprotocol/aura/x/aura/types"
 )
 
 func AuraKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {

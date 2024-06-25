@@ -5,7 +5,7 @@ package aura.v1;
 import "aura/blocklist/v1/genesis.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/noble-assets/aura/x/aura/types";
+option go_package = "github.com/ondoprotocol/aura/x/aura/types";
 
 message GenesisState {
   // blocklist_state is the genesis state of the blocklist submodule.

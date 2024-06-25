@@ -5,10 +5,10 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/noble-assets/aura/utils"
-	"github.com/noble-assets/aura/utils/mocks"
-	"github.com/noble-assets/aura/x/aura/keeper"
-	"github.com/noble-assets/aura/x/aura/types"
+	"github.com/ondoprotocol/aura/utils"
+	"github.com/ondoprotocol/aura/utils/mocks"
+	"github.com/ondoprotocol/aura/x/aura/keeper"
+	"github.com/ondoprotocol/aura/x/aura/types"
 	"github.com/stretchr/testify/require"
 )
 
