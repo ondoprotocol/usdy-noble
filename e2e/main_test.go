@@ -267,7 +267,7 @@ func TestIBCTransfer(t *testing.T) {
 	// ASSERT: The action should've failed.
 	require.ErrorContains(t, err, "ausdy transfers are blocked on channel-0")
 
-	// ACT: Attempt to transfer back to Noble, channel is blocked.
+	// ACT: Attempt to transfer back to Noble, channel is allowed.
 	_, err = wrapper.gaia.SendIBCTransfer(ctx, "channel-0", wrapper.charlie.KeyName(), ibc.WalletAmount{
 		Address: wrapper.alice.FormattedAddress(),
 		Denom:   denom,
