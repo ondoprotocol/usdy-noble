@@ -879,10 +879,10 @@ github.com/nbutton23/zxcvbn-go v0.0.0-20210217022336-fa2cb2858354 h1:4kuARK6Y6Fx
 github.com/nbutton23/zxcvbn-go v0.0.0-20210217022336-fa2cb2858354/go.mod h1:KSVJerMDfblTH7p5MZaTt+8zaT2iEk3AkVb9PQdZuE8=
 github.com/neilotoole/errgroup v0.1.6 h1:PODGqPXdT5BC/zCYIMoTrwV+ujKcW+gBXM6Ye9Ve3R8=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=
+github.com/noble-assets/cosmos-sdk v0.45.17-0.20240626105200-928be03f1633 h1:ogvlGIWP3oTRqDSRV4V+QJAiQD0Sk+7iHMrtlZmgCno=
+github.com/noble-assets/cosmos-sdk v0.45.17-0.20240626105200-928be03f1633/go.mod h1:bScuNwWAP0TZJpUf+SHXRU3xGoUPp+X9nAzfeIXts40=
 github.com/noble-assets/interchaintest/v4 v4.0.0-20240310120800-113c680bdc4c h1:f1e4yRB1Ph06TDZxOJUCzB0ZTN24gS+52xOpwysVvII=
 github.com/noble-assets/interchaintest/v4 v4.0.0-20240310120800-113c680bdc4c/go.mod h1:oEYorKX6XBoQOrkVv9uhq4X0azZbEf5Jq6h3GN8jJ2w=
-github.com/noble-assets/interchaintest/v4 v4.0.0-20240525124701-0c3cc84d04e2 h1:EJIy3o95etc3GYtHTUX2Ayl0Zsq/5R/8xNXVRqkS9e8=
-github.com/noble-assets/interchaintest/v4 v4.0.0-20240525124701-0c3cc84d04e2/go.mod h1:oEYorKX6XBoQOrkVv9uhq4X0azZbEf5Jq6h3GN8jJ2w=
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/nxadm/tail v1.4.8/go.mod h1:+ncqLTQzXmGhMZNUePPaPqPvBxHAIsmXswZKocGu+AU=
 github.com/oklog/oklog v0.3.2 h1:wVfs8F+in6nTBMkA7CbRw+zZMIB7nNM825cM1wuzoTk=

@@ -947,8 +947,8 @@ github.com/nishanths/exhaustive v0.11.0 h1:T3I8nUGhl/Cwu5Z2hfc92l0e04D2GEW6e0l8p
 github.com/nishanths/exhaustive v0.11.0/go.mod h1:RqwDsZ1xY0dNdqHho2z6X+bgzizwbLYOWnZbbl2wLB4=
 github.com/nishanths/predeclared v0.2.2 h1:V2EPdZPliZymNAn79T8RkNApBjMmVKh5XRpLm/w98Vk=
 github.com/nishanths/predeclared v0.2.2/go.mod h1:RROzoN6TnGQupbC+lqggsOlcgysk3LMK/HI84Mp280c=
-github.com/noble-assets/cosmos-sdk v0.45.17-0.20240525075530-8fac7fa77ac6 h1:OQaEHkr9WFtqM08NBFdYtazuH/OAreBhclte3QOekvc=
-github.com/noble-assets/cosmos-sdk v0.45.17-0.20240525075530-8fac7fa77ac6/go.mod h1:bScuNwWAP0TZJpUf+SHXRU3xGoUPp+X9nAzfeIXts40=
+github.com/noble-assets/cosmos-sdk v0.45.17-0.20240626105200-928be03f1633 h1:ogvlGIWP3oTRqDSRV4V+QJAiQD0Sk+7iHMrtlZmgCno=
+github.com/noble-assets/cosmos-sdk v0.45.17-0.20240626105200-928be03f1633/go.mod h1:bScuNwWAP0TZJpUf+SHXRU3xGoUPp+X9nAzfeIXts40=
 github.com/nunnatsa/ginkgolinter v0.14.0 h1:XQPNmw+kZz5cC/HbFK3mQutpjzAQv1dHregRA+4CGGg=
 github.com/nunnatsa/ginkgolinter v0.14.0/go.mod h1:cm2xaqCUCRd7qcP4DqbVvpcyEMkuLM9CF0wY6VASohk=
 github.com/nxadm/tail v1.4.4 h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=
