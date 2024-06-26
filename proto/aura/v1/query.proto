@@ -30,6 +30,10 @@ service Query {
   rpc Pausers(aura.v1.QueryPausers) returns (aura.v1.QueryPausersResponse) {
     option (google.api.http).get = "/aura/v1/pausers";
   }
+
+  rpc BlockedChannels(aura.v1.QueryBlockedChannels) returns (aura.v1.QueryBlockedChannelsResponse) {
+    option (google.api.http).get = "/aura/v1/blocked_channels";
+  }
 }
 
 //
@@ -69,4 +73,10 @@ message QueryPausers {}
 
 message QueryPausersResponse {
   repeated string pausers = 1;
+}
+
+message QueryBlockedChannels {}
+
+message QueryBlockedChannelsResponse {
+  repeated string blocked_channels = 1;
 }

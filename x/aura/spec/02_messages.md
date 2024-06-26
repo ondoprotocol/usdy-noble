@@ -718,3 +718,103 @@ A message that removes a pauser.
 ### Events Emitted
 
 - [`aura.v1.PauserRemoved`](./03_events.md#pauserremoved)
+
+## Add Blocked Channel
+
+`aura.v1.MsgAddBlockedChannel`
+
+A message that adds a blocked channel.
+
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgAddBlockedChannel",
+        "signer": "noble1signer",
+        "channel": "channel-0"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
+```
+
+### Arguments
+
+- `channel` — The IBC channel to block.
+
+### Requirements
+
+- Signer must be the current [`owner`](./01_state.md#owner).
+
+### State Changes
+
+- [`blocked_channels`](./01_state.md#blocked-channels)
+
+### Events Emitted
+
+- [`aura.v1.BlockedChannelAdded`](./03_events.md#blockedchanneladded)
+
+## Remove Blocked Channel
+
+`aura.v1.MsgRemoveBlockedChannel`
+
+A message that removes a blocked channel.
+
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/aura.v1.MsgRemoveBlockedChannel",
+        "signer": "noble1signer",
+        "channel": "channel-0"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
+```
+
+### Arguments
+
+- `channel` — The IBC channel to unblock.
+
+### Requirements
+
+- Signer must be the current [`owner`](./01_state.md#owner).
+
+### State Changes
+
+- [`blocked_channels`](./01_state.md#blocked-channels)
+
+### Events Emitted
+
+- [`aura.v1.BlockedChannelRemoved`](./03_events.md#blockedchannelremoved)

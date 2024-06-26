@@ -376,3 +376,47 @@ func (k msgServer) RemovePauser(goCtx context.Context, msg *types.MsgRemovePause
 		Address: msg.Pauser,
 	})
 }
+
+func (k msgServer) AddBlockedChannel(goCtx context.Context, msg *types.MsgAddBlockedChannel) (*types.MsgAddBlockedChannelResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
+	}
+	if msg.Signer != owner {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
+	}
+
+	if k.HasBlockedChannel(ctx, msg.Channel) {
+		return nil, fmt.Errorf("%s is already blocked", msg.Channel)
+	}
+
+	k.SetBlockedChannel(ctx, msg.Channel)
+
+	return &types.MsgAddBlockedChannelResponse{}, ctx.EventManager().EmitTypedEvent(&types.BlockedChannelAdded{
+		Channel: msg.Channel,
+	})
+}
+
+func (k msgServer) RemoveBlockedChannel(goCtx context.Context, msg *types.MsgRemoveBlockedChannel) (*types.MsgRemoveBlockedChannelResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner := k.GetOwner(ctx)
+	if owner == "" {
+		return nil, types.ErrNoOwner
+	}
+	if msg.Signer != owner {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidOwner, "expected %s, got %s", owner, msg.Signer)
+	}
+
+	if !k.HasBlockedChannel(ctx, msg.Channel) {
+		return nil, fmt.Errorf("%s is not blocked", msg.Channel)
+	}
+
+	k.DeleteBlockedChannel(ctx, msg.Channel)
+
+	return &types.MsgRemoveBlockedChannelResponse{}, ctx.EventManager().EmitTypedEvent(&types.BlockedChannelRemoved{
+		Channel: msg.Channel,
+	})
+}

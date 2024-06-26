@@ -78,3 +78,13 @@ func (k queryServer) Pausers(goCtx context.Context, req *types.QueryPausers) (*t
 
 	return &types.QueryPausersResponse{Pausers: k.GetPausers(ctx)}, nil
 }
+
+func (k queryServer) BlockedChannels(goCtx context.Context, req *types.QueryBlockedChannels) (*types.QueryBlockedChannelsResponse, error) {
+	if req == nil {
+		return nil, errors.ErrInvalidRequest
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	return &types.QueryBlockedChannelsResponse{BlockedChannels: k.GetBlockedChannels(ctx)}, nil
+}

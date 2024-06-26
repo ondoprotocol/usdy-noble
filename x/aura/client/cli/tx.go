@@ -37,6 +37,8 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(TxSetMinterAllowance())
 	cmd.AddCommand(TxAddPauser())
 	cmd.AddCommand(TxRemovePauser())
+	cmd.AddCommand(TxAddBlockedChannel())
+	cmd.AddCommand(TxRemoveBlockedChannel())
 
 	return cmd
 }
@@ -235,7 +237,7 @@ func TxAddBurner() *cobra.Command {
 func TxRemoveBurner() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove-burner [burner]",
-		Short: "Removes an existing burner",
+		Short: "Remove an existing burner",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -260,7 +262,7 @@ func TxRemoveBurner() *cobra.Command {
 func TxSetBurnerAllowance() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-burner-allowance [burner] [allowance]",
-		Short: "Sets an existing burner's allowance",
+		Short: "Set an existing burner's allowance",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -322,7 +324,7 @@ func TxAddMinter() *cobra.Command {
 func TxRemoveMinter() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove-minter [minter]",
-		Short: "Removes an existing minter",
+		Short: "Remove an existing minter",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -347,7 +349,7 @@ func TxRemoveMinter() *cobra.Command {
 func TxSetMinterAllowance() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-minter-allowance [minter] [allowance]",
-		Short: "Sets an existing minter's allowance",
+		Short: "Set an existing minter's allowance",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -403,7 +405,7 @@ func TxAddPauser() *cobra.Command {
 func TxRemovePauser() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove-pauser [pauser]",
-		Short: "Removes an existing pauser",
+		Short: "Remove an existing pauser",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -414,6 +416,56 @@ func TxRemovePauser() *cobra.Command {
 			msg := &types.MsgRemovePauser{
 				Signer: clientCtx.GetFromAddress().String(),
 				Pauser: args[0],
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func TxAddBlockedChannel() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "add-blocked-channel [channel]",
+		Short: "Add a new blocked channel",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			msg := &types.MsgAddBlockedChannel{
+				Signer:  clientCtx.GetFromAddress().String(),
+				Channel: args[0],
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func TxRemoveBlockedChannel() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "remove-blocked-channel [channel]",
+		Short: "Remove an existing blocked channel",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			msg := &types.MsgRemoveBlockedChannel{
+				Signer:  clientCtx.GetFromAddress().String(),
+				Channel: args[0],
 			}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)

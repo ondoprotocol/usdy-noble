@@ -175,3 +175,33 @@ func (k *Keeper) SetPauser(ctx sdk.Context, pauser string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.PauserKey(pauser), []byte{})
 }
+
+//
+
+func (k *Keeper) DeleteBlockedChannel(ctx sdk.Context, channel string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.BlockedChannelKey(channel))
+}
+
+func (k *Keeper) GetBlockedChannels(ctx sdk.Context) (channels []string) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BlockedChannelPrefix)
+	itr := store.Iterator(nil, nil)
+
+	defer itr.Close()
+
+	for ; itr.Valid(); itr.Next() {
+		channels = append(channels, string(itr.Key()))
+	}
+
+	return
+}
+
+func (k *Keeper) HasBlockedChannel(ctx sdk.Context, channel string) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.BlockedChannelKey(channel))
+}
+
+func (k *Keeper) SetBlockedChannel(ctx sdk.Context, channel string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.BlockedChannelKey(channel), []byte{})
+}

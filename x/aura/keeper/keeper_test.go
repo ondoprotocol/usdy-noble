@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 	"github.com/noble-assets/aura/utils"
 	"github.com/noble-assets/aura/utils/mocks"
 	"github.com/noble-assets/aura/x/aura/types"
@@ -248,4 +249,21 @@ func TestSendRestrictionTransfer(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestSendRestrictionIBCTransfer(t *testing.T) {
+	user := utils.TestAccount()
+	keeper, ctx := mocks.AuraKeeper(t)
+	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
+
+	// ARRANGE: Set a blocked channel in state.
+	keeper.SetBlockedChannel(ctx, "channel-0")
+	escrow := transfertypes.GetEscrowAddress(transfertypes.PortID, "channel-0")
+
+	// ACT: Attempt to transfer from user to escrow account.
+	// This is to mimic the underlying transfer that occurs when using IBC.
+	_, err := keeper.SendRestrictionFn(ctx, user.Bytes, escrow, coins)
+
+	// ASSERT: The action should've failed due to blocked channel.
+	require.ErrorContains(t, err, "transfers are blocked")
 }
