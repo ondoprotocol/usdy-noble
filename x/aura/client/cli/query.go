@@ -27,6 +27,7 @@ func GetQueryCmd() *cobra.Command {
 	cmd.AddCommand(QueryBurners())
 	cmd.AddCommand(QueryMinters())
 	cmd.AddCommand(QueryPausers())
+	cmd.AddCommand(QueryBlockedChannels())
 
 	return cmd
 }
@@ -156,6 +157,29 @@ func QueryPausers() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.Pausers(context.Background(), &types.QueryPausers{})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func QueryBlockedChannels() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "blocked-channels",
+		Short: "Query the blocked channels",
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.BlockedChannels(context.Background(), &types.QueryBlockedChannels{})
 			if err != nil {
 				return err
 			}

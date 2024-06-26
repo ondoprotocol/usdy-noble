@@ -30,6 +30,9 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 
 	cdc.RegisterConcrete(&MsgAddPauser{}, "aura/AddPauser", nil)
 	cdc.RegisterConcrete(&MsgRemovePauser{}, "aura/RemovePauser", nil)
+
+	cdc.RegisterConcrete(&MsgAddBlockedChannel{}, "aura/AddBlockedChannel", nil)
+	cdc.RegisterConcrete(&MsgRemoveBlockedChannel{}, "aura/RemoveBlockedChannel", nil)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
@@ -54,6 +57,9 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgAddPauser{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgRemovePauser{})
+
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgAddBlockedChannel{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgRemoveBlockedChannel{})
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

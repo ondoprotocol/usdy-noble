@@ -319,3 +319,43 @@ This event is emitted when a pauser is removed.
 This event is emitted by the following transactions:
 
 - [`aura.v1.MsgRemovePauser`](./02_messages.md#remove-pauser)
+
+## BlockedChannelAdded
+
+This event is emitted when a blocked channel is added.
+
+```json
+{
+  "type": "aura.v1.BlockedChannelAdded",
+  "attributes": [
+    {
+      "key": "channel",
+      "value": "channel-0"
+    }
+  ]
+}
+```
+
+This event is emitted by the following transactions:
+
+- [`aura.v1.MsgAddBlockedChannel`](./02_messages.md#add-blocked-channel)
+
+## BlockedChannelRemoved
+
+This event is emitted when a blocked channel is removed.
+
+```json
+{
+  "type": "aura.v1.BlockedChannelRemoved",
+  "attributes": [
+    {
+      "key": "channel",
+      "value": "channel-0"
+    }
+  ]
+}
+```
+
+This event is emitted by the following transactions:
+
+- [`aura.v1.MsgRemoveBlockedChannel`](./02_messages.md#remove-blocked-channel)

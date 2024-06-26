@@ -189,3 +189,33 @@ func TestPausersQuery(t *testing.T) {
 	require.Contains(t, res.Pausers, pauser1.Address)
 	require.Contains(t, res.Pausers, pauser2.Address)
 }
+
+func TestBlockedChannelsQuery(t *testing.T) {
+	k, ctx := mocks.AuraKeeper(t)
+	goCtx := sdk.WrapSDKContext(ctx)
+	server := keeper.NewQueryServer(k)
+
+	// ACT: Attempt to query blocked channels with invalid request.
+	_, err := server.BlockedChannels(goCtx, nil)
+	// ASSERT: The query should've failed due to invalid request.
+	require.ErrorContains(t, err, errors.ErrInvalidRequest.Error())
+
+	// ACT: Attempt to query blocked channels with no state.
+	res, err := server.BlockedChannels(goCtx, &types.QueryBlockedChannels{})
+	// ASSERT: The query should've succeeded, and returned no channels.
+	require.NoError(t, err)
+	require.Empty(t, res.BlockedChannels)
+
+	// ARRANGE: Set blocked channels in state.
+	channel1, channel2 := "channel-0", "channel-1"
+	k.SetBlockedChannel(ctx, channel1)
+	k.SetBlockedChannel(ctx, channel2)
+
+	// ACT: Attempt to query blocked channels with state.
+	res, err = server.BlockedChannels(goCtx, &types.QueryBlockedChannels{})
+	// ASSERT: The query should've succeeded, and returned channels.
+	require.NoError(t, err)
+	require.Len(t, res.BlockedChannels, 2)
+	require.Contains(t, res.BlockedChannels, channel1)
+	require.Contains(t, res.BlockedChannels, channel2)
+}

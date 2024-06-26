@@ -1068,6 +1068,154 @@ func (m *MsgRemovePauserResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgRemovePauserResponse proto.InternalMessageInfo
 
+type MsgAddBlockedChannel struct {
+	Signer  string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
+	Channel string `protobuf:"bytes,2,opt,name=channel,proto3" json:"channel,omitempty"`
+}
+
+func (m *MsgAddBlockedChannel) Reset()         { *m = MsgAddBlockedChannel{} }
+func (m *MsgAddBlockedChannel) String() string { return proto.CompactTextString(m) }
+func (*MsgAddBlockedChannel) ProtoMessage()    {}
+func (*MsgAddBlockedChannel) Descriptor() ([]byte, []int) {
+	return fileDescriptor_72e81433c42c397f, []int{28}
+}
+func (m *MsgAddBlockedChannel) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddBlockedChannel) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddBlockedChannel.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddBlockedChannel) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddBlockedChannel.Merge(m, src)
+}
+func (m *MsgAddBlockedChannel) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddBlockedChannel) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddBlockedChannel.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddBlockedChannel proto.InternalMessageInfo
+
+type MsgAddBlockedChannelResponse struct {
+}
+
+func (m *MsgAddBlockedChannelResponse) Reset()         { *m = MsgAddBlockedChannelResponse{} }
+func (m *MsgAddBlockedChannelResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAddBlockedChannelResponse) ProtoMessage()    {}
+func (*MsgAddBlockedChannelResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_72e81433c42c397f, []int{29}
+}
+func (m *MsgAddBlockedChannelResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddBlockedChannelResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddBlockedChannelResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddBlockedChannelResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddBlockedChannelResponse.Merge(m, src)
+}
+func (m *MsgAddBlockedChannelResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddBlockedChannelResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddBlockedChannelResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddBlockedChannelResponse proto.InternalMessageInfo
+
+type MsgRemoveBlockedChannel struct {
+	Signer  string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
+	Channel string `protobuf:"bytes,2,opt,name=channel,proto3" json:"channel,omitempty"`
+}
+
+func (m *MsgRemoveBlockedChannel) Reset()         { *m = MsgRemoveBlockedChannel{} }
+func (m *MsgRemoveBlockedChannel) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveBlockedChannel) ProtoMessage()    {}
+func (*MsgRemoveBlockedChannel) Descriptor() ([]byte, []int) {
+	return fileDescriptor_72e81433c42c397f, []int{30}
+}
+func (m *MsgRemoveBlockedChannel) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveBlockedChannel) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveBlockedChannel.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveBlockedChannel) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveBlockedChannel.Merge(m, src)
+}
+func (m *MsgRemoveBlockedChannel) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveBlockedChannel) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveBlockedChannel.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveBlockedChannel proto.InternalMessageInfo
+
+type MsgRemoveBlockedChannelResponse struct {
+}
+
+func (m *MsgRemoveBlockedChannelResponse) Reset()         { *m = MsgRemoveBlockedChannelResponse{} }
+func (m *MsgRemoveBlockedChannelResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveBlockedChannelResponse) ProtoMessage()    {}
+func (*MsgRemoveBlockedChannelResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_72e81433c42c397f, []int{31}
+}
+func (m *MsgRemoveBlockedChannelResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveBlockedChannelResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveBlockedChannelResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveBlockedChannelResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveBlockedChannelResponse.Merge(m, src)
+}
+func (m *MsgRemoveBlockedChannelResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveBlockedChannelResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveBlockedChannelResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveBlockedChannelResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgBurn)(nil), "aura.v1.MsgBurn")
 	proto.RegisterType((*MsgBurnResponse)(nil), "aura.v1.MsgBurnResponse")
@@ -1097,60 +1245,69 @@ func init() {
 	proto.RegisterType((*MsgAddPauserResponse)(nil), "aura.v1.MsgAddPauserResponse")
 	proto.RegisterType((*MsgRemovePauser)(nil), "aura.v1.MsgRemovePauser")
 	proto.RegisterType((*MsgRemovePauserResponse)(nil), "aura.v1.MsgRemovePauserResponse")
+	proto.RegisterType((*MsgAddBlockedChannel)(nil), "aura.v1.MsgAddBlockedChannel")
+	proto.RegisterType((*MsgAddBlockedChannelResponse)(nil), "aura.v1.MsgAddBlockedChannelResponse")
+	proto.RegisterType((*MsgRemoveBlockedChannel)(nil), "aura.v1.MsgRemoveBlockedChannel")
+	proto.RegisterType((*MsgRemoveBlockedChannelResponse)(nil), "aura.v1.MsgRemoveBlockedChannelResponse")
 }
 
 func init() { proto.RegisterFile("aura/v1/tx.proto", fileDescriptor_72e81433c42c397f) }
 
 var fileDescriptor_72e81433c42c397f = []byte{
-	// 763 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x56, 0xcf, 0x4f, 0x13, 0x41,
-	0x14, 0xee, 0x02, 0xb6, 0xf4, 0x85, 0x08, 0xac, 0x80, 0x65, 0x81, 0x6d, 0x83, 0x91, 0x68, 0x22,
-	0xdb, 0x80, 0xd1, 0x83, 0x9e, 0xc0, 0xc4, 0xf8, 0x6b, 0xa3, 0x29, 0x72, 0xd0, 0x98, 0x98, 0x6d,
-	0x19, 0x96, 0x46, 0x3a, 0xd3, 0xec, 0x6c, 0x29, 0x9e, 0x3d, 0xe8, 0xd1, 0x93, 0x57, 0xf9, 0x73,
-	0x38, 0x72, 0x34, 0x1e, 0x88, 0x81, 0x8b, 0x7f, 0x83, 0x27, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3,
-	0xbb, 0x95, 0x60, 0x30, 0x9e, 0xda, 0x7d, 0xdf, 0xbc, 0xef, 0x7d, 0xdf, 0xbc, 0xee, 0x7b, 0x85,
-	0x09, 0xa7, 0xe7, 0x39, 0xf5, 0xbd, 0x95, 0xba, 0xbf, 0x6f, 0x75, 0x3d, 0xe2, 0x13, 0xbd, 0x14,
-	0x44, 0xac, 0xbd, 0x15, 0x63, 0xca, 0x25, 0x2e, 0x61, 0xb1, 0x7a, 0xf0, 0x2d, 0x84, 0x17, 0x3f,
-	0x6a, 0x50, 0xb2, 0xa9, 0xbb, 0xde, 0xf3, 0xb0, 0x3e, 0x03, 0x45, 0xda, 0x76, 0x31, 0xf2, 0x2a,
-	0x5a, 0x4d, 0xbb, 0x51, 0x6e, 0xf0, 0x27, 0x5d, 0x87, 0x91, 0x6d, 0x8f, 0x74, 0x2a, 0x43, 0x2c,
-	0xca, 0xbe, 0xeb, 0x0f, 0xa1, 0xe8, 0x74, 0x48, 0x0f, 0xfb, 0x95, 0xe1, 0x20, 0xba, 0x6e, 0x1d,
-	0x1e, 0x57, 0x0b, 0xdf, 0x8f, 0xab, 0x4b, 0x6e, 0xdb, 0xdf, 0xe9, 0x35, 0xad, 0x16, 0xe9, 0xd4,
-	0x5b, 0x84, 0x76, 0x08, 0xe5, 0x1f, 0xcb, 0x74, 0xeb, 0x5d, 0xdd, 0x7f, 0xdf, 0x45, 0xd4, 0x7a,
-	0x8c, 0xfd, 0x06, 0xcf, 0xbe, 0x37, 0xfa, 0xe9, 0xa0, 0x5a, 0xf8, 0x79, 0x50, 0x2d, 0x2c, 0x4e,
-	0xc2, 0x38, 0x17, 0xd2, 0x40, 0xb4, 0x4b, 0x30, 0x45, 0x8b, 0x1f, 0x42, 0x71, 0x76, 0x1b, 0xfb,
-	0xb9, 0xe2, 0x2e, 0xc3, 0x90, 0x4f, 0xb8, 0xb4, 0x21, 0x9f, 0x5c, 0x98, 0xb0, 0x40, 0x84, 0x10,
-	0x76, 0x0b, 0x46, 0x6d, 0xea, 0xbe, 0x70, 0x7a, 0x14, 0xe5, 0x09, 0x93, 0x08, 0x74, 0x98, 0x88,
-	0x4e, 0x0b, 0x06, 0x0b, 0xc0, 0xa6, 0xee, 0x26, 0xee, 0x9e, 0x91, 0x63, 0x0a, 0xf4, 0xf8, 0xbc,
-	0x60, 0xd9, 0x84, 0x29, 0x9b, 0xba, 0x2f, 0x3d, 0x07, 0xd3, 0x6d, 0xe4, 0x3d, 0xef, 0x63, 0xe4,
-	0xd1, 0x9d, 0x76, 0x37, 0xf7, 0xb2, 0xe6, 0xa0, 0x8c, 0x51, 0xff, 0x2d, 0x09, 0x0e, 0xf2, 0x3b,
-	0x1b, 0xc5, 0xa8, 0xcf, 0x12, 0xa5, 0x62, 0x26, 0xcc, 0x67, 0xd1, 0x8a, 0xb2, 0x77, 0x99, 0x98,
-	0xb5, 0x56, 0x0b, 0x75, 0xfd, 0x3f, 0x16, 0x95, 0x78, 0xe7, 0xc1, 0x48, 0xe7, 0x09, 0xd6, 0x2f,
-	0x1a, 0x8c, 0x05, 0xf0, 0xd6, 0x56, 0xf0, 0x23, 0x40, 0x5e, 0xae, 0x8b, 0x19, 0x28, 0x36, 0xd9,
-	0x09, 0x6e, 0x81, 0x3f, 0xe9, 0xcf, 0xa0, 0xec, 0xec, 0xee, 0x92, 0xbe, 0x83, 0x5b, 0xe8, 0x9c,
-	0xdd, 0x8f, 0x09, 0x24, 0xd9, 0x33, 0xec, 0x96, 0x85, 0x2e, 0x21, 0xf8, 0x29, 0xfb, 0x61, 0x34,
-	0x50, 0x87, 0xec, 0xa1, 0xf3, 0x49, 0x96, 0x8a, 0xcc, 0xc2, 0x55, 0x85, 0x4c, 0xd4, 0xf9, 0xaa,
-	0xc1, 0xb4, 0x4d, 0xdd, 0x0d, 0xe4, 0x87, 0xc0, 0x5a, 0xa4, 0xf1, 0xbf, 0xb9, 0xa1, 0x2a, 0x2c,
-	0x64, 0x0a, 0xcc, 0xe8, 0x6d, 0xf0, 0x1e, 0x0d, 0xbe, 0xa8, 0x0e, 0x3b, 0x11, 0x29, 0x0f, 0x9f,
-	0x2e, 0xbe, 0xb7, 0xa1, 0xae, 0xcc, 0xde, 0x9e, 0x4f, 0x72, 0x4e, 0x6f, 0x95, 0x3a, 0x71, 0x6f,
-	0x43, 0xe0, 0x4c, 0xbd, 0xfd, 0xa7, 0x37, 0x24, 0x7a, 0xab, 0x08, 0x14, 0x16, 0x1e, 0x45, 0xad,
-	0x65, 0x13, 0x6e, 0xe0, 0x3d, 0xb1, 0xe9, 0x25, 0x84, 0x87, 0x4f, 0x59, 0xcd, 0x08, 0x99, 0x32,
-	0x9b, 0xf1, 0xd7, 0x45, 0xe4, 0x66, 0x24, 0xeb, 0xac, 0xfe, 0x2a, 0xc1, 0xb0, 0x4d, 0x5d, 0x7d,
-	0x15, 0x46, 0xd8, 0x42, 0x9c, 0xb0, 0xf8, 0xf2, 0xb4, 0xf8, 0x66, 0x32, 0x2a, 0x6a, 0x24, 0xca,
-	0x0d, 0x72, 0xd8, 0x9e, 0x4a, 0xe4, 0x04, 0x91, 0x64, 0x8e, 0xbc, 0x46, 0xf4, 0x3b, 0x70, 0x29,
-	0xdc, 0x21, 0x93, 0xf2, 0x11, 0x16, 0x32, 0x66, 0x53, 0x21, 0x91, 0x76, 0x1f, 0x4a, 0xd1, 0xe2,
-	0xb8, 0x22, 0x9f, 0xe2, 0x41, 0x63, 0x2e, 0x23, 0x28, 0x92, 0x5f, 0xc1, 0x64, 0x7a, 0x5f, 0x2c,
-	0xc8, 0x19, 0x29, 0xd8, 0xb8, 0x3e, 0x10, 0x16, 0xd4, 0x1b, 0x30, 0xae, 0xee, 0x84, 0x84, 0x14,
-	0x05, 0x34, 0xae, 0x0d, 0x00, 0x05, 0xe9, 0x1a, 0x94, 0xe3, 0x8d, 0x30, 0x9d, 0xc8, 0x88, 0xc2,
-	0xc6, 0x42, 0x66, 0x58, 0x50, 0x3c, 0x81, 0xb1, 0xc4, 0x90, 0x4e, 0x34, 0x44, 0x46, 0x8c, 0x5a,
-	0x1e, 0x22, 0xb8, 0xde, 0x80, 0x9e, 0x31, 0x87, 0x4d, 0x39, 0x2f, 0x8d, 0x1b, 0x4b, 0x83, 0x71,
-	0xc5, 0x2c, 0x9f, 0x37, 0xaa, 0xd9, 0x30, 0x9c, 0x32, 0x9b, 0x1c, 0x28, 0xb1, 0x59, 0xce, 0x92,
-	0x61, 0x96, 0x13, 0xd5, 0xf2, 0x10, 0xc5, 0xac, 0x3a, 0x98, 0x54, 0xb3, 0x0a, 0x9e, 0x32, 0x9b,
-	0x33, 0x37, 0xb8, 0x59, 0xfe, 0x3e, 0xab, 0x66, 0xc3, 0x70, 0xca, 0x6c, 0xf2, 0x85, 0x8d, 0xcd,
-	0x72, 0x96, 0x0c, 0xb3, 0x9c, 0xa8, 0x96, 0x87, 0x44, 0x5c, 0xeb, 0x0f, 0x0e, 0x4f, 0x4c, 0xed,
-	0xe8, 0xc4, 0xd4, 0x7e, 0x9c, 0x98, 0xda, 0xe7, 0x53, 0xb3, 0x70, 0x74, 0x6a, 0x16, 0xbe, 0x9d,
-	0x9a, 0x85, 0xd7, 0x37, 0xa5, 0xf1, 0x89, 0x49, 0x73, 0x17, 0x2d, 0x3b, 0x94, 0x22, 0x9f, 0xd6,
-	0xd9, 0x9f, 0xed, 0xfd, 0xf0, 0x83, 0x4d, 0xd1, 0x66, 0x91, 0xfd, 0xab, 0xbe, 0xfd, 0x3b, 0x00,
-	0x00, 0xff, 0xff, 0xd9, 0x1d, 0xd2, 0x17, 0x88, 0x0b, 0x00, 0x00,
+	// 835 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x57, 0x4f, 0x4f, 0x13, 0x41,
+	0x14, 0xef, 0x02, 0xb6, 0xf4, 0x85, 0x08, 0xac, 0x05, 0xcb, 0x02, 0xdb, 0x8a, 0x91, 0x60, 0x22,
+	0xdb, 0x80, 0xd1, 0x83, 0x9e, 0x80, 0xc4, 0xf8, 0xaf, 0xd1, 0x14, 0x39, 0x68, 0x4c, 0xcc, 0x76,
+	0x3b, 0x2c, 0x0d, 0xed, 0x4c, 0xb3, 0xb3, 0xa5, 0x78, 0xf6, 0xa0, 0x47, 0x4f, 0x5e, 0xe5, 0x6b,
+	0xf8, 0x0d, 0x38, 0x72, 0x34, 0x1e, 0x88, 0x81, 0x8b, 0x1f, 0xc3, 0xec, 0xec, 0xec, 0x74, 0xf6,
+	0x5f, 0x21, 0x28, 0xc6, 0x53, 0xbb, 0xef, 0xcf, 0xef, 0xfd, 0x7e, 0xf3, 0x76, 0xde, 0x6b, 0x61,
+	0xc2, 0xec, 0x3a, 0x66, 0x65, 0x6f, 0xa5, 0xe2, 0xee, 0x1b, 0x1d, 0x87, 0xb8, 0x44, 0xcd, 0x79,
+	0x16, 0x63, 0x6f, 0x45, 0x2b, 0xd8, 0xc4, 0x26, 0xcc, 0x56, 0xf1, 0xbe, 0xf9, 0xee, 0x85, 0x8f,
+	0x0a, 0xe4, 0xaa, 0xd4, 0x5e, 0xef, 0x3a, 0x58, 0x9d, 0x86, 0x2c, 0x6d, 0xda, 0x18, 0x39, 0x45,
+	0xa5, 0xac, 0x2c, 0xe5, 0x6b, 0xfc, 0x49, 0x55, 0x61, 0x64, 0xdb, 0x21, 0xed, 0xe2, 0x10, 0xb3,
+	0xb2, 0xef, 0xea, 0x23, 0xc8, 0x9a, 0x6d, 0xd2, 0xc5, 0x6e, 0x71, 0xd8, 0xb3, 0xae, 0x1b, 0x87,
+	0xc7, 0xa5, 0xcc, 0x8f, 0xe3, 0xd2, 0xa2, 0xdd, 0x74, 0x77, 0xba, 0x75, 0xc3, 0x22, 0xed, 0x8a,
+	0x45, 0x68, 0x9b, 0x50, 0xfe, 0xb1, 0x4c, 0x1b, 0xbb, 0x15, 0xf7, 0x7d, 0x07, 0x51, 0xe3, 0x09,
+	0x76, 0x6b, 0x3c, 0xfb, 0xc1, 0xe8, 0xa7, 0x83, 0x52, 0xe6, 0xd7, 0x41, 0x29, 0xb3, 0x30, 0x09,
+	0xe3, 0x9c, 0x48, 0x0d, 0xd1, 0x0e, 0xc1, 0x14, 0x2d, 0x7c, 0xf0, 0xc9, 0x55, 0x9b, 0xd8, 0x4d,
+	0x25, 0x77, 0x15, 0x86, 0x5c, 0xc2, 0xa9, 0x0d, 0xb9, 0xe4, 0xd2, 0x88, 0x79, 0x24, 0x04, 0xb1,
+	0x3b, 0x30, 0x5a, 0xa5, 0xf6, 0x4b, 0xb3, 0x4b, 0x51, 0x1a, 0x31, 0x09, 0x40, 0x85, 0x89, 0x20,
+	0x5a, 0x20, 0x18, 0x00, 0x55, 0x6a, 0x6f, 0xe1, 0xce, 0x39, 0x31, 0x0a, 0xa0, 0xf6, 0xe3, 0x05,
+	0xca, 0x16, 0x14, 0xaa, 0xd4, 0x7e, 0xe5, 0x98, 0x98, 0x6e, 0x23, 0xe7, 0x45, 0x0f, 0x23, 0x87,
+	0xee, 0x34, 0x3b, 0xa9, 0x87, 0x35, 0x0b, 0x79, 0x8c, 0x7a, 0xef, 0x88, 0x17, 0xc8, 0xcf, 0x6c,
+	0x14, 0xa3, 0x1e, 0x4b, 0x94, 0x8a, 0xe9, 0x30, 0x97, 0x04, 0x2b, 0xca, 0xde, 0x67, 0x64, 0xd6,
+	0x2c, 0x0b, 0x75, 0xdc, 0x33, 0x8b, 0x4a, 0xb8, 0x73, 0xa0, 0xc5, 0xf3, 0x04, 0xea, 0x17, 0x05,
+	0xc6, 0x3c, 0x77, 0xa3, 0xe1, 0xbd, 0x04, 0xc8, 0x49, 0x55, 0x31, 0x0d, 0xd9, 0x3a, 0x8b, 0xe0,
+	0x12, 0xf8, 0x93, 0xfa, 0x1c, 0xf2, 0x66, 0xab, 0x45, 0x7a, 0x26, 0xb6, 0xd0, 0x05, 0xbb, 0xdf,
+	0x07, 0x90, 0x68, 0x4f, 0xb3, 0x53, 0x16, 0xbc, 0x04, 0xe1, 0x67, 0xec, 0xc5, 0xa8, 0xa1, 0x36,
+	0xd9, 0x43, 0x17, 0xa3, 0x2c, 0x15, 0x99, 0x81, 0xeb, 0x11, 0x30, 0x51, 0xe7, 0xab, 0x02, 0x53,
+	0x55, 0x6a, 0x6f, 0x22, 0xd7, 0x77, 0xac, 0x05, 0x1c, 0xff, 0x9b, 0x13, 0x2a, 0xc1, 0x7c, 0x22,
+	0xc1, 0x84, 0xde, 0x7a, 0xf7, 0x68, 0xf0, 0x41, 0xb5, 0x59, 0x44, 0xc0, 0xdc, 0x7f, 0xba, 0xfc,
+	0xde, 0xfa, 0xbc, 0x12, 0x7b, 0x7b, 0x31, 0xca, 0x29, 0xbd, 0x8d, 0xd4, 0xe9, 0xf7, 0xd6, 0x77,
+	0x9c, 0xab, 0xb7, 0xff, 0xf4, 0x84, 0x44, 0x6f, 0x23, 0x04, 0x85, 0x84, 0xc7, 0x41, 0x6b, 0xd9,
+	0x84, 0x1b, 0x78, 0x4e, 0x6c, 0x7a, 0x09, 0xe2, 0xfe, 0x53, 0x52, 0x33, 0x7c, 0xa4, 0xc4, 0x66,
+	0xfc, 0x71, 0x11, 0xb9, 0x19, 0x91, 0x3a, 0x35, 0x71, 0xd1, 0x5b, 0xc4, 0xda, 0x45, 0x8d, 0x8d,
+	0x1d, 0x13, 0x63, 0xd4, 0x4a, 0x2d, 0x56, 0x84, 0x9c, 0xe5, 0x87, 0xf0, 0x6a, 0xc1, 0x63, 0x6c,
+	0x96, 0xc6, 0x30, 0xa5, 0x11, 0x2e, 0xdd, 0xfb, 0xbf, 0x57, 0xf6, 0x06, 0x94, 0x52, 0x60, 0x83,
+	0xca, 0xab, 0xdf, 0xf2, 0x30, 0x5c, 0xa5, 0xb6, 0xba, 0x0a, 0x23, 0x6c, 0xfd, 0x4f, 0x18, 0xfc,
+	0xa7, 0x82, 0xc1, 0xf7, 0xb0, 0x56, 0x8c, 0x5a, 0x82, 0x5c, 0x2f, 0x87, 0x6d, 0xe5, 0x50, 0x8e,
+	0x67, 0x09, 0xe7, 0xc8, 0x4b, 0x53, 0xbd, 0x07, 0x57, 0xfc, 0x8d, 0x39, 0x29, 0x87, 0x30, 0x93,
+	0x36, 0x13, 0x33, 0x89, 0xb4, 0x87, 0x90, 0x0b, 0xd6, 0xe4, 0x35, 0x39, 0x8a, 0x1b, 0xb5, 0xd9,
+	0x04, 0xa3, 0x48, 0x7e, 0x0d, 0x93, 0xf1, 0xed, 0x38, 0x2f, 0x67, 0xc4, 0xdc, 0xda, 0xad, 0x81,
+	0x6e, 0x01, 0xbd, 0x09, 0xe3, 0xd1, 0x0d, 0x18, 0xa2, 0x12, 0x71, 0x6a, 0x37, 0x07, 0x38, 0x05,
+	0xe8, 0x1a, 0xe4, 0xfb, 0xfb, 0x6f, 0x2a, 0x94, 0x11, 0x98, 0xb5, 0xf9, 0x44, 0xb3, 0x80, 0x78,
+	0x0a, 0x63, 0xa1, 0x95, 0x14, 0x6a, 0x88, 0xec, 0xd1, 0xca, 0x69, 0x1e, 0x81, 0xf5, 0x16, 0xd4,
+	0x84, 0xad, 0xa3, 0xcb, 0x79, 0x71, 0xbf, 0xb6, 0x38, 0xd8, 0x1f, 0x11, 0xcb, 0xa7, 0x6b, 0x54,
+	0xac, 0x6f, 0x8e, 0x89, 0x0d, 0x8f, 0xcf, 0xbe, 0x58, 0x8e, 0x92, 0x20, 0x96, 0x03, 0x95, 0xd3,
+	0x3c, 0x11, 0xb1, 0xd1, 0x31, 0x1c, 0x15, 0x1b, 0xf1, 0xc7, 0xc4, 0xa6, 0x4c, 0x49, 0x2e, 0x96,
+	0x4f, 0xaf, 0xa8, 0x58, 0xdf, 0x1c, 0x13, 0x1b, 0x1e, 0x4f, 0x7d, 0xb1, 0x1c, 0x25, 0x41, 0x2c,
+	0x07, 0x2a, 0xa7, 0x79, 0xe4, 0x8b, 0x11, 0x9f, 0x73, 0xb1, 0x37, 0x2b, 0xe4, 0x0e, 0x5f, 0x8c,
+	0xd4, 0x89, 0xa6, 0xd6, 0xa1, 0x90, 0x38, 0xce, 0x92, 0x5e, 0xb7, 0x70, 0x81, 0xa5, 0xb3, 0x22,
+	0x82, 0x1a, 0xeb, 0x1b, 0x87, 0x27, 0xba, 0x72, 0x74, 0xa2, 0x2b, 0x3f, 0x4f, 0x74, 0xe5, 0xf3,
+	0xa9, 0x9e, 0x39, 0x3a, 0xd5, 0x33, 0xdf, 0x4f, 0xf5, 0xcc, 0x9b, 0xdb, 0xd2, 0xae, 0xc3, 0xa4,
+	0xde, 0x42, 0xcb, 0x26, 0xa5, 0xc8, 0xa5, 0x15, 0xf6, 0xcf, 0x68, 0xdf, 0xff, 0x60, 0x2b, 0xaf,
+	0x9e, 0x65, 0x7f, 0x81, 0xee, 0xfe, 0x0e, 0x00, 0x00, 0xff, 0xff, 0x7d, 0xb0, 0x94, 0x55, 0x35,
+	0x0d, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1179,6 +1336,8 @@ type MsgClient interface {
 	SetMinterAllowance(ctx context.Context, in *MsgSetMinterAllowance, opts ...grpc.CallOption) (*MsgSetMinterAllowanceResponse, error)
 	AddPauser(ctx context.Context, in *MsgAddPauser, opts ...grpc.CallOption) (*MsgAddPauserResponse, error)
 	RemovePauser(ctx context.Context, in *MsgRemovePauser, opts ...grpc.CallOption) (*MsgRemovePauserResponse, error)
+	AddBlockedChannel(ctx context.Context, in *MsgAddBlockedChannel, opts ...grpc.CallOption) (*MsgAddBlockedChannelResponse, error)
+	RemoveBlockedChannel(ctx context.Context, in *MsgRemoveBlockedChannel, opts ...grpc.CallOption) (*MsgRemoveBlockedChannelResponse, error)
 }
 
 type msgClient struct {
@@ -1315,6 +1474,24 @@ func (c *msgClient) RemovePauser(ctx context.Context, in *MsgRemovePauser, opts 
 	return out, nil
 }
 
+func (c *msgClient) AddBlockedChannel(ctx context.Context, in *MsgAddBlockedChannel, opts ...grpc.CallOption) (*MsgAddBlockedChannelResponse, error) {
+	out := new(MsgAddBlockedChannelResponse)
+	err := c.cc.Invoke(ctx, "/aura.v1.Msg/AddBlockedChannel", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RemoveBlockedChannel(ctx context.Context, in *MsgRemoveBlockedChannel, opts ...grpc.CallOption) (*MsgRemoveBlockedChannelResponse, error) {
+	out := new(MsgRemoveBlockedChannelResponse)
+	err := c.cc.Invoke(ctx, "/aura.v1.Msg/RemoveBlockedChannel", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	Burn(context.Context, *MsgBurn) (*MsgBurnResponse, error)
@@ -1331,6 +1508,8 @@ type MsgServer interface {
 	SetMinterAllowance(context.Context, *MsgSetMinterAllowance) (*MsgSetMinterAllowanceResponse, error)
 	AddPauser(context.Context, *MsgAddPauser) (*MsgAddPauserResponse, error)
 	RemovePauser(context.Context, *MsgRemovePauser) (*MsgRemovePauserResponse, error)
+	AddBlockedChannel(context.Context, *MsgAddBlockedChannel) (*MsgAddBlockedChannelResponse, error)
+	RemoveBlockedChannel(context.Context, *MsgRemoveBlockedChannel) (*MsgRemoveBlockedChannelResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -1378,6 +1557,12 @@ func (*UnimplementedMsgServer) AddPauser(ctx context.Context, req *MsgAddPauser)
 }
 func (*UnimplementedMsgServer) RemovePauser(ctx context.Context, req *MsgRemovePauser) (*MsgRemovePauserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemovePauser not implemented")
+}
+func (*UnimplementedMsgServer) AddBlockedChannel(ctx context.Context, req *MsgAddBlockedChannel) (*MsgAddBlockedChannelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBlockedChannel not implemented")
+}
+func (*UnimplementedMsgServer) RemoveBlockedChannel(ctx context.Context, req *MsgRemoveBlockedChannel) (*MsgRemoveBlockedChannelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveBlockedChannel not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -1636,6 +1821,42 @@ func _Msg_RemovePauser_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_AddBlockedChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAddBlockedChannel)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).AddBlockedChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/aura.v1.Msg/AddBlockedChannel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).AddBlockedChannel(ctx, req.(*MsgAddBlockedChannel))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RemoveBlockedChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoveBlockedChannel)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RemoveBlockedChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/aura.v1.Msg/RemoveBlockedChannel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RemoveBlockedChannel(ctx, req.(*MsgRemoveBlockedChannel))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "aura.v1.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -1695,6 +1916,14 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemovePauser",
 			Handler:    _Msg_RemovePauser_Handler,
+		},
+		{
+			MethodName: "AddBlockedChannel",
+			Handler:    _Msg_AddBlockedChannel_Handler,
+		},
+		{
+			MethodName: "RemoveBlockedChannel",
+			Handler:    _Msg_RemoveBlockedChannel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -2580,6 +2809,126 @@ func (m *MsgRemovePauserResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgAddBlockedChannel) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddBlockedChannel) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddBlockedChannel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Channel) > 0 {
+		i -= len(m.Channel)
+		copy(dAtA[i:], m.Channel)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Channel)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Signer) > 0 {
+		i -= len(m.Signer)
+		copy(dAtA[i:], m.Signer)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Signer)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAddBlockedChannelResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddBlockedChannelResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddBlockedChannelResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveBlockedChannel) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveBlockedChannel) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveBlockedChannel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Channel) > 0 {
+		i -= len(m.Channel)
+		copy(dAtA[i:], m.Channel)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Channel)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Signer) > 0 {
+		i -= len(m.Signer)
+		copy(dAtA[i:], m.Signer)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Signer)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveBlockedChannelResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveBlockedChannelResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveBlockedChannelResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -2947,6 +3296,58 @@ func (m *MsgRemovePauser) Size() (n int) {
 }
 
 func (m *MsgRemovePauserResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgAddBlockedChannel) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Signer)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Channel)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgAddBlockedChannelResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgRemoveBlockedChannel) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Signer)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Channel)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgRemoveBlockedChannelResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -5342,6 +5743,334 @@ func (m *MsgRemovePauserResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgRemovePauserResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddBlockedChannel) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddBlockedChannel: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddBlockedChannel: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Signer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Signer = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Channel", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Channel = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddBlockedChannelResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddBlockedChannelResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddBlockedChannelResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveBlockedChannel) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveBlockedChannel: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveBlockedChannel: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Signer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Signer = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Channel", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Channel = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveBlockedChannelResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveBlockedChannelResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveBlockedChannelResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

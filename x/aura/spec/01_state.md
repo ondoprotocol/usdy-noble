@@ -86,3 +86,17 @@ It is updated by the following messages:
 
 - [`aura.v1.MsgAddPauser`](./02_messages.md#add-pauser)
 - [`aura.v1.MsgRemovePauser`](./02_messages.md#remove-pauser)
+
+## Blocked Channels
+
+The blocked channels field is a unique set of strings, specifically IBC channels.
+It is used to store all blocked IBC transfer channels for USDY.
+
+```go
+var BlockedChannelPrefix = []byte("blocked_channel/")
+```
+
+It is updated by the following messages:
+
+- [`aura.v1.MsgAddBlockedChannel`](./02_messages.md#add-blocked-channel)
+- [`aura.v1.MsgRemoveBlockedChannel`](./02_messages.md#remove-blocked-channel)

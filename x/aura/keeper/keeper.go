@@ -6,6 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
 	"github.com/noble-assets/aura/x/aura/types"
 )
 
@@ -59,6 +60,14 @@ func (k *Keeper) SendRestrictionFn(ctx sdk.Context, fromAddr, toAddr sdk.AccAddr
 
 		if k.HasBlockedAddress(ctx, toAddr) {
 			return toAddr, fmt.Errorf("%s is blocked from receiving %s", toAddr, k.Denom)
+		}
+
+		for _, channel := range k.GetBlockedChannels(ctx) {
+			escrow := transfertypes.GetEscrowAddress(transfertypes.PortID, channel)
+
+			if toAddr.Equals(escrow) {
+				return toAddr, fmt.Errorf("%s transfers are blocked on %s", k.Denom, channel)
+			}
 		}
 	}
 

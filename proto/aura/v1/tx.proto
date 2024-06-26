@@ -26,6 +26,9 @@ service Msg {
 
   rpc AddPauser(aura.v1.MsgAddPauser) returns (aura.v1.MsgAddPauserResponse);
   rpc RemovePauser(aura.v1.MsgRemovePauser) returns (aura.v1.MsgRemovePauserResponse);
+
+  rpc AddBlockedChannel(aura.v1.MsgAddBlockedChannel) returns (aura.v1.MsgAddBlockedChannelResponse);
+  rpc RemoveBlockedChannel(aura.v1.MsgRemoveBlockedChannel) returns (aura.v1.MsgRemoveBlockedChannelResponse);
 }
 
 //
@@ -190,3 +193,23 @@ message MsgRemovePauser {
 }
 
 message MsgRemovePauserResponse {}
+
+message MsgAddBlockedChannel {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1;
+  string channel = 2;
+}
+
+message MsgAddBlockedChannelResponse {}
+
+message MsgRemoveBlockedChannel {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1;
+  string channel = 2;
+}
+
+message MsgRemoveBlockedChannelResponse {}
