@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/noble-assets/aura/utils"
-	"github.com/noble-assets/aura/utils/mocks"
+	"github.com/ondoprotocol/usdy-noble/utils"
+	"github.com/ondoprotocol/usdy-noble/utils/mocks"
 	"github.com/stretchr/testify/require"
 )
 

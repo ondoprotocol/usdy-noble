@@ -1,11 +1,11 @@
-module github.com/noble-assets/aura/simapp
+module github.com/ondoprotocol/usdy-noble/simapp
 
 go 1.21
 
 require (
 	github.com/cosmos/cosmos-sdk v0.45.16
 	github.com/cosmos/ibc-go/v4 v4.6.0
-	github.com/noble-assets/aura v1.0.0
+	github.com/ondoprotocol/usdy-noble v1.0.0
 	github.com/spf13/cast v1.5.1
 	github.com/spf13/cobra v1.7.0
 	github.com/tendermint/tendermint v0.34.27
@@ -158,8 +158,8 @@ replace (
 	// https://github.com/cosmos/cosmos-sdk/issues/8469
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-	// use local noble-assets/aura
-	github.com/noble-assets/aura => ../
+	// use local ondoprotocol/usdy-noble
+	github.com/ondoprotocol/usdy-noble => ../
 
 	// use cosmos compatible syndtr/goleveldb
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7

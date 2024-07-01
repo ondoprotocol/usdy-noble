@@ -4,7 +4,7 @@ package aura.v1;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/noble-assets/aura/x/aura/types";
+option go_package = "github.com/ondoprotocol/usdy-noble/x/aura/types";
 
 service Msg {
   rpc Burn(aura.v1.MsgBurn) returns (aura.v1.MsgBurnResponse);
