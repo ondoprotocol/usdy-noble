@@ -6,7 +6,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/noble-assets/aura/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/x/aura/types"
 	"github.com/spf13/cobra"
 )
 
