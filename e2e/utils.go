@@ -7,9 +7,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/jsonpb"
-	_ "github.com/noble-assets/aura/x/aura"
-	"github.com/noble-assets/aura/x/aura/types"
-	"github.com/noble-assets/aura/x/aura/types/blocklist"
+	_ "github.com/ondoprotocol/usdy-noble/x/aura"
+	"github.com/ondoprotocol/usdy-noble/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/x/aura/types/blocklist"
 	"github.com/strangelove-ventures/interchaintest/v4"
 	"github.com/strangelove-ventures/interchaintest/v4/chain/cosmos"
 	"github.com/strangelove-ventures/interchaintest/v4/ibc"

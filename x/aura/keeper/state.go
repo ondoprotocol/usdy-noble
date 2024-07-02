@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/noble-assets/aura/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/x/aura/types"
 )
 
 //

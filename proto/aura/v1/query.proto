@@ -6,7 +6,7 @@ import "aura/v1/genesis.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
-option go_package = "github.com/noble-assets/aura/x/aura/types";
+option go_package = "github.com/ondoprotocol/usdy-noble/x/aura/types";
 
 service Query {
   rpc Denom(aura.v1.QueryDenom) returns (aura.v1.QueryDenomResponse) {

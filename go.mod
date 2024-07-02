@@ -1,4 +1,4 @@
-module github.com/noble-assets/aura
+module github.com/ondoprotocol/usdy-noble
 
 go 1.21
 
