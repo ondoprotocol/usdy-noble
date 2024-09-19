@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
-	"github.com/ondoprotocol/usdy-noble/x/aura/types/blocklist"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
 )
 
 func DefaultGenesisState() *GenesisState {

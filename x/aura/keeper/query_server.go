@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/ondoprotocol/usdy-noble/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 )
 
 var _ types.QueryServer = &queryServer{}

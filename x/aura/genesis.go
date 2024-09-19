@@ -2,9 +2,9 @@ package aura
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ondoprotocol/usdy-noble/x/aura/keeper"
-	"github.com/ondoprotocol/usdy-noble/x/aura/types"
-	"github.com/ondoprotocol/usdy-noble/x/aura/types/blocklist"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
 )
 
 func InitGenesis(ctx sdk.Context, k *keeper.Keeper, genesis types.GenesisState) {

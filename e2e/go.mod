@@ -1,4 +1,4 @@
-module github.com/ondoprotocol/usdy-noble/e2e
+module github.com/ondoprotocol/usdy-noble/v2/e2e
 
 go 1.21
 
@@ -6,7 +6,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.45.16
 	github.com/cosmos/ibc-go/v4 v4.6.0
 	github.com/gogo/protobuf v1.3.3
-	github.com/ondoprotocol/usdy-noble v1.0.0
+	github.com/ondoprotocol/usdy-noble/v2 v2.0.0
 	github.com/strangelove-ventures/interchaintest/v4 v4.0.0-20231026153934-334934f17a68
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/zap v1.24.0
@@ -175,7 +175,7 @@ replace (
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
 	// use local ondoprotocol/usdy-noble
-	github.com/ondoprotocol/usdy-noble => ../
+	github.com/ondoprotocol/usdy-noble/v2 => ../
 
 	// use noble compatible strangelove-ventures/interchaintest
 	github.com/strangelove-ventures/interchaintest/v4 => github.com/noble-assets/interchaintest/v4 v4.0.0-20240525124701-0c3cc84d04e2

@@ -5,7 +5,7 @@ import (
 
 	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ondoprotocol/usdy-noble/x/aura/types/blocklist"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
 )
 
 var _ blocklist.MsgServer = &blocklistMsgServer{}
