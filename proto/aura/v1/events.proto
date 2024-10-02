@@ -4,7 +4,7 @@ package aura.v1;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/ondoprotocol/usdy-noble/x/aura/types";
+option go_package = "github.com/ondoprotocol/usdy-noble/v2/x/aura/types";
 
 // Paused is emitted whenever the module is paused.
 message Paused {

@@ -1,4 +1,4 @@
-module github.com/ondoprotocol/usdy-noble
+module github.com/ondoprotocol/usdy-noble/v2
 
 go 1.21
 

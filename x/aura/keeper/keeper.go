@@ -7,7 +7,7 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
-	"github.com/ondoprotocol/usdy-noble/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 )
 
 type Keeper struct {

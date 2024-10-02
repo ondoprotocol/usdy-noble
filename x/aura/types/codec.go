@@ -5,7 +5,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
-	"github.com/ondoprotocol/usdy-noble/x/aura/types/blocklist"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
 )
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {

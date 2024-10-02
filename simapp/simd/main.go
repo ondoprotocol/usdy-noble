@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/server"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ondoprotocol/usdy-noble/simapp"
-	"github.com/ondoprotocol/usdy-noble/simapp/simd/cmd"
+	"github.com/ondoprotocol/usdy-noble/v2/simapp"
+	"github.com/ondoprotocol/usdy-noble/v2/simapp/simd/cmd"
 )
 
 var (

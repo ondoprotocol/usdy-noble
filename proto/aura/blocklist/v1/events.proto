@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package aura.blocklist.v1;
 
-option go_package = "github.com/ondoprotocol/usdy-noble/x/aura/types/blocklist";
+option go_package = "github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist";
 
 // OwnershipTransferStarted is emitted whenever an ownership transfer is started.
 message OwnershipTransferStarted {

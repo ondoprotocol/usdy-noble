@@ -58,9 +58,9 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/ondoprotocol/usdy-noble/x/aura"
-	aurakeeper "github.com/ondoprotocol/usdy-noble/x/aura/keeper"
-	auratypes "github.com/ondoprotocol/usdy-noble/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura"
+	aurakeeper "github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
+	auratypes "github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 )
 
 var (

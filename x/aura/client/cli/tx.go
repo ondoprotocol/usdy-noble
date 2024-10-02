@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ondoprotocol/usdy-noble/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 	"github.com/spf13/cobra"
 )
 

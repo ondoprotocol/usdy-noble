@@ -6,9 +6,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
-	"github.com/ondoprotocol/usdy-noble/utils"
-	"github.com/ondoprotocol/usdy-noble/utils/mocks"
-	"github.com/ondoprotocol/usdy-noble/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/v2/utils"
+	"github.com/ondoprotocol/usdy-noble/v2/utils/mocks"
+	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 	"github.com/stretchr/testify/require"
 )
 
