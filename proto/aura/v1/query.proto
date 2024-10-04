@@ -3,6 +3,7 @@ syntax = "proto3";
 package aura.v1;
 
 import "aura/v1/genesis.proto";
+import "cosmos/query/v1/query.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
@@ -10,28 +11,35 @@ option go_package = "github.com/ondoprotocol/usdy-noble/v2/x/aura/types";
 
 service Query {
   rpc Denom(aura.v1.QueryDenom) returns (aura.v1.QueryDenomResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/v1/denom";
   }
 
   rpc Paused(aura.v1.QueryPaused) returns (aura.v1.QueryPausedResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/v1/paused";
   }
 
   rpc Owner(QueryOwner) returns (QueryOwnerResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/v1/owner";
   }
 
   rpc Burners(aura.v1.QueryBurners) returns (aura.v1.QueryBurnersResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/v1/burners";
   }
   rpc Minters(aura.v1.QueryMinters) returns (aura.v1.QueryMintersResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/v1/minters";
   }
   rpc Pausers(aura.v1.QueryPausers) returns (aura.v1.QueryPausersResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/v1/pausers";
   }
 
   rpc BlockedChannels(aura.v1.QueryBlockedChannels) returns (aura.v1.QueryBlockedChannelsResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/v1/blocked_channels";
   }
 }

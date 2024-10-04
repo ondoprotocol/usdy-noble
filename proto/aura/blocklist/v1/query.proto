@@ -3,20 +3,24 @@ syntax = "proto3";
 package aura.blocklist.v1;
 
 import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos/query/v1/query.proto";
 import "google/api/annotations.proto";
 
 option go_package = "github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist";
 
 service Query {
   rpc Owner(QueryOwner) returns (QueryOwnerResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/blocklist/v1/owner";
   }
 
   rpc Addresses(QueryAddresses) returns (QueryAddressesResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/blocklist/v1/addresses";
   }
 
   rpc Address(QueryAddress) returns (QueryAddressResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/aura/blocklist/v1/address/{address}";
   }
 }
