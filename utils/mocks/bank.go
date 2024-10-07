@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/v2/types"
 )
 
 var _ types.BankKeeper = BankKeeper{}

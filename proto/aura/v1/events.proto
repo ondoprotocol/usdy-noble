@@ -6,7 +6,7 @@ import "amino/amino.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/ondoprotocol/usdy-noble/v2/x/aura/types";
+option go_package = "github.com/ondoprotocol/usdy-noble/v2/types";
 
 // Paused is emitted whenever the module is paused.
 message Paused {

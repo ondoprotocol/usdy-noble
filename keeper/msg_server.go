@@ -7,7 +7,7 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/v2/types"
 )
 
 var _ types.MsgServer = &msgServer{}

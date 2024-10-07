@@ -3,9 +3,9 @@ package aura
 import (
 	"cosmossdk.io/core/address"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
+	"github.com/ondoprotocol/usdy-noble/v2/keeper"
+	"github.com/ondoprotocol/usdy-noble/v2/types"
+	"github.com/ondoprotocol/usdy-noble/v2/types/blocklist"
 )
 
 func InitGenesis(ctx sdk.Context, k *keeper.Keeper, addressCodec address.Codec, genesis types.GenesisState) {

@@ -9,7 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	errorstypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
+	"github.com/ondoprotocol/usdy-noble/v2/types/blocklist"
 )
 
 var _ blocklist.QueryServer = &blocklistQueryServer{}

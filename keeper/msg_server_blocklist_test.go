@@ -3,10 +3,10 @@ package keeper_test
 import (
 	"testing"
 
+	"github.com/ondoprotocol/usdy-noble/v2/keeper"
+	"github.com/ondoprotocol/usdy-noble/v2/types/blocklist"
 	"github.com/ondoprotocol/usdy-noble/v2/utils"
 	"github.com/ondoprotocol/usdy-noble/v2/utils/mocks"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
 	"github.com/stretchr/testify/require"
 )
 

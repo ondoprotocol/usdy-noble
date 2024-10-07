@@ -6,8 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/runtime"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
+	"github.com/ondoprotocol/usdy-noble/v2/keeper"
+	"github.com/ondoprotocol/usdy-noble/v2/types"
 )
 
 func AuraKeeper() (*keeper.Keeper, sdk.Context) {

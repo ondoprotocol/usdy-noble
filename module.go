@@ -21,9 +21,9 @@ import (
 	blocklistv1 "github.com/ondoprotocol/usdy-noble/v2/api/blocklist/v1"
 	modulev1 "github.com/ondoprotocol/usdy-noble/v2/api/module/v1"
 	aurav1 "github.com/ondoprotocol/usdy-noble/v2/api/v1"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
+	"github.com/ondoprotocol/usdy-noble/v2/keeper"
+	"github.com/ondoprotocol/usdy-noble/v2/types"
+	"github.com/ondoprotocol/usdy-noble/v2/types/blocklist"
 )
 
 // ConsensusVersion defines the current x/aura module consensus version.
