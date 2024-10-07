@@ -26,6 +26,7 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/x/consensus"
 	_ "github.com/cosmos/cosmos-sdk/x/params"
 	_ "github.com/cosmos/cosmos-sdk/x/staking"
+	_ "github.com/ondoprotocol/usdy-noble/v2/x/aura"
 
 	// Cosmos Modules
 	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
@@ -42,9 +43,7 @@ import (
 	transferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	// Custom Modules
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura"
 	aurakeeper "github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
-	auratypes "github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 )
 
 var DefaultNodeHome string
@@ -138,27 +137,13 @@ func NewSimApp(
 		&app.ParamsKeeper,
 		&app.StakingKeeper,
 		&app.UpgradeKeeper,
+		// Custom Modules
+		&app.AuraKeeper,
 	); err != nil {
 		return nil, err
 	}
 
 	app.App = appBuilder.Build(db, traceStore, baseAppOptions...)
-
-	if err := app.RegisterStores(storetypes.NewKVStoreKey(auratypes.ModuleName)); err != nil {
-		return nil, err
-	}
-	app.AuraKeeper = aurakeeper.NewKeeper(
-		"ausdy",
-		runtime.NewKVStoreService(app.GetKey(auratypes.ModuleName)),
-		runtime.ProvideEventService(),
-		app.AccountKeeper.AddressCodec(),
-		nil,
-	)
-	app.BankKeeper.AppendSendRestriction(app.AuraKeeper.SendRestrictionFn)
-	app.AuraKeeper.SetBankKeeper(app.BankKeeper)
-	if err := app.RegisterModules(aura.NewAppModule(app.AccountKeeper.AddressCodec(), app.AuraKeeper)); err != nil {
-		return nil, err
-	}
 
 	if err := app.RegisterLegacyModules(); err != nil {
 		return nil, err

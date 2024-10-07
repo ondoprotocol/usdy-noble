@@ -7,4 +7,7 @@ import "cosmos/app/v1alpha1/module.proto";
 // Module is the config object of the Aura module.
 message Module {
   option (cosmos.app.v1alpha1.module) = {go_import: "github.com/ondoprotocol/usdy-noble/v2/x/aura"};
+
+  // denom is the denom this module is allowed to govern, burn, mint, etc.
+  string denom = 1;
 }

@@ -47,3 +47,8 @@ modules:
   - name: upgrade
     config:
       "@type": cosmos.upgrade.module.v1.Module
+
+  - name: aura
+    config:
+      "@type": aura.module.v1.Module
+      denom: ausdy
