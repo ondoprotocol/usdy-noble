@@ -1,35 +1,30 @@
 package mocks
 
 import (
-	"testing"
-
-	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	storetypes "cosmossdk.io/store/types"
+	"github.com/cosmos/cosmos-sdk/codec/address"
+	"github.com/cosmos/cosmos-sdk/runtime"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 )
 
-func AuraKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
-	return AuraKeeperWithBank(t, BankKeeper{
+func AuraKeeper() (*keeper.Keeper, sdk.Context) {
+	return AuraKeeperWithBank(BankKeeper{
 		Restriction: NoOpSendRestrictionFn,
 	})
 }
 
-func AuraKeeperWithBank(_ testing.TB, bank BankKeeper) (*keeper.Keeper, sdk.Context) {
+func AuraKeeperWithBank(bank BankKeeper) (*keeper.Keeper, sdk.Context) {
 	key := storetypes.NewKVStoreKey(types.ModuleName)
 	tkey := storetypes.NewTransientStoreKey("transient_aura")
 
-	reg := codectypes.NewInterfaceRegistry()
-	types.RegisterInterfaces(reg)
-	cdc := codec.NewProtoCodec(reg)
-
 	k := keeper.NewKeeper(
-		cdc,
-		key,
 		"ausdy",
+		runtime.NewKVStoreService(key),
+		runtime.ProvideEventService(),
+		address.NewBech32Codec("noble"),
 		nil,
 	)
 

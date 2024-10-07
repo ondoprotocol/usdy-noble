@@ -3,8 +3,8 @@ package types
 import (
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
+	"cosmossdk.io/core/address"
+	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
 )
 
@@ -15,21 +15,25 @@ func DefaultGenesisState() *GenesisState {
 	}
 }
 
-func (gs *GenesisState) Validate() error {
+func (gs *GenesisState) Validate(cdc address.Codec) error {
+	if err := gs.BlocklistState.Validate(cdc); err != nil {
+		return err
+	}
+
 	if gs.Owner != "" {
-		if _, err := sdk.AccAddressFromBech32(gs.Owner); err != nil {
+		if _, err := cdc.StringToBytes(gs.Owner); err != nil {
 			return fmt.Errorf("invalid owner address (%s): %s", gs.Owner, err)
 		}
 	}
 
 	if gs.PendingOwner != "" {
-		if _, err := sdk.AccAddressFromBech32(gs.PendingOwner); err != nil {
+		if _, err := cdc.StringToBytes(gs.PendingOwner); err != nil {
 			return fmt.Errorf("invalid pending owner address (%s): %s", gs.PendingOwner, err)
 		}
 	}
 
 	for _, burner := range gs.Burners {
-		if _, err := sdk.AccAddressFromBech32(burner.Address); err != nil {
+		if _, err := cdc.StringToBytes(burner.Address); err != nil {
 			return fmt.Errorf("invalid burner address (%s): %s", burner.Address, err)
 		}
 
@@ -39,7 +43,7 @@ func (gs *GenesisState) Validate() error {
 	}
 
 	for _, minter := range gs.Minters {
-		if _, err := sdk.AccAddressFromBech32(minter.Address); err != nil {
+		if _, err := cdc.StringToBytes(minter.Address); err != nil {
 			return fmt.Errorf("invalid minter address (%s): %s", minter.Address, err)
 		}
 
@@ -49,7 +53,7 @@ func (gs *GenesisState) Validate() error {
 	}
 
 	for _, pauser := range gs.Pausers {
-		if _, err := sdk.AccAddressFromBech32(pauser); err != nil {
+		if _, err := cdc.StringToBytes(pauser); err != nil {
 			return fmt.Errorf("invalid pauser address (%s): %s", pauser, err)
 		}
 	}
@@ -60,5 +64,5 @@ func (gs *GenesisState) Validate() error {
 		}
 	}
 
-	return gs.BlocklistState.Validate()
+	return nil
 }

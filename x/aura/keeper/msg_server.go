@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	sdkerrors "cosmossdk.io/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 )
@@ -21,9 +20,7 @@ func NewMsgServer(keeper *Keeper) types.MsgServer {
 	return &msgServer{Keeper: keeper}
 }
 
-func (k msgServer) Burn(goCtx context.Context, msg *types.MsgBurn) (*types.MsgBurnResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) Burn(ctx context.Context, msg *types.MsgBurn) (*types.MsgBurnResponse, error) {
 	if !k.HasBurner(ctx, msg.Signer) {
 		return nil, types.ErrInvalidBurner
 	}
@@ -32,7 +29,7 @@ func (k msgServer) Burn(goCtx context.Context, msg *types.MsgBurn) (*types.MsgBu
 		return nil, sdkerrors.Wrapf(types.ErrInsufficientAllowance, "burner %s has an allowance of %s", msg.Signer, allowance.String())
 	}
 
-	from, err := sdk.AccAddressFromBech32(msg.From)
+	from, err := k.addressCodec.StringToBytes(msg.From)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to decode account address %s", msg.From)
 	}
@@ -57,9 +54,7 @@ func (k msgServer) Burn(goCtx context.Context, msg *types.MsgBurn) (*types.MsgBu
 	return &types.MsgBurnResponse{}, nil
 }
 
-func (k msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMintResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) Mint(ctx context.Context, msg *types.MsgMint) (*types.MsgMintResponse, error) {
 	if !k.HasMinter(ctx, msg.Signer) {
 		return nil, types.ErrInvalidMinter
 	}
@@ -68,7 +63,7 @@ func (k msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMi
 		return nil, sdkerrors.Wrapf(types.ErrInsufficientAllowance, "minter %s has an allowance of %s", msg.Signer, allowance.String())
 	}
 
-	to, err := sdk.AccAddressFromBech32(msg.To)
+	to, err := k.addressCodec.StringToBytes(msg.To)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(err, "unable to decode account address %s", msg.To)
 	}
@@ -93,9 +88,7 @@ func (k msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMi
 	return &types.MsgMintResponse{}, nil
 }
 
-func (k msgServer) Pause(goCtx context.Context, msg *types.MsgPause) (*types.MsgPauseResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) Pause(ctx context.Context, msg *types.MsgPause) (*types.MsgPauseResponse, error) {
 	if !k.HasPauser(ctx, msg.Signer) {
 		return nil, types.ErrInvalidPauser
 	}
@@ -105,14 +98,12 @@ func (k msgServer) Pause(goCtx context.Context, msg *types.MsgPause) (*types.Msg
 
 	k.SetPaused(ctx, true)
 
-	return &types.MsgPauseResponse{}, ctx.EventManager().EmitTypedEvent(&types.Paused{
+	return &types.MsgPauseResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.Paused{
 		Account: msg.Signer,
 	})
 }
 
-func (k msgServer) Unpause(goCtx context.Context, msg *types.MsgUnpause) (*types.MsgUnpauseResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) Unpause(ctx context.Context, msg *types.MsgUnpause) (*types.MsgUnpauseResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -127,14 +118,12 @@ func (k msgServer) Unpause(goCtx context.Context, msg *types.MsgUnpause) (*types
 
 	k.SetPaused(ctx, false)
 
-	return &types.MsgUnpauseResponse{}, ctx.EventManager().EmitTypedEvent(&types.Unpaused{
+	return &types.MsgUnpauseResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.Unpaused{
 		Account: msg.Signer,
 	})
 }
 
-func (k msgServer) TransferOwnership(goCtx context.Context, msg *types.MsgTransferOwnership) (*types.MsgTransferOwnershipResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) TransferOwnership(ctx context.Context, msg *types.MsgTransferOwnership) (*types.MsgTransferOwnershipResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -149,15 +138,13 @@ func (k msgServer) TransferOwnership(goCtx context.Context, msg *types.MsgTransf
 
 	k.SetPendingOwner(ctx, msg.NewOwner)
 
-	return &types.MsgTransferOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&types.OwnershipTransferStarted{
+	return &types.MsgTransferOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.OwnershipTransferStarted{
 		PreviousOwner: owner,
 		NewOwner:      msg.NewOwner,
 	})
 }
 
-func (k msgServer) AcceptOwnership(goCtx context.Context, msg *types.MsgAcceptOwnership) (*types.MsgAcceptOwnershipResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) AcceptOwnership(ctx context.Context, msg *types.MsgAcceptOwnership) (*types.MsgAcceptOwnershipResponse, error) {
 	pendingOwner := k.GetPendingOwner(ctx)
 	if pendingOwner == "" {
 		return nil, types.ErrNoPendingOwner
@@ -171,15 +158,13 @@ func (k msgServer) AcceptOwnership(goCtx context.Context, msg *types.MsgAcceptOw
 	k.SetOwner(ctx, msg.Signer)
 	k.DeletePendingOwner(ctx)
 
-	return &types.MsgAcceptOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&types.OwnershipTransferred{
+	return &types.MsgAcceptOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.OwnershipTransferred{
 		PreviousOwner: owner,
 		NewOwner:      msg.Signer,
 	})
 }
 
-func (k msgServer) AddBurner(goCtx context.Context, msg *types.MsgAddBurner) (*types.MsgAddBurnerResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) AddBurner(ctx context.Context, msg *types.MsgAddBurner) (*types.MsgAddBurnerResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -198,15 +183,13 @@ func (k msgServer) AddBurner(goCtx context.Context, msg *types.MsgAddBurner) (*t
 
 	k.SetBurner(ctx, msg.Burner, msg.Allowance)
 
-	return &types.MsgAddBurnerResponse{}, ctx.EventManager().EmitTypedEvent(&types.BurnerAdded{
+	return &types.MsgAddBurnerResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerAdded{
 		Address:   msg.Burner,
 		Allowance: msg.Allowance,
 	})
 }
 
-func (k msgServer) RemoveBurner(goCtx context.Context, msg *types.MsgRemoveBurner) (*types.MsgRemoveBurnerResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) RemoveBurner(ctx context.Context, msg *types.MsgRemoveBurner) (*types.MsgRemoveBurnerResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -221,14 +204,12 @@ func (k msgServer) RemoveBurner(goCtx context.Context, msg *types.MsgRemoveBurne
 
 	k.DeleteBurner(ctx, msg.Burner)
 
-	return &types.MsgRemoveBurnerResponse{}, ctx.EventManager().EmitTypedEvent(&types.BurnerRemoved{
+	return &types.MsgRemoveBurnerResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerRemoved{
 		Address: msg.Burner,
 	})
 }
 
-func (k msgServer) SetBurnerAllowance(goCtx context.Context, msg *types.MsgSetBurnerAllowance) (*types.MsgSetBurnerAllowanceResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) SetBurnerAllowance(ctx context.Context, msg *types.MsgSetBurnerAllowance) (*types.MsgSetBurnerAllowanceResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -248,16 +229,14 @@ func (k msgServer) SetBurnerAllowance(goCtx context.Context, msg *types.MsgSetBu
 	allowance := k.GetBurner(ctx, msg.Burner)
 	k.SetBurner(ctx, msg.Burner, msg.Allowance)
 
-	return &types.MsgSetBurnerAllowanceResponse{}, ctx.EventManager().EmitTypedEvent(&types.BurnerUpdated{
+	return &types.MsgSetBurnerAllowanceResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerUpdated{
 		Address:           msg.Burner,
 		PreviousAllowance: allowance,
 		NewAllowance:      msg.Allowance,
 	})
 }
 
-func (k msgServer) AddMinter(goCtx context.Context, msg *types.MsgAddMinter) (*types.MsgAddMinterResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) AddMinter(ctx context.Context, msg *types.MsgAddMinter) (*types.MsgAddMinterResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -276,15 +255,13 @@ func (k msgServer) AddMinter(goCtx context.Context, msg *types.MsgAddMinter) (*t
 
 	k.SetMinter(ctx, msg.Minter, msg.Allowance)
 
-	return &types.MsgAddMinterResponse{}, ctx.EventManager().EmitTypedEvent(&types.MinterAdded{
+	return &types.MsgAddMinterResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterAdded{
 		Address:   msg.Minter,
 		Allowance: msg.Allowance,
 	})
 }
 
-func (k msgServer) RemoveMinter(goCtx context.Context, msg *types.MsgRemoveMinter) (*types.MsgRemoveMinterResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) RemoveMinter(ctx context.Context, msg *types.MsgRemoveMinter) (*types.MsgRemoveMinterResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -299,14 +276,12 @@ func (k msgServer) RemoveMinter(goCtx context.Context, msg *types.MsgRemoveMinte
 
 	k.DeleteMinter(ctx, msg.Minter)
 
-	return &types.MsgRemoveMinterResponse{}, ctx.EventManager().EmitTypedEvent(&types.MinterRemoved{
+	return &types.MsgRemoveMinterResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterRemoved{
 		Address: msg.Minter,
 	})
 }
 
-func (k msgServer) SetMinterAllowance(goCtx context.Context, msg *types.MsgSetMinterAllowance) (*types.MsgSetMinterAllowanceResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) SetMinterAllowance(ctx context.Context, msg *types.MsgSetMinterAllowance) (*types.MsgSetMinterAllowanceResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -326,16 +301,14 @@ func (k msgServer) SetMinterAllowance(goCtx context.Context, msg *types.MsgSetMi
 	allowance := k.GetMinter(ctx, msg.Minter)
 	k.SetMinter(ctx, msg.Minter, msg.Allowance)
 
-	return &types.MsgSetMinterAllowanceResponse{}, ctx.EventManager().EmitTypedEvent(&types.MinterUpdated{
+	return &types.MsgSetMinterAllowanceResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterUpdated{
 		Address:           msg.Minter,
 		PreviousAllowance: allowance,
 		NewAllowance:      msg.Allowance,
 	})
 }
 
-func (k msgServer) AddPauser(goCtx context.Context, msg *types.MsgAddPauser) (*types.MsgAddPauserResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) AddPauser(ctx context.Context, msg *types.MsgAddPauser) (*types.MsgAddPauserResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -350,14 +323,12 @@ func (k msgServer) AddPauser(goCtx context.Context, msg *types.MsgAddPauser) (*t
 
 	k.SetPauser(ctx, msg.Pauser)
 
-	return &types.MsgAddPauserResponse{}, ctx.EventManager().EmitTypedEvent(&types.PauserAdded{
+	return &types.MsgAddPauserResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.PauserAdded{
 		Address: msg.Pauser,
 	})
 }
 
-func (k msgServer) RemovePauser(goCtx context.Context, msg *types.MsgRemovePauser) (*types.MsgRemovePauserResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) RemovePauser(ctx context.Context, msg *types.MsgRemovePauser) (*types.MsgRemovePauserResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -372,14 +343,12 @@ func (k msgServer) RemovePauser(goCtx context.Context, msg *types.MsgRemovePause
 
 	k.DeletePauser(ctx, msg.Pauser)
 
-	return &types.MsgRemovePauserResponse{}, ctx.EventManager().EmitTypedEvent(&types.PauserRemoved{
+	return &types.MsgRemovePauserResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.PauserRemoved{
 		Address: msg.Pauser,
 	})
 }
 
-func (k msgServer) AddBlockedChannel(goCtx context.Context, msg *types.MsgAddBlockedChannel) (*types.MsgAddBlockedChannelResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) AddBlockedChannel(ctx context.Context, msg *types.MsgAddBlockedChannel) (*types.MsgAddBlockedChannelResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -394,14 +363,12 @@ func (k msgServer) AddBlockedChannel(goCtx context.Context, msg *types.MsgAddBlo
 
 	k.SetBlockedChannel(ctx, msg.Channel)
 
-	return &types.MsgAddBlockedChannelResponse{}, ctx.EventManager().EmitTypedEvent(&types.BlockedChannelAdded{
+	return &types.MsgAddBlockedChannelResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BlockedChannelAdded{
 		Channel: msg.Channel,
 	})
 }
 
-func (k msgServer) RemoveBlockedChannel(goCtx context.Context, msg *types.MsgRemoveBlockedChannel) (*types.MsgRemoveBlockedChannelResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k msgServer) RemoveBlockedChannel(ctx context.Context, msg *types.MsgRemoveBlockedChannel) (*types.MsgRemoveBlockedChannelResponse, error) {
 	owner := k.GetOwner(ctx)
 	if owner == "" {
 		return nil, types.ErrNoOwner
@@ -416,7 +383,7 @@ func (k msgServer) RemoveBlockedChannel(goCtx context.Context, msg *types.MsgRem
 
 	k.DeleteBlockedChannel(ctx, msg.Channel)
 
-	return &types.MsgRemoveBlockedChannelResponse{}, ctx.EventManager().EmitTypedEvent(&types.BlockedChannelRemoved{
+	return &types.MsgRemoveBlockedChannelResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BlockedChannelRemoved{
 		Channel: msg.Channel,
 	})
 }

@@ -4,7 +4,8 @@ import (
 	"context"
 
 	"cosmossdk.io/errors"
-	"github.com/cosmos/cosmos-sdk/store/prefix"
+	"cosmossdk.io/store/prefix"
+	"github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	errorstypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
@@ -21,12 +22,10 @@ func NewBlocklistQueryServer(keeper *Keeper) blocklist.QueryServer {
 	return &blocklistQueryServer{Keeper: keeper}
 }
 
-func (k blocklistQueryServer) Owner(goCtx context.Context, req *blocklist.QueryOwner) (*blocklist.QueryOwnerResponse, error) {
+func (k blocklistQueryServer) Owner(ctx context.Context, req *blocklist.QueryOwner) (*blocklist.QueryOwnerResponse, error) {
 	if req == nil {
 		return nil, errorstypes.ErrInvalidRequest
 	}
-
-	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	return &blocklist.QueryOwnerResponse{
 		Owner:        k.GetBlocklistOwner(ctx),
@@ -34,13 +33,13 @@ func (k blocklistQueryServer) Owner(goCtx context.Context, req *blocklist.QueryO
 	}, nil
 }
 
-func (k blocklistQueryServer) Addresses(goCtx context.Context, req *blocklist.QueryAddresses) (*blocklist.QueryAddressesResponse, error) {
+func (k blocklistQueryServer) Addresses(ctx context.Context, req *blocklist.QueryAddresses) (*blocklist.QueryAddressesResponse, error) {
 	if req == nil {
 		return nil, errorstypes.ErrInvalidRequest
 	}
 
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), blocklist.BlockedAddressPrefix)
+	adapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	store := prefix.NewStore(adapter, blocklist.BlockedAddressPrefix)
 
 	var addresses []string
 	pagination, err := query.Paginate(store, req.Pagination, func(key []byte, _ []byte) error {
@@ -54,14 +53,12 @@ func (k blocklistQueryServer) Addresses(goCtx context.Context, req *blocklist.Qu
 	}, err
 }
 
-func (k blocklistQueryServer) Address(goCtx context.Context, req *blocklist.QueryAddress) (*blocklist.QueryAddressResponse, error) {
+func (k blocklistQueryServer) Address(ctx context.Context, req *blocklist.QueryAddress) (*blocklist.QueryAddressResponse, error) {
 	if req == nil {
 		return nil, errorstypes.ErrInvalidRequest
 	}
 
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	address, err := sdk.AccAddressFromBech32(req.Address)
+	address, err := k.addressCodec.StringToBytes(req.Address)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to decode address %s", req.Address)
 	}

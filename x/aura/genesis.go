@@ -1,17 +1,18 @@
 package aura
 
 import (
+	"cosmossdk.io/core/address"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
 )
 
-func InitGenesis(ctx sdk.Context, k *keeper.Keeper, genesis types.GenesisState) {
+func InitGenesis(ctx sdk.Context, k *keeper.Keeper, addressCodec address.Codec, genesis types.GenesisState) {
 	k.SetBlocklistOwner(ctx, genesis.BlocklistState.Owner)
 	k.SetBlocklistPendingOwner(ctx, genesis.BlocklistState.PendingOwner)
 	for _, account := range genesis.BlocklistState.BlockedAddresses {
-		address, _ := sdk.AccAddressFromBech32(account)
+		address, _ := addressCodec.StringToBytes(account)
 		k.SetBlockedAddress(ctx, address)
 	}
 
