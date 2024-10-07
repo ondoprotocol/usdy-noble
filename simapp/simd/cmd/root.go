@@ -30,8 +30,6 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 	tendermint "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 	"github.com/ondoprotocol/usdy-noble/v2/simapp"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura"
-	auratypes "github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 	"github.com/spf13/cobra"
 )
 
@@ -111,7 +109,6 @@ func NewRootCmd() *cobra.Command {
 		ibcexported.ModuleName:     ibc.AppModule{},
 		transfertypes.ModuleName:   transfer.AppModule{},
 		tendermint.ModuleName:      tendermint.AppModule{},
-		auratypes.ModuleName:       aura.NewAppModule(autoCliOpts.AddressCodec, nil),
 	}
 	for name, mod := range modules {
 		moduleBasicManager[name] = module.CoreAppModuleBasicAdaptor(name, mod)
