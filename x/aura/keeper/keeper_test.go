@@ -4,8 +4,9 @@ import (
 	"errors"
 	"testing"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	"github.com/ondoprotocol/usdy-noble/v2/utils"
 	"github.com/ondoprotocol/usdy-noble/v2/utils/mocks"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
@@ -14,7 +15,7 @@ import (
 
 func TestSendRestrictionBurn(t *testing.T) {
 	user := utils.TestAccount()
-	keeper, ctx := mocks.AuraKeeper(t)
+	keeper, ctx := mocks.AuraKeeper()
 	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
 
 	testCases := []struct {
@@ -75,7 +76,7 @@ func TestSendRestrictionBurn(t *testing.T) {
 
 func TestSendRestrictionMint(t *testing.T) {
 	user := utils.TestAccount()
-	keeper, ctx := mocks.AuraKeeper(t)
+	keeper, ctx := mocks.AuraKeeper()
 	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
 
 	testCases := []struct {
@@ -136,7 +137,7 @@ func TestSendRestrictionMint(t *testing.T) {
 
 func TestSendRestrictionTransfer(t *testing.T) {
 	alice, bob := utils.TestAccount(), utils.TestAccount()
-	keeper, ctx := mocks.AuraKeeper(t)
+	keeper, ctx := mocks.AuraKeeper()
 	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
 
 	testCases := []struct {
@@ -152,7 +153,7 @@ func TestSendRestrictionTransfer(t *testing.T) {
 			paused:           true,
 			senderBlocked:    true,
 			recipientBlocked: true,
-			coins:            sdk.NewCoins(sdk.NewCoin("uusdc", sdk.NewInt(1_000_000))),
+			coins:            sdk.NewCoins(sdk.NewCoin("uusdc", math.NewInt(1_000_000))),
 			err:              nil,
 		},
 		{
@@ -253,7 +254,7 @@ func TestSendRestrictionTransfer(t *testing.T) {
 
 func TestSendRestrictionIBCTransfer(t *testing.T) {
 	user := utils.TestAccount()
-	keeper, ctx := mocks.AuraKeeper(t)
+	keeper, ctx := mocks.AuraKeeper()
 	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
 
 	// ARRANGE: Set a blocked channel in state.

@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
+	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 	"github.com/spf13/cobra"
 )
@@ -54,7 +54,7 @@ func TxBurn() *cobra.Command {
 				return err
 			}
 
-			amount, ok := sdk.NewIntFromString(args[1])
+			amount, ok := math.NewIntFromString(args[1])
 			if !ok {
 				return errors.New("invalid amount")
 			}
@@ -85,7 +85,7 @@ func TxMint() *cobra.Command {
 				return err
 			}
 
-			amount, ok := sdk.NewIntFromString(args[1])
+			amount, ok := math.NewIntFromString(args[1])
 			if !ok {
 				return errors.New("invalid amount")
 			}
@@ -214,7 +214,7 @@ func TxAddBurner() *cobra.Command {
 				return err
 			}
 
-			allowance, ok := sdk.NewIntFromString(args[1])
+			allowance, ok := math.NewIntFromString(args[1])
 			if !ok {
 				return errors.New("invalid allowance")
 			}
@@ -270,7 +270,7 @@ func TxSetBurnerAllowance() *cobra.Command {
 				return err
 			}
 
-			allowance, ok := sdk.NewIntFromString(args[1])
+			allowance, ok := math.NewIntFromString(args[1])
 			if !ok {
 				return errors.New("invalid allowance")
 			}
@@ -301,7 +301,7 @@ func TxAddMinter() *cobra.Command {
 				return err
 			}
 
-			allowance, ok := sdk.NewIntFromString(args[1])
+			allowance, ok := math.NewIntFromString(args[1])
 			if !ok {
 				return errors.New("invalid allowance")
 			}
@@ -357,7 +357,7 @@ func TxSetMinterAllowance() *cobra.Command {
 				return err
 			}
 
-			allowance, ok := sdk.NewIntFromString(args[1])
+			allowance, ok := math.NewIntFromString(args[1])
 			if !ok {
 				return errors.New("invalid allowance")
 			}

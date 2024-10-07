@@ -3,14 +3,14 @@ package e2e
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
-	"github.com/strangelove-ventures/interchaintest/v4/ibc"
-	"github.com/strangelove-ventures/interchaintest/v4/testutil"
+	"cosmossdk.io/math"
+	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
+	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/strangelove-ventures/interchaintest/v8/testutil"
 	"github.com/stretchr/testify/require"
 )
 
-var ONE = sdk.NewInt(1_000_000_000_000_000_000)
+var ONE = math.NewInt(1_000_000_000_000_000_000)
 
 func TestMintBurn(t *testing.T) {
 	t.Parallel()
@@ -32,9 +32,9 @@ func TestMintBurn(t *testing.T) {
 	// ASSERT: Alice has 1 $USDY.
 	balance, err := wrapper.chain.GetBalance(ctx, wrapper.alice.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Equal(t, ONE.Int64(), balance)
+	require.Equal(t, ONE, balance)
 	// ASSERT: Minter has no allowance.
-	EnsureMinter(t, wrapper, ctx, wrapper.minter.FormattedAddress(), sdk.ZeroInt())
+	EnsureMinter(t, wrapper, ctx, wrapper.minter.FormattedAddress(), math.ZeroInt())
 
 	// ASSERT: Burner has an allowance of 1 $USDY.
 	EnsureBurner(t, wrapper, ctx, wrapper.burner.FormattedAddress(), ONE)
@@ -49,9 +49,9 @@ func TestMintBurn(t *testing.T) {
 	// ASSERT: Alice has no balance.
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.alice.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Zero(t, balance)
+	require.True(t, balance.IsZero())
 	// ASSERT: Burner has no allowance.
-	EnsureBurner(t, wrapper, ctx, wrapper.burner.FormattedAddress(), sdk.ZeroInt())
+	EnsureBurner(t, wrapper, ctx, wrapper.burner.FormattedAddress(), math.ZeroInt())
 }
 
 func TestMintTransferBurn(t *testing.T) {
@@ -74,26 +74,26 @@ func TestMintTransferBurn(t *testing.T) {
 	// ASSERT: Alice has 1 $USDY.
 	balance, err := wrapper.chain.GetBalance(ctx, wrapper.alice.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Equal(t, ONE.Int64(), balance)
+	require.Equal(t, ONE, balance)
 	// ASSERT: Minter has no allowance.
-	EnsureMinter(t, wrapper, ctx, wrapper.minter.FormattedAddress(), sdk.ZeroInt())
+	EnsureMinter(t, wrapper, ctx, wrapper.minter.FormattedAddress(), math.ZeroInt())
 
 	// ACT: Transfer 1 $USDY from Alice to Bob.
 	err = validator.SendFunds(ctx, wrapper.alice.KeyName(), ibc.WalletAmount{
 		Address: wrapper.bob.FormattedAddress(),
 		Denom:   "ausdy",
-		Amount:  ONE.Int64(),
+		Amount:  ONE,
 	})
 	require.NoError(t, err)
 
 	// ASSERT: Alice has no balance.
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.alice.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Zero(t, balance)
+	require.True(t, balance.IsZero())
 	// ASSERT: Bob has 1 $USDY.
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.bob.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Equal(t, ONE.Int64(), balance)
+	require.Equal(t, ONE, balance)
 
 	// ASSERT: Burner has an allowance of 1 $USDY.
 	EnsureBurner(t, wrapper, ctx, wrapper.burner.FormattedAddress(), ONE)
@@ -108,9 +108,9 @@ func TestMintTransferBurn(t *testing.T) {
 	// ASSERT: Bob has no balance.
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.bob.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Zero(t, balance)
+	require.True(t, balance.IsZero())
 	// ASSERT: Burner has no allowance.
-	EnsureBurner(t, wrapper, ctx, wrapper.burner.FormattedAddress(), sdk.ZeroInt())
+	EnsureBurner(t, wrapper, ctx, wrapper.burner.FormattedAddress(), math.ZeroInt())
 }
 
 func TestMintTransferBlockBurn(t *testing.T) {
@@ -133,26 +133,26 @@ func TestMintTransferBlockBurn(t *testing.T) {
 	// ASSERT: Alice has 1 $USDY.
 	balance, err := wrapper.chain.GetBalance(ctx, wrapper.alice.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Equal(t, ONE.Int64(), balance)
+	require.Equal(t, ONE, balance)
 	// ASSERT: Minter has no allowance.
-	EnsureMinter(t, wrapper, ctx, wrapper.minter.FormattedAddress(), sdk.ZeroInt())
+	EnsureMinter(t, wrapper, ctx, wrapper.minter.FormattedAddress(), math.ZeroInt())
 
 	// ACT: Transfer 1 $USDY from Alice to Bob.
 	err = validator.SendFunds(ctx, wrapper.alice.KeyName(), ibc.WalletAmount{
 		Address: wrapper.bob.FormattedAddress(),
 		Denom:   "ausdy",
-		Amount:  ONE.Int64(),
+		Amount:  ONE,
 	})
 	require.NoError(t, err)
 
 	// ASSERT: Alice has no balance.
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.alice.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Zero(t, balance)
+	require.True(t, balance.IsZero())
 	// ASSERT: Bob has 1 $USDY.
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.bob.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Equal(t, ONE.Int64(), balance)
+	require.Equal(t, ONE, balance)
 
 	// ACT: Add Bob to the blocklist.
 	_, err = validator.ExecTx(
@@ -168,14 +168,14 @@ func TestMintTransferBlockBurn(t *testing.T) {
 	err = validator.SendFunds(ctx, wrapper.bob.KeyName(), ibc.WalletAmount{
 		Address: wrapper.alice.FormattedAddress(),
 		Denom:   "ausdy",
-		Amount:  ONE.Int64(),
+		Amount:  ONE,
 	})
 	require.ErrorContains(t, err, "blocked from sending")
 
 	// ASSERT: Bob has 1 $USDY.
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.bob.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Equal(t, ONE.Int64(), balance)
+	require.Equal(t, ONE, balance)
 	// ASSERT: Burner has an allowance of 1 $USDY.
 	EnsureBurner(t, wrapper, ctx, wrapper.burner.FormattedAddress(), ONE)
 
@@ -189,9 +189,9 @@ func TestMintTransferBlockBurn(t *testing.T) {
 	// ASSERT: Bob has no balance.
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.bob.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Zero(t, balance)
+	require.True(t, balance.IsZero())
 	// ASSERT: Burner has no allowance.
-	EnsureBurner(t, wrapper, ctx, wrapper.burner.FormattedAddress(), sdk.ZeroInt())
+	EnsureBurner(t, wrapper, ctx, wrapper.burner.FormattedAddress(), math.ZeroInt())
 }
 
 func TestIBCTransfer(t *testing.T) {
@@ -221,33 +221,33 @@ func TestIBCTransfer(t *testing.T) {
 	_, err = wrapper.chain.SendIBCTransfer(ctx, "channel-0", wrapper.alice.KeyName(), ibc.WalletAmount{
 		Address: wrapper.charlie.FormattedAddress(),
 		Denom:   "ausdy",
-		Amount:  ONE.MulRaw(2).Int64(),
+		Amount:  ONE.MulRaw(2),
 	}, ibc.TransferOptions{})
 	// ASSERT: The action should've succeeded.
 	require.NoError(t, err)
 	require.NoError(t, testutil.WaitForBlocks(ctx, 5, wrapper.chain, wrapper.gaia))
 	balance, err := wrapper.chain.GetBalance(ctx, wrapper.alice.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Zero(t, balance)
+	require.True(t, balance.IsZero())
 	balance, err = wrapper.gaia.GetBalance(ctx, wrapper.charlie.FormattedAddress(), denom)
 	require.NoError(t, err)
-	require.Equal(t, ONE.MulRaw(2).Int64(), balance)
+	require.Equal(t, ONE.MulRaw(2), balance)
 
 	// ACT: Attempt to transfer back to Noble, channel is allowed.
 	_, err = wrapper.gaia.SendIBCTransfer(ctx, "channel-0", wrapper.charlie.KeyName(), ibc.WalletAmount{
 		Address: wrapper.alice.FormattedAddress(),
 		Denom:   denom,
-		Amount:  ONE.Int64(),
+		Amount:  ONE,
 	}, ibc.TransferOptions{})
 	// ASSERT: The action should've succeeded.
 	require.NoError(t, err)
 	require.NoError(t, testutil.WaitForBlocks(ctx, 5, wrapper.chain, wrapper.gaia))
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.alice.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Equal(t, ONE.Int64(), balance)
+	require.Equal(t, ONE, balance)
 	balance, err = wrapper.gaia.GetBalance(ctx, wrapper.charlie.FormattedAddress(), denom)
 	require.NoError(t, err)
-	require.Equal(t, ONE.Int64(), balance)
+	require.Equal(t, ONE, balance)
 
 	// ACT: Block transfers over channel-0.
 	_, err = validator.ExecTx(
@@ -262,7 +262,7 @@ func TestIBCTransfer(t *testing.T) {
 	_, err = wrapper.chain.SendIBCTransfer(ctx, "channel-0", wrapper.alice.KeyName(), ibc.WalletAmount{
 		Address: wrapper.charlie.FormattedAddress(),
 		Denom:   "ausdy",
-		Amount:  ONE.Int64(),
+		Amount:  ONE,
 	}, ibc.TransferOptions{})
 	// ASSERT: The action should've failed.
 	require.ErrorContains(t, err, "ausdy transfers are blocked on channel-0")
@@ -271,15 +271,15 @@ func TestIBCTransfer(t *testing.T) {
 	_, err = wrapper.gaia.SendIBCTransfer(ctx, "channel-0", wrapper.charlie.KeyName(), ibc.WalletAmount{
 		Address: wrapper.alice.FormattedAddress(),
 		Denom:   denom,
-		Amount:  ONE.Int64(),
+		Amount:  ONE,
 	}, ibc.TransferOptions{})
 	// ASSERT: The action should've succeeded.
 	require.NoError(t, err)
 	require.NoError(t, testutil.WaitForBlocks(ctx, 5, wrapper.chain, wrapper.gaia))
 	balance, err = wrapper.chain.GetBalance(ctx, wrapper.alice.FormattedAddress(), "ausdy")
 	require.NoError(t, err)
-	require.Equal(t, ONE.MulRaw(2).Int64(), balance)
+	require.Equal(t, ONE.MulRaw(2), balance)
 	balance, err = wrapper.gaia.GetBalance(ctx, wrapper.charlie.FormattedAddress(), denom)
 	require.NoError(t, err)
-	require.Zero(t, balance)
+	require.True(t, balance.IsZero())
 }

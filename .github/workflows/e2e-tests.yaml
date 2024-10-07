@@ -22,6 +22,8 @@ jobs:
           tag: local # emulate local environment for consistency in interchaintest cases
           tar-export-path: ${{ env.TAR_PATH }} # export a tarball that can be uploaded as an artifact for the e2e jobs
           platform: linux/amd64 # test runner architecture only
+          github-organization: ${{ github.event.pull_request.head.repo.owner.login }}
+          github-repo: ${{ github.event.pull_request.head.repo.name }}
           git-ref: ${{ github.head_ref }} # source code ref
 
           # Heighliner chains.yaml config
@@ -49,7 +51,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.22'
 
       - name: Generate Matrix
         id: set-matrix
@@ -76,7 +78,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.22'
 
       - name: Download Tarball Artifact
         uses: actions/download-artifact@v4

@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetBlockedAddresses(t *testing.T) {
-	keeper, ctx := mocks.AuraKeeper(t)
+	keeper, ctx := mocks.AuraKeeper()
 
 	// ACT: Retrieve all blocked addresses with no state.
 	addresses := keeper.GetBlockedAddresses(ctx)

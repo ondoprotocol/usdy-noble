@@ -1,6 +1,8 @@
 package mocks
 
 import (
+	"context"
+
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
@@ -15,11 +17,11 @@ type BankKeeper struct {
 	Restriction SendRestrictionFn
 }
 
-func (k BankKeeper) BurnCoins(ctx sdk.Context, moduleName string, amt sdk.Coins) error {
+func (k BankKeeper) BurnCoins(_ context.Context, moduleName string, amt sdk.Coins) error {
 	address := authtypes.NewModuleAddress(moduleName).String()
 
 	balance := k.Balances[address]
-	newBalance, negative := balance.SafeSub(amt)
+	newBalance, negative := balance.SafeSub(amt...)
 	if negative {
 		return sdkerrors.Wrapf(errors.ErrInsufficientFunds, "%s is smaller than %s", balance, amt)
 	}
@@ -29,20 +31,20 @@ func (k BankKeeper) BurnCoins(ctx sdk.Context, moduleName string, amt sdk.Coins)
 	return nil
 }
 
-func (k BankKeeper) MintCoins(ctx sdk.Context, moduleName string, amt sdk.Coins) error {
+func (k BankKeeper) MintCoins(_ context.Context, moduleName string, amt sdk.Coins) error {
 	address := authtypes.NewModuleAddress(moduleName).String()
 	k.Balances[address] = k.Balances[address].Add(amt...)
 
 	return nil
 }
 
-func (k BankKeeper) SendCoinsFromAccountToModule(ctx sdk.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error {
+func (k BankKeeper) SendCoinsFromAccountToModule(ctx context.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error {
 	recipientAddr := authtypes.NewModuleAddress(recipientModule)
 
 	return k.SendCoins(ctx, senderAddr, recipientAddr, amt)
 }
 
-func (k BankKeeper) SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error {
+func (k BankKeeper) SendCoinsFromModuleToAccount(ctx context.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error {
 	senderAddr := authtypes.NewModuleAddress(senderModule)
 
 	return k.SendCoins(ctx, senderAddr, recipientAddr, amt)
@@ -50,15 +52,15 @@ func (k BankKeeper) SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule s
 
 //
 
-type SendRestrictionFn func(ctx sdk.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error)
+type SendRestrictionFn func(ctx context.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error)
 
-func NoOpSendRestrictionFn(_ sdk.Context, _, toAddr sdk.AccAddress, _ sdk.Coins) (sdk.AccAddress, error) {
+func NoOpSendRestrictionFn(_ context.Context, _, toAddr sdk.AccAddress, _ sdk.Coins) (sdk.AccAddress, error) {
 	return toAddr, nil
 }
 
 func (k BankKeeper) WithSendCoinsRestriction(check SendRestrictionFn) BankKeeper {
 	oldRestriction := k.Restriction
-	k.Restriction = func(ctx sdk.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error) {
+	k.Restriction = func(ctx context.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error) {
 		newToAddr, err = check(ctx, fromAddr, toAddr, amt)
 		if err != nil {
 			return newToAddr, err
@@ -68,14 +70,14 @@ func (k BankKeeper) WithSendCoinsRestriction(check SendRestrictionFn) BankKeeper
 	return k
 }
 
-func (k BankKeeper) SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error {
+func (k BankKeeper) SendCoins(ctx context.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error {
 	toAddr, err := k.Restriction(ctx, fromAddr, toAddr, amt)
 	if err != nil {
 		return err
 	}
 
 	balance := k.Balances[fromAddr.String()]
-	newBalance, negative := balance.SafeSub(amt)
+	newBalance, negative := balance.SafeSub(amt...)
 	if negative {
 		return sdkerrors.Wrapf(errors.ErrInsufficientFunds, "%s is smaller than %s", balance, amt)
 	}

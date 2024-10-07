@@ -1,35 +1,42 @@
 package keeper
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/cosmos/cosmos-sdk/codec"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	"cosmossdk.io/core/address"
+	"cosmossdk.io/core/event"
+	"cosmossdk.io/core/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 )
 
 type Keeper struct {
-	cdc      codec.Codec
-	storeKey storetypes.StoreKey
+	Denom string
 
-	Denom      string
-	bankKeeper types.BankKeeper
+	storeService store.KVStoreService
+	eventService event.Service
+
+	addressCodec address.Codec
+	bankKeeper   types.BankKeeper
 }
 
 func NewKeeper(
-	cdc codec.Codec,
-	storeKey storetypes.StoreKey,
 	denom string,
+	storeService store.KVStoreService,
+	eventService event.Service,
+	addressCodec address.Codec,
 	bankKeeper types.BankKeeper,
 ) *Keeper {
 	return &Keeper{
-		cdc:      cdc,
-		storeKey: storeKey,
+		Denom: denom,
 
-		Denom:      denom,
-		bankKeeper: bankKeeper,
+		storeService: storeService,
+		eventService: eventService,
+
+		addressCodec: addressCodec,
+		bankKeeper:   bankKeeper,
 	}
 }
 
@@ -39,7 +46,7 @@ func (k *Keeper) SetBankKeeper(bankKeeper types.BankKeeper) {
 }
 
 // SendRestrictionFn executes necessary checks against all USDY transfers.
-func (k *Keeper) SendRestrictionFn(ctx sdk.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error) {
+func (k *Keeper) SendRestrictionFn(ctx context.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error) {
 	if amount := amt.AmountOf(k.Denom); !amount.IsZero() {
 		burning := !fromAddr.Equals(types.ModuleAddress) && toAddr.Equals(types.ModuleAddress)
 		if burning {

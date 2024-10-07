@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ondoprotocol/usdy-noble/v2/utils"
 	"github.com/ondoprotocol/usdy-noble/v2/utils/mocks"
@@ -11,15 +12,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var ONE = sdk.NewInt(1_000_000_000_000_000_000)
+var ONE = math.NewInt(1_000_000_000_000_000_000)
 
 func TestBurn(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances:    make(map[string]sdk.Coins),
 		Restriction: mocks.NoOpSendRestrictionFn,
 	}
-	k, ctx := mocks.AuraKeeperWithBank(t, bank)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeperWithBank(bank)
 	server := keeper.NewMsgServer(k)
 
 	// ARRANGE: Set burner in state, with enough allowance for a single burn.
@@ -27,14 +27,14 @@ func TestBurn(t *testing.T) {
 	k.SetBurner(ctx, burner.Address, ONE)
 
 	// ACT: Attempt to burn with invalid signer.
-	_, err := server.Burn(goCtx, &types.MsgBurn{
+	_, err := server.Burn(ctx, &types.MsgBurn{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
 	require.ErrorContains(t, err, types.ErrInvalidBurner.Error())
 
 	// ACT: Attempt to burn with invalid account address.
-	_, err = server.Burn(goCtx, &types.MsgBurn{
+	_, err = server.Burn(ctx, &types.MsgBurn{
 		Signer: burner.Address,
 		From:   "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn",
 		Amount: ONE,
@@ -46,7 +46,7 @@ func TestBurn(t *testing.T) {
 	user := utils.TestAccount()
 
 	// ACT: Attempt to burn invalid amount.
-	_, err = server.Burn(goCtx, &types.MsgBurn{
+	_, err = server.Burn(ctx, &types.MsgBurn{
 		Signer: burner.Address,
 		From:   user.Address,
 		Amount: ONE.Neg(),
@@ -55,7 +55,7 @@ func TestBurn(t *testing.T) {
 	require.ErrorContains(t, err, "amount must be positive")
 
 	// ACT: Attempt to burn from user with insufficient funds.
-	_, err = server.Burn(goCtx, &types.MsgBurn{
+	_, err = server.Burn(ctx, &types.MsgBurn{
 		Signer: burner.Address,
 		From:   user.Address,
 		Amount: ONE,
@@ -67,7 +67,7 @@ func TestBurn(t *testing.T) {
 	bank.Balances[user.Address] = sdk.NewCoins(sdk.NewCoin(k.Denom, ONE))
 
 	// ACT: Attempt to burn.
-	_, err = server.Burn(goCtx, &types.MsgBurn{
+	_, err = server.Burn(ctx, &types.MsgBurn{
 		Signer: burner.Address,
 		From:   user.Address,
 		Amount: ONE,
@@ -79,7 +79,7 @@ func TestBurn(t *testing.T) {
 	require.True(t, k.GetBurner(ctx, burner.Address).IsZero())
 
 	// ACT: Attempt another burn with insufficient allowance.
-	_, err = server.Burn(goCtx, &types.MsgBurn{
+	_, err = server.Burn(ctx, &types.MsgBurn{
 		Signer: burner.Address,
 		From:   user.Address,
 		Amount: ONE,
@@ -93,8 +93,7 @@ func TestMint(t *testing.T) {
 		Balances:    make(map[string]sdk.Coins),
 		Restriction: mocks.NoOpSendRestrictionFn,
 	}
-	k, ctx := mocks.AuraKeeperWithBank(t, bank)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeperWithBank(bank)
 	server := keeper.NewMsgServer(k)
 
 	// ARRANGE: Set minter in state, with enough allowance for a single mint.
@@ -102,14 +101,14 @@ func TestMint(t *testing.T) {
 	k.SetMinter(ctx, minter.Address, ONE)
 
 	// ACT: Attempt to mint with invalid signer.
-	_, err := server.Mint(goCtx, &types.MsgMint{
+	_, err := server.Mint(ctx, &types.MsgMint{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
 	require.ErrorContains(t, err, types.ErrInvalidMinter.Error())
 
 	// ACT: Attempt to mint with invalid account address.
-	_, err = server.Mint(goCtx, &types.MsgMint{
+	_, err = server.Mint(ctx, &types.MsgMint{
 		Signer: minter.Address,
 		To:     "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn",
 		Amount: ONE,
@@ -122,7 +121,7 @@ func TestMint(t *testing.T) {
 	k.SetBlockedAddress(ctx, user.Bytes)
 
 	// ACT: Attempt to mint to blocked address.
-	_, err = server.Mint(goCtx, &types.MsgMint{
+	_, err = server.Mint(ctx, &types.MsgMint{
 		Signer: minter.Address,
 		To:     user.Address,
 		Amount: ONE,
@@ -134,7 +133,7 @@ func TestMint(t *testing.T) {
 	k.DeleteBlockedAddress(ctx, user.Bytes)
 
 	// ACT: Attempt to mint invalid amount.
-	_, err = server.Mint(goCtx, &types.MsgMint{
+	_, err = server.Mint(ctx, &types.MsgMint{
 		Signer: minter.Address,
 		To:     user.Address,
 		Amount: ONE.Neg(),
@@ -143,7 +142,7 @@ func TestMint(t *testing.T) {
 	require.ErrorContains(t, err, "amount must be positive")
 
 	// ACT: Attempt to mint.
-	_, err = server.Mint(goCtx, &types.MsgMint{
+	_, err = server.Mint(ctx, &types.MsgMint{
 		Signer: minter.Address,
 		To:     user.Address,
 		Amount: ONE,
@@ -155,7 +154,7 @@ func TestMint(t *testing.T) {
 	require.True(t, k.GetMinter(ctx, minter.Address).IsZero())
 
 	// ACT: Attempt another mint with insufficient allowance.
-	_, err = server.Mint(goCtx, &types.MsgMint{
+	_, err = server.Mint(ctx, &types.MsgMint{
 		Signer: minter.Address,
 		To:     user.Address,
 		Amount: ONE,
@@ -165,8 +164,7 @@ func TestMint(t *testing.T) {
 }
 
 func TestPause(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ARRANGE: Set pauser in state.
@@ -174,7 +172,7 @@ func TestPause(t *testing.T) {
 	k.SetPauser(ctx, pauser.Address)
 
 	// ACT: Attempt to pause with invalid signer.
-	_, err := server.Pause(goCtx, &types.MsgPause{
+	_, err := server.Pause(ctx, &types.MsgPause{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -182,7 +180,7 @@ func TestPause(t *testing.T) {
 	require.False(t, k.GetPaused(ctx))
 
 	// ACT: Attempt to pause.
-	_, err = server.Pause(goCtx, &types.MsgPause{
+	_, err = server.Pause(ctx, &types.MsgPause{
 		Signer: pauser.Address,
 	})
 	// ASSERT: The action should've succeeded.
@@ -190,7 +188,7 @@ func TestPause(t *testing.T) {
 	require.True(t, k.GetPaused(ctx))
 
 	// ACT: Attempt to pause again.
-	_, err = server.Pause(goCtx, &types.MsgPause{
+	_, err = server.Pause(ctx, &types.MsgPause{
 		Signer: pauser.Address,
 	})
 	// ASSERT: The action should've failed due to module being paused already.
@@ -199,15 +197,14 @@ func TestPause(t *testing.T) {
 }
 
 func TestUnpause(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ARRANGE: Set paused state to true.
 	k.SetPaused(ctx, true)
 
 	// ACT: Attempt to unpause with no owner set.
-	_, err := server.Unpause(goCtx, &types.MsgUnpause{})
+	_, err := server.Unpause(ctx, &types.MsgUnpause{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 	require.True(t, k.GetPaused(ctx))
@@ -217,7 +214,7 @@ func TestUnpause(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to unpause with invalid signer.
-	_, err = server.Unpause(goCtx, &types.MsgUnpause{
+	_, err = server.Unpause(ctx, &types.MsgUnpause{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -225,7 +222,7 @@ func TestUnpause(t *testing.T) {
 	require.True(t, k.GetPaused(ctx))
 
 	// ACT: Attempt to unpause.
-	_, err = server.Unpause(goCtx, &types.MsgUnpause{
+	_, err = server.Unpause(ctx, &types.MsgUnpause{
 		Signer: owner.Address,
 	})
 	// ASSERT: The action should've succeeded.
@@ -233,7 +230,7 @@ func TestUnpause(t *testing.T) {
 	require.False(t, k.GetPaused(ctx))
 
 	// ACT: Attempt to unpause again.
-	_, err = server.Unpause(goCtx, &types.MsgUnpause{
+	_, err = server.Unpause(ctx, &types.MsgUnpause{
 		Signer: owner.Address,
 	})
 	// ASSERT: The action should've failed due to module being unpaused already.
@@ -242,12 +239,11 @@ func TestUnpause(t *testing.T) {
 }
 
 func TestTransferOwnership(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to transfer ownership with no owner set.
-	_, err := server.TransferOwnership(goCtx, &types.MsgTransferOwnership{})
+	_, err := server.TransferOwnership(ctx, &types.MsgTransferOwnership{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -256,14 +252,14 @@ func TestTransferOwnership(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to transfer ownership with invalid signer.
-	_, err = server.TransferOwnership(goCtx, &types.MsgTransferOwnership{
+	_, err = server.TransferOwnership(ctx, &types.MsgTransferOwnership{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
 	require.ErrorContains(t, err, types.ErrInvalidOwner.Error())
 
 	// ACT: Attempt to transfer ownership to same owner.
-	_, err = server.TransferOwnership(goCtx, &types.MsgTransferOwnership{
+	_, err = server.TransferOwnership(ctx, &types.MsgTransferOwnership{
 		Signer:   owner.Address,
 		NewOwner: owner.Address,
 	})
@@ -274,7 +270,7 @@ func TestTransferOwnership(t *testing.T) {
 	pendingOwner := utils.TestAccount()
 
 	// ACT: Attempt to transfer ownership.
-	_, err = server.TransferOwnership(goCtx, &types.MsgTransferOwnership{
+	_, err = server.TransferOwnership(ctx, &types.MsgTransferOwnership{
 		Signer:   owner.Address,
 		NewOwner: pendingOwner.Address,
 	})
@@ -284,12 +280,11 @@ func TestTransferOwnership(t *testing.T) {
 }
 
 func TestAcceptOwnership(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to accept ownership with no pending owner set.
-	_, err := server.AcceptOwnership(goCtx, &types.MsgAcceptOwnership{})
+	_, err := server.AcceptOwnership(ctx, &types.MsgAcceptOwnership{})
 	// ASSERT: The action should've failed due to no pending owner set.
 	require.ErrorContains(t, err, "there is no pending owner")
 
@@ -298,14 +293,14 @@ func TestAcceptOwnership(t *testing.T) {
 	k.SetPendingOwner(ctx, pendingOwner.Address)
 
 	// ACT: Attempt to accept ownership with invalid signer.
-	_, err = server.AcceptOwnership(goCtx, &types.MsgAcceptOwnership{
+	_, err = server.AcceptOwnership(ctx, &types.MsgAcceptOwnership{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
 	require.ErrorContains(t, err, types.ErrInvalidPendingOwner.Error())
 
 	// ACT: Attempt to accept ownership.
-	_, err = server.AcceptOwnership(goCtx, &types.MsgAcceptOwnership{
+	_, err = server.AcceptOwnership(ctx, &types.MsgAcceptOwnership{
 		Signer: pendingOwner.Address,
 	})
 	// ASSERT: The action should've succeeded, and updated the owner in state.
@@ -315,12 +310,11 @@ func TestAcceptOwnership(t *testing.T) {
 }
 
 func TestAddBurner(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to add burner with no owner set.
-	_, err := server.AddBurner(goCtx, &types.MsgAddBurner{})
+	_, err := server.AddBurner(ctx, &types.MsgAddBurner{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -329,7 +323,7 @@ func TestAddBurner(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to add burner with invalid signer.
-	_, err = server.AddBurner(goCtx, &types.MsgAddBurner{
+	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -340,7 +334,7 @@ func TestAddBurner(t *testing.T) {
 	k.SetBurner(ctx, burner2.Address, ONE)
 
 	// ACT: Attempt to add burner that already exists.
-	_, err = server.AddBurner(goCtx, &types.MsgAddBurner{
+	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
 		Signer:    owner.Address,
 		Burner:    burner2.Address,
 		Allowance: ONE,
@@ -349,7 +343,7 @@ func TestAddBurner(t *testing.T) {
 	require.ErrorContains(t, err, "is already a burner")
 
 	// ACT: Attempt to add burner with invalid allowance.
-	_, err = server.AddBurner(goCtx, &types.MsgAddBurner{
+	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
 		Signer:    owner.Address,
 		Burner:    burner1.Address,
 		Allowance: ONE.Neg(),
@@ -358,7 +352,7 @@ func TestAddBurner(t *testing.T) {
 	require.ErrorContains(t, err, "allowance cannot be negative")
 
 	// ACT: Attempt to add burner.
-	_, err = server.AddBurner(goCtx, &types.MsgAddBurner{
+	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
 		Signer:    owner.Address,
 		Burner:    burner1.Address,
 		Allowance: ONE,
@@ -369,12 +363,11 @@ func TestAddBurner(t *testing.T) {
 }
 
 func TestRemoveBurner(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to remove burner with no owner set.
-	_, err := server.RemoveBurner(goCtx, &types.MsgRemoveBurner{})
+	_, err := server.RemoveBurner(ctx, &types.MsgRemoveBurner{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -383,7 +376,7 @@ func TestRemoveBurner(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to remove burner with invalid signer.
-	_, err = server.RemoveBurner(goCtx, &types.MsgRemoveBurner{
+	_, err = server.RemoveBurner(ctx, &types.MsgRemoveBurner{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -393,7 +386,7 @@ func TestRemoveBurner(t *testing.T) {
 	burner := utils.TestAccount()
 
 	// ACT: Attempt to remove burner that does not exist.
-	_, err = server.RemoveBurner(goCtx, &types.MsgRemoveBurner{
+	_, err = server.RemoveBurner(ctx, &types.MsgRemoveBurner{
 		Signer: owner.Address,
 		Burner: burner.Address,
 	})
@@ -404,7 +397,7 @@ func TestRemoveBurner(t *testing.T) {
 	k.SetBurner(ctx, burner.Address, ONE)
 
 	// ACT: Attempt to remove burner.
-	_, err = server.RemoveBurner(goCtx, &types.MsgRemoveBurner{
+	_, err = server.RemoveBurner(ctx, &types.MsgRemoveBurner{
 		Signer: owner.Address,
 		Burner: burner.Address,
 	})
@@ -414,12 +407,11 @@ func TestRemoveBurner(t *testing.T) {
 }
 
 func TestSetBurnerAllowance(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to set burner allowance with no owner set.
-	_, err := server.SetBurnerAllowance(goCtx, &types.MsgSetBurnerAllowance{})
+	_, err := server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -428,7 +420,7 @@ func TestSetBurnerAllowance(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to set burner allowance with invalid signer.
-	_, err = server.SetBurnerAllowance(goCtx, &types.MsgSetBurnerAllowance{
+	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -438,7 +430,7 @@ func TestSetBurnerAllowance(t *testing.T) {
 	burner := utils.TestAccount()
 
 	// ACT: Attempt to set burner allowance that does not exist.
-	_, err = server.SetBurnerAllowance(goCtx, &types.MsgSetBurnerAllowance{
+	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
 		Signer:    owner.Address,
 		Burner:    burner.Address,
 		Allowance: ONE,
@@ -447,10 +439,10 @@ func TestSetBurnerAllowance(t *testing.T) {
 	require.ErrorContains(t, err, "is not a burner")
 
 	// ARRANGE: Set burner in state.
-	k.SetBurner(ctx, burner.Address, sdk.ZeroInt())
+	k.SetBurner(ctx, burner.Address, math.ZeroInt())
 
 	// ACT: Attempt to set burner allowance with invalid allowance.
-	_, err = server.SetBurnerAllowance(goCtx, &types.MsgSetBurnerAllowance{
+	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
 		Signer:    owner.Address,
 		Burner:    burner.Address,
 		Allowance: ONE.Neg(),
@@ -459,7 +451,7 @@ func TestSetBurnerAllowance(t *testing.T) {
 	require.ErrorContains(t, err, "allowance cannot be negative")
 
 	// ACT: Attempt to set burner allowance.
-	_, err = server.SetBurnerAllowance(goCtx, &types.MsgSetBurnerAllowance{
+	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
 		Signer:    owner.Address,
 		Burner:    burner.Address,
 		Allowance: ONE,
@@ -470,12 +462,11 @@ func TestSetBurnerAllowance(t *testing.T) {
 }
 
 func TestAddMinter(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to add minter with no owner set.
-	_, err := server.AddMinter(goCtx, &types.MsgAddMinter{})
+	_, err := server.AddMinter(ctx, &types.MsgAddMinter{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -484,7 +475,7 @@ func TestAddMinter(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to add minter with invalid signer.
-	_, err = server.AddMinter(goCtx, &types.MsgAddMinter{
+	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -495,7 +486,7 @@ func TestAddMinter(t *testing.T) {
 	k.SetMinter(ctx, minter2.Address, ONE)
 
 	// ACT: Attempt to add minter that already exists.
-	_, err = server.AddMinter(goCtx, &types.MsgAddMinter{
+	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
 		Signer:    owner.Address,
 		Minter:    minter2.Address,
 		Allowance: ONE,
@@ -504,7 +495,7 @@ func TestAddMinter(t *testing.T) {
 	require.ErrorContains(t, err, "is already a minter")
 
 	// ACT: Attempt to add minter with invalid allowance.
-	_, err = server.AddMinter(goCtx, &types.MsgAddMinter{
+	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
 		Signer:    owner.Address,
 		Minter:    minter1.Address,
 		Allowance: ONE.Neg(),
@@ -513,7 +504,7 @@ func TestAddMinter(t *testing.T) {
 	require.ErrorContains(t, err, "allowance cannot be negative")
 
 	// ACT: Attempt to add minter.
-	_, err = server.AddMinter(goCtx, &types.MsgAddMinter{
+	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
 		Signer:    owner.Address,
 		Minter:    minter1.Address,
 		Allowance: ONE,
@@ -524,12 +515,11 @@ func TestAddMinter(t *testing.T) {
 }
 
 func TestRemoveMinter(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to remove minter with no owner set.
-	_, err := server.RemoveMinter(goCtx, &types.MsgRemoveMinter{})
+	_, err := server.RemoveMinter(ctx, &types.MsgRemoveMinter{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -538,7 +528,7 @@ func TestRemoveMinter(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to remove minter with invalid signer.
-	_, err = server.RemoveMinter(goCtx, &types.MsgRemoveMinter{
+	_, err = server.RemoveMinter(ctx, &types.MsgRemoveMinter{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -548,7 +538,7 @@ func TestRemoveMinter(t *testing.T) {
 	minter := utils.TestAccount()
 
 	// ACT: Attempt to remove minter that does not exist.
-	_, err = server.RemoveMinter(goCtx, &types.MsgRemoveMinter{
+	_, err = server.RemoveMinter(ctx, &types.MsgRemoveMinter{
 		Signer: owner.Address,
 		Minter: minter.Address,
 	})
@@ -559,7 +549,7 @@ func TestRemoveMinter(t *testing.T) {
 	k.SetMinter(ctx, minter.Address, ONE)
 
 	// ACT: Attempt to remove minter.
-	_, err = server.RemoveMinter(goCtx, &types.MsgRemoveMinter{
+	_, err = server.RemoveMinter(ctx, &types.MsgRemoveMinter{
 		Signer: owner.Address,
 		Minter: minter.Address,
 	})
@@ -569,12 +559,11 @@ func TestRemoveMinter(t *testing.T) {
 }
 
 func TestSetMinterAllowance(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to set minter allowance with no owner set.
-	_, err := server.SetMinterAllowance(goCtx, &types.MsgSetMinterAllowance{})
+	_, err := server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -583,7 +572,7 @@ func TestSetMinterAllowance(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to set minter allowance with invalid signer.
-	_, err = server.SetMinterAllowance(goCtx, &types.MsgSetMinterAllowance{
+	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -593,7 +582,7 @@ func TestSetMinterAllowance(t *testing.T) {
 	minter := utils.TestAccount()
 
 	// ACT: Attempt to set minter allowance that does not exist.
-	_, err = server.SetMinterAllowance(goCtx, &types.MsgSetMinterAllowance{
+	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{
 		Signer:    owner.Address,
 		Minter:    minter.Address,
 		Allowance: ONE,
@@ -602,10 +591,10 @@ func TestSetMinterAllowance(t *testing.T) {
 	require.ErrorContains(t, err, "is not a minter")
 
 	// ARRANGE: Set minters in state.
-	k.SetMinter(ctx, minter.Address, sdk.ZeroInt())
+	k.SetMinter(ctx, minter.Address, math.ZeroInt())
 
 	// ACT: Attempt to set minter allowance with invalid allowance.
-	_, err = server.SetMinterAllowance(goCtx, &types.MsgSetMinterAllowance{
+	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{
 		Signer:    owner.Address,
 		Minter:    minter.Address,
 		Allowance: ONE.Neg(),
@@ -614,7 +603,7 @@ func TestSetMinterAllowance(t *testing.T) {
 	require.ErrorContains(t, err, "allowance cannot be negative")
 
 	// ACT: Attempt to set minter allowance.
-	_, err = server.SetMinterAllowance(goCtx, &types.MsgSetMinterAllowance{
+	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{
 		Signer:    owner.Address,
 		Minter:    minter.Address,
 		Allowance: ONE,
@@ -625,12 +614,11 @@ func TestSetMinterAllowance(t *testing.T) {
 }
 
 func TestAddPauser(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to add pauser with no owner set.
-	_, err := server.AddPauser(goCtx, &types.MsgAddPauser{})
+	_, err := server.AddPauser(ctx, &types.MsgAddPauser{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -639,7 +627,7 @@ func TestAddPauser(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to add pauser with invalid signer.
-	_, err = server.AddPauser(goCtx, &types.MsgAddPauser{
+	_, err = server.AddPauser(ctx, &types.MsgAddPauser{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -650,7 +638,7 @@ func TestAddPauser(t *testing.T) {
 	k.SetPauser(ctx, pauser2.Address)
 
 	// ACT: Attempt to add pauser that already exists.
-	_, err = server.AddPauser(goCtx, &types.MsgAddPauser{
+	_, err = server.AddPauser(ctx, &types.MsgAddPauser{
 		Signer: owner.Address,
 		Pauser: pauser2.Address,
 	})
@@ -658,7 +646,7 @@ func TestAddPauser(t *testing.T) {
 	require.ErrorContains(t, err, "is already a pauser")
 
 	// ACT: Attempt to add pauser.
-	_, err = server.AddPauser(goCtx, &types.MsgAddPauser{
+	_, err = server.AddPauser(ctx, &types.MsgAddPauser{
 		Signer: owner.Address,
 		Pauser: pauser1.Address,
 	})
@@ -668,12 +656,11 @@ func TestAddPauser(t *testing.T) {
 }
 
 func TestRemovePauser(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to remove pauser with no owner set.
-	_, err := server.RemovePauser(goCtx, &types.MsgRemovePauser{})
+	_, err := server.RemovePauser(ctx, &types.MsgRemovePauser{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -682,7 +669,7 @@ func TestRemovePauser(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to remove pauser with invalid signer.
-	_, err = server.RemovePauser(goCtx, &types.MsgRemovePauser{
+	_, err = server.RemovePauser(ctx, &types.MsgRemovePauser{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -692,7 +679,7 @@ func TestRemovePauser(t *testing.T) {
 	pauser := utils.TestAccount()
 
 	// ACT: Attempt to remove pauser that does not exist.
-	_, err = server.RemovePauser(goCtx, &types.MsgRemovePauser{
+	_, err = server.RemovePauser(ctx, &types.MsgRemovePauser{
 		Signer: owner.Address,
 		Pauser: pauser.Address,
 	})
@@ -703,7 +690,7 @@ func TestRemovePauser(t *testing.T) {
 	k.SetPauser(ctx, pauser.Address)
 
 	// ACT: Attempt to remove pauser.
-	_, err = server.RemovePauser(goCtx, &types.MsgRemovePauser{
+	_, err = server.RemovePauser(ctx, &types.MsgRemovePauser{
 		Signer: owner.Address,
 		Pauser: pauser.Address,
 	})
@@ -713,12 +700,11 @@ func TestRemovePauser(t *testing.T) {
 }
 
 func TestAddBlockedChannel(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to add blocked channel with no owner set.
-	_, err := server.AddBlockedChannel(goCtx, &types.MsgAddBlockedChannel{})
+	_, err := server.AddBlockedChannel(ctx, &types.MsgAddBlockedChannel{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -727,7 +713,7 @@ func TestAddBlockedChannel(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to add blocked channel with invalid signer.
-	_, err = server.AddBlockedChannel(goCtx, &types.MsgAddBlockedChannel{
+	_, err = server.AddBlockedChannel(ctx, &types.MsgAddBlockedChannel{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -738,7 +724,7 @@ func TestAddBlockedChannel(t *testing.T) {
 	k.SetBlockedChannel(ctx, channel2)
 
 	// ACT: Attempt to add blocked channel that is blocked.
-	_, err = server.AddBlockedChannel(goCtx, &types.MsgAddBlockedChannel{
+	_, err = server.AddBlockedChannel(ctx, &types.MsgAddBlockedChannel{
 		Signer:  owner.Address,
 		Channel: channel2,
 	})
@@ -746,7 +732,7 @@ func TestAddBlockedChannel(t *testing.T) {
 	require.ErrorContains(t, err, "is already blocked")
 
 	// ACT: Attempt to add blocked channel.
-	_, err = server.AddBlockedChannel(goCtx, &types.MsgAddBlockedChannel{
+	_, err = server.AddBlockedChannel(ctx, &types.MsgAddBlockedChannel{
 		Signer:  owner.Address,
 		Channel: channel1,
 	})
@@ -756,12 +742,11 @@ func TestAddBlockedChannel(t *testing.T) {
 }
 
 func TestRemoveBlockedChannel(t *testing.T) {
-	k, ctx := mocks.AuraKeeper(t)
-	goCtx := sdk.WrapSDKContext(ctx)
+	k, ctx := mocks.AuraKeeper()
 	server := keeper.NewMsgServer(k)
 
 	// ACT: Attempt to remove blocked channel with no owner set.
-	_, err := server.RemoveBlockedChannel(goCtx, &types.MsgRemoveBlockedChannel{})
+	_, err := server.RemoveBlockedChannel(ctx, &types.MsgRemoveBlockedChannel{})
 	// ASSERT: The action should've failed due to no owner set.
 	require.ErrorContains(t, err, "there is no owner")
 
@@ -770,7 +755,7 @@ func TestRemoveBlockedChannel(t *testing.T) {
 	k.SetOwner(ctx, owner.Address)
 
 	// ACT: Attempt to remove blocked channel with invalid signer.
-	_, err = server.RemoveBlockedChannel(goCtx, &types.MsgRemoveBlockedChannel{
+	_, err = server.RemoveBlockedChannel(ctx, &types.MsgRemoveBlockedChannel{
 		Signer: utils.TestAccount().Address,
 	})
 	// ASSERT: The action should've failed due to invalid signer.
@@ -780,7 +765,7 @@ func TestRemoveBlockedChannel(t *testing.T) {
 	channel := "channel-0"
 
 	// ACT: Attempt to remove blocked channel that isn't blocked.
-	_, err = server.RemoveBlockedChannel(goCtx, &types.MsgRemoveBlockedChannel{
+	_, err = server.RemoveBlockedChannel(ctx, &types.MsgRemoveBlockedChannel{
 		Signer:  owner.Address,
 		Channel: channel,
 	})
@@ -791,7 +776,7 @@ func TestRemoveBlockedChannel(t *testing.T) {
 	k.SetBlockedChannel(ctx, channel)
 
 	// ACT: Attempt to remove blocked channel.
-	_, err = server.RemoveBlockedChannel(goCtx, &types.MsgRemoveBlockedChannel{
+	_, err = server.RemoveBlockedChannel(ctx, &types.MsgRemoveBlockedChannel{
 		Signer:  owner.Address,
 		Channel: channel,
 	})

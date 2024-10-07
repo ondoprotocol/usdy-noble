@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"cosmossdk.io/errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types/blocklist"
 )
 
@@ -18,9 +17,7 @@ func NewBlocklistMsgServer(keeper *Keeper) blocklist.MsgServer {
 	return &blocklistMsgServer{Keeper: keeper}
 }
 
-func (k blocklistMsgServer) TransferOwnership(goCtx context.Context, msg *blocklist.MsgTransferOwnership) (*blocklist.MsgTransferOwnershipResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k blocklistMsgServer) TransferOwnership(ctx context.Context, msg *blocklist.MsgTransferOwnership) (*blocklist.MsgTransferOwnershipResponse, error) {
 	owner := k.GetBlocklistOwner(ctx)
 	if owner == "" {
 		return nil, blocklist.ErrNoOwner
@@ -35,15 +32,13 @@ func (k blocklistMsgServer) TransferOwnership(goCtx context.Context, msg *blockl
 
 	k.SetBlocklistPendingOwner(ctx, msg.NewOwner)
 
-	return &blocklist.MsgTransferOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&blocklist.OwnershipTransferStarted{
+	return &blocklist.MsgTransferOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.OwnershipTransferStarted{
 		PreviousOwner: owner,
 		NewOwner:      msg.NewOwner,
 	})
 }
 
-func (k blocklistMsgServer) AcceptOwnership(goCtx context.Context, msg *blocklist.MsgAcceptOwnership) (*blocklist.MsgAcceptOwnershipResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k blocklistMsgServer) AcceptOwnership(ctx context.Context, msg *blocklist.MsgAcceptOwnership) (*blocklist.MsgAcceptOwnershipResponse, error) {
 	pendingOwner := k.GetBlocklistPendingOwner(ctx)
 	if pendingOwner == "" {
 		return nil, blocklist.ErrNoPendingOwner
@@ -56,15 +51,13 @@ func (k blocklistMsgServer) AcceptOwnership(goCtx context.Context, msg *blocklis
 	k.SetBlocklistOwner(ctx, msg.Signer)
 	k.DeleteBlocklistPendingOwner(ctx)
 
-	return &blocklist.MsgAcceptOwnershipResponse{}, ctx.EventManager().EmitTypedEvent(&blocklist.OwnershipTransferred{
+	return &blocklist.MsgAcceptOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.OwnershipTransferred{
 		PreviousOwner: owner,
 		NewOwner:      msg.Signer,
 	})
 }
 
-func (k blocklistMsgServer) AddToBlocklist(goCtx context.Context, msg *blocklist.MsgAddToBlocklist) (*blocklist.MsgAddToBlocklistResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k blocklistMsgServer) AddToBlocklist(ctx context.Context, msg *blocklist.MsgAddToBlocklist) (*blocklist.MsgAddToBlocklistResponse, error) {
 	owner := k.GetBlocklistOwner(ctx)
 	if owner == "" {
 		return nil, blocklist.ErrNoOwner
@@ -74,7 +67,7 @@ func (k blocklistMsgServer) AddToBlocklist(goCtx context.Context, msg *blocklist
 	}
 
 	for _, account := range msg.Accounts {
-		address, err := sdk.AccAddressFromBech32(account)
+		address, err := k.addressCodec.StringToBytes(account)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to decode account address %s", account)
 		}
@@ -82,14 +75,12 @@ func (k blocklistMsgServer) AddToBlocklist(goCtx context.Context, msg *blocklist
 		k.SetBlockedAddress(ctx, address)
 	}
 
-	return &blocklist.MsgAddToBlocklistResponse{}, ctx.EventManager().EmitTypedEvent(&blocklist.BlockedAddressesAdded{
+	return &blocklist.MsgAddToBlocklistResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.BlockedAddressesAdded{
 		Accounts: msg.Accounts,
 	})
 }
 
-func (k blocklistMsgServer) RemoveFromBlocklist(goCtx context.Context, msg *blocklist.MsgRemoveFromBlocklist) (*blocklist.MsgRemoveFromBlocklistResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
+func (k blocklistMsgServer) RemoveFromBlocklist(ctx context.Context, msg *blocklist.MsgRemoveFromBlocklist) (*blocklist.MsgRemoveFromBlocklistResponse, error) {
 	owner := k.GetBlocklistOwner(ctx)
 	if owner == "" {
 		return nil, blocklist.ErrNoOwner
@@ -99,7 +90,7 @@ func (k blocklistMsgServer) RemoveFromBlocklist(goCtx context.Context, msg *bloc
 	}
 
 	for _, account := range msg.Accounts {
-		address, err := sdk.AccAddressFromBech32(account)
+		address, err := k.addressCodec.StringToBytes(account)
 		if err != nil {
 			return nil, errors.Wrapf(err, "unable to decode account address %s", account)
 		}
@@ -107,7 +98,7 @@ func (k blocklistMsgServer) RemoveFromBlocklist(goCtx context.Context, msg *bloc
 		k.DeleteBlockedAddress(ctx, address)
 	}
 
-	return &blocklist.MsgRemoveFromBlocklistResponse{}, ctx.EventManager().EmitTypedEvent(&blocklist.BlockedAddressesRemoved{
+	return &blocklist.MsgRemoveFromBlocklistResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.BlockedAddressesRemoved{
 		Accounts: msg.Accounts,
 	})
 }

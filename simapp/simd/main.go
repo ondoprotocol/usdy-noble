@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/cosmos/cosmos-sdk/server"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ondoprotocol/usdy-noble/v2/simapp"
@@ -32,14 +32,9 @@ func main() {
 	config.SetBech32PrefixForConsensusNode(Bech32PrefixConsAddr, Bech32PrefixConsPub)
 	config.Seal()
 
-	rootCmd, _ := cmd.NewRootCmd()
-	if err := svrcmd.Execute(rootCmd, simapp.DefaultNodeHome); err != nil {
-		switch e := err.(type) {
-		case server.ErrorCode:
-			os.Exit(e.Code)
-
-		default:
-			os.Exit(1)
-		}
+	rootCmd := cmd.NewRootCmd()
+	if err := svrcmd.Execute(rootCmd, "", simapp.DefaultNodeHome); err != nil {
+		fmt.Fprintln(rootCmd.OutOrStderr(), err)
+		os.Exit(1)
 	}
 }
