@@ -5,8 +5,11 @@ import (
 	"testing"
 
 	"cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/codec/address"
+	"github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
+	"github.com/ondoprotocol/usdy-noble/v2/keeper"
 	"github.com/ondoprotocol/usdy-noble/v2/types"
 	"github.com/ondoprotocol/usdy-noble/v2/utils"
 	"github.com/ondoprotocol/usdy-noble/v2/utils/mocks"
@@ -15,8 +18,8 @@ import (
 
 func TestSendRestrictionBurn(t *testing.T) {
 	user := utils.TestAccount()
-	keeper, ctx := mocks.AuraKeeper()
-	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
+	k, ctx := mocks.AuraKeeper()
+	coins := sdk.NewCoins(sdk.NewCoin(k.Denom, ONE))
 
 	testCases := []struct {
 		name    string
@@ -53,16 +56,16 @@ func TestSendRestrictionBurn(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			// ARRANGE: Set paused state.
-			keeper.SetPaused(ctx, testCase.paused)
+			require.NoError(t, k.SetPaused(ctx, testCase.paused))
 			// ARRANGE: Set blocked state.
 			if testCase.blocked {
-				keeper.SetBlockedAddress(ctx, user.Bytes)
+				require.NoError(t, k.SetBlockedAddress(ctx, user.Bytes))
 			} else {
-				keeper.DeleteBlockedAddress(ctx, user.Bytes)
+				require.NoError(t, k.DeleteBlockedAddress(ctx, user.Bytes))
 			}
 
 			// ACT: Attempt to burn.
-			_, err := keeper.SendRestrictionFn(ctx, user.Bytes, types.ModuleAddress, coins)
+			_, err := k.SendRestrictionFn(ctx, user.Bytes, types.ModuleAddress, coins)
 
 			// ASSERT: Send restriction correctly handled test case.
 			if testCase.err != nil {
@@ -76,8 +79,8 @@ func TestSendRestrictionBurn(t *testing.T) {
 
 func TestSendRestrictionMint(t *testing.T) {
 	user := utils.TestAccount()
-	keeper, ctx := mocks.AuraKeeper()
-	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
+	k, ctx := mocks.AuraKeeper()
+	coins := sdk.NewCoins(sdk.NewCoin(k.Denom, ONE))
 
 	testCases := []struct {
 		name    string
@@ -114,16 +117,16 @@ func TestSendRestrictionMint(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			// ARRANGE: Set paused state.
-			keeper.SetPaused(ctx, testCase.paused)
+			require.NoError(t, k.SetPaused(ctx, testCase.paused))
 			// ARRANGE: Set blocked state.
 			if testCase.blocked {
-				keeper.SetBlockedAddress(ctx, user.Bytes)
+				require.NoError(t, k.SetBlockedAddress(ctx, user.Bytes))
 			} else {
-				keeper.DeleteBlockedAddress(ctx, user.Bytes)
+				require.NoError(t, k.DeleteBlockedAddress(ctx, user.Bytes))
 			}
 
 			// ACT: Attempt to mint.
-			_, err := keeper.SendRestrictionFn(ctx, types.ModuleAddress, user.Bytes, coins)
+			_, err := k.SendRestrictionFn(ctx, types.ModuleAddress, user.Bytes, coins)
 
 			// ASSERT: Send restriction correctly handled test case.
 			if testCase.err != nil {
@@ -137,8 +140,8 @@ func TestSendRestrictionMint(t *testing.T) {
 
 func TestSendRestrictionTransfer(t *testing.T) {
 	alice, bob := utils.TestAccount(), utils.TestAccount()
-	keeper, ctx := mocks.AuraKeeper()
-	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
+	k, ctx := mocks.AuraKeeper()
+	coins := sdk.NewCoins(sdk.NewCoin(k.Denom, ONE))
 
 	testCases := []struct {
 		name             string
@@ -225,22 +228,22 @@ func TestSendRestrictionTransfer(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			// ARRANGE: Set paused state.
-			keeper.SetPaused(ctx, testCase.paused)
+			require.NoError(t, k.SetPaused(ctx, testCase.paused))
 			// ARRANGE: Set sender blocked state.
 			if testCase.senderBlocked {
-				keeper.SetBlockedAddress(ctx, alice.Bytes)
+				require.NoError(t, k.SetBlockedAddress(ctx, alice.Bytes))
 			} else {
-				keeper.DeleteBlockedAddress(ctx, alice.Bytes)
+				require.NoError(t, k.DeleteBlockedAddress(ctx, alice.Bytes))
 			}
 			// ARRANGE: Set recipient blocked state.
 			if testCase.recipientBlocked {
-				keeper.SetBlockedAddress(ctx, bob.Bytes)
+				require.NoError(t, k.SetBlockedAddress(ctx, bob.Bytes))
 			} else {
-				keeper.DeleteBlockedAddress(ctx, bob.Bytes)
+				require.NoError(t, k.DeleteBlockedAddress(ctx, bob.Bytes))
 			}
 
 			// ACT: Attempt to transfer.
-			_, err := keeper.SendRestrictionFn(ctx, alice.Bytes, bob.Bytes, testCase.coins)
+			_, err := k.SendRestrictionFn(ctx, alice.Bytes, bob.Bytes, testCase.coins)
 
 			// ASSERT: Send restriction correctly handled test case.
 			if testCase.err != nil {
@@ -254,17 +257,37 @@ func TestSendRestrictionTransfer(t *testing.T) {
 
 func TestSendRestrictionIBCTransfer(t *testing.T) {
 	user := utils.TestAccount()
-	keeper, ctx := mocks.AuraKeeper()
-	coins := sdk.NewCoins(sdk.NewCoin(keeper.Denom, ONE))
+	k, ctx := mocks.AuraKeeper()
+	coins := sdk.NewCoins(sdk.NewCoin(k.Denom, ONE))
 
 	// ARRANGE: Set a blocked channel in state.
-	keeper.SetBlockedChannel(ctx, "channel-0")
+	require.NoError(t, k.SetBlockedChannel(ctx, "channel-0"))
 	escrow := transfertypes.GetEscrowAddress(transfertypes.PortID, "channel-0")
 
 	// ACT: Attempt to transfer from user to escrow account.
 	// This is to mimic the underlying transfer that occurs when using IBC.
-	_, err := keeper.SendRestrictionFn(ctx, user.Bytes, escrow, coins)
+	_, err := k.SendRestrictionFn(ctx, user.Bytes, escrow, coins)
 
 	// ASSERT: The action should've failed due to blocked channel.
 	require.ErrorContains(t, err, "transfers are blocked")
+}
+
+func TestNewKeeper(t *testing.T) {
+	// ARRANGE: Set the PausedKey to an already existing key
+	types.PausedKey = types.OwnerKey
+
+	// ACT: Attempt to create a new Keeper with overlapping prefixes
+	require.Panics(t, func() {
+		keeper.NewKeeper(
+			"ausdy",
+			mocks.FailingStore(mocks.Set, nil),
+			runtime.ProvideEventService(),
+			address.NewBech32Codec("noble"),
+			mocks.BankKeeper{},
+		)
+	})
+	// ASSERT: The function should've panicked.
+
+	// ARRANGE: Restore the original PausedKey
+	types.PausedKey = []byte("paused")
 }

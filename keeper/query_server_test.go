@@ -43,7 +43,7 @@ func TestPausedQuery(t *testing.T) {
 	require.False(t, res.Paused)
 
 	// ARRANGE: Set paused state to true.
-	k.SetPaused(ctx, true)
+	require.NoError(t, k.SetPaused(ctx, true))
 
 	// ACT: Attempt to query paused state with state.
 	res, err = server.Paused(ctx, &types.QueryPaused{})
@@ -63,7 +63,7 @@ func TestOwnerQuery(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to query owner with state.
 	res, err := server.Owner(ctx, &types.QueryOwner{})
@@ -74,7 +74,7 @@ func TestOwnerQuery(t *testing.T) {
 
 	// ARRANGE: Set pending owner in state.
 	pendingOwner := utils.TestAccount()
-	k.SetPendingOwner(ctx, pendingOwner.Address)
+	require.NoError(t, k.SetPendingOwner(ctx, pendingOwner.Address))
 
 	// ACT: Attempt to query owner with state.
 	res, err = server.Owner(ctx, &types.QueryOwner{})
@@ -101,8 +101,8 @@ func TestBurnersQuery(t *testing.T) {
 
 	// ARRANGE: Set burners in state.
 	burner1, burner2 := utils.TestAccount(), utils.TestAccount()
-	k.SetBurner(ctx, burner1.Address, ONE)
-	k.SetBurner(ctx, burner2.Address, ONE.MulRaw(2))
+	require.NoError(t, k.SetBurner(ctx, burner1.Address, ONE))
+	require.NoError(t, k.SetBurner(ctx, burner2.Address, ONE.MulRaw(2)))
 
 	// ACT: Attempt to query burners with state.
 	res, err = server.Burners(ctx, &types.QueryBurners{})
@@ -136,8 +136,8 @@ func TestMintersQuery(t *testing.T) {
 
 	// ARRANGE: Set minters in state.
 	minter1, minter2 := utils.TestAccount(), utils.TestAccount()
-	k.SetMinter(ctx, minter1.Address, ONE)
-	k.SetMinter(ctx, minter2.Address, ONE.MulRaw(2))
+	require.NoError(t, k.SetMinter(ctx, minter1.Address, ONE))
+	require.NoError(t, k.SetMinter(ctx, minter2.Address, ONE.MulRaw(2)))
 
 	// ACT: Attempt to query minters with state.
 	res, err = server.Minters(ctx, &types.QueryMinters{})
@@ -171,8 +171,8 @@ func TestPausersQuery(t *testing.T) {
 
 	// ARRANGE: Set pausers in state.
 	pauser1, pauser2 := utils.TestAccount(), utils.TestAccount()
-	k.SetPauser(ctx, pauser1.Address)
-	k.SetPauser(ctx, pauser2.Address)
+	require.NoError(t, k.SetPauser(ctx, pauser1.Address))
+	require.NoError(t, k.SetPauser(ctx, pauser2.Address))
 
 	// ACT: Attempt to query pausers with state.
 	res, err = server.Pausers(ctx, &types.QueryPausers{})
@@ -200,8 +200,8 @@ func TestBlockedChannelsQuery(t *testing.T) {
 
 	// ARRANGE: Set blocked channels in state.
 	channel1, channel2 := "channel-0", "channel-1"
-	k.SetBlockedChannel(ctx, channel1)
-	k.SetBlockedChannel(ctx, channel2)
+	require.NoError(t, k.SetBlockedChannel(ctx, channel1))
+	require.NoError(t, k.SetBlockedChannel(ctx, channel2))
 
 	// ACT: Attempt to query blocked channels with state.
 	res, err = server.BlockedChannels(ctx, &types.QueryBlockedChannels{})

@@ -30,7 +30,9 @@ func (k blocklistMsgServer) TransferOwnership(ctx context.Context, msg *blocklis
 		return nil, blocklist.ErrSameOwner
 	}
 
-	k.SetBlocklistPendingOwner(ctx, msg.NewOwner)
+	if err := k.SetBlocklistPendingOwner(ctx, msg.NewOwner); err != nil {
+		return nil, err
+	}
 
 	return &blocklist.MsgTransferOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.OwnershipTransferStarted{
 		PreviousOwner: owner,
@@ -48,8 +50,12 @@ func (k blocklistMsgServer) AcceptOwnership(ctx context.Context, msg *blocklist.
 	}
 
 	owner := k.GetBlocklistOwner(ctx)
-	k.SetBlocklistOwner(ctx, msg.Signer)
-	k.DeleteBlocklistPendingOwner(ctx)
+	if err := k.SetBlocklistOwner(ctx, msg.Signer); err != nil {
+		return nil, err
+	}
+	if err := k.DeleteBlocklistPendingOwner(ctx); err != nil {
+		return nil, err
+	}
 
 	return &blocklist.MsgAcceptOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.OwnershipTransferred{
 		PreviousOwner: owner,
@@ -72,7 +78,9 @@ func (k blocklistMsgServer) AddToBlocklist(ctx context.Context, msg *blocklist.M
 			return nil, errors.Wrapf(err, "unable to decode account address %s", account)
 		}
 
-		k.SetBlockedAddress(ctx, address)
+		if err := k.SetBlockedAddress(ctx, address); err != nil {
+			return nil, err
+		}
 	}
 
 	return &blocklist.MsgAddToBlocklistResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.BlockedAddressesAdded{
@@ -95,7 +103,9 @@ func (k blocklistMsgServer) RemoveFromBlocklist(ctx context.Context, msg *blockl
 			return nil, errors.Wrapf(err, "unable to decode account address %s", account)
 		}
 
-		k.DeleteBlockedAddress(ctx, address)
+		if err := k.DeleteBlockedAddress(ctx, address); err != nil {
+			return nil, err
+		}
 	}
 
 	return &blocklist.MsgRemoveFromBlocklistResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &blocklist.BlockedAddressesRemoved{

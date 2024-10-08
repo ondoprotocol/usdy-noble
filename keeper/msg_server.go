@@ -48,7 +48,9 @@ func (k msgServer) Burn(ctx context.Context, msg *types.MsgBurn) (*types.MsgBurn
 		return nil, sdkerrors.Wrapf(err, "unable to burn from module")
 	}
 
-	k.SetBurner(ctx, msg.Signer, allowance.Sub(msg.Amount))
+	if err := k.SetBurner(ctx, msg.Signer, allowance.Sub(msg.Amount)); err != nil {
+		return nil, err
+	}
 
 	// NOTE: The bank module emits an event for us.
 	return &types.MsgBurnResponse{}, nil
@@ -82,7 +84,9 @@ func (k msgServer) Mint(ctx context.Context, msg *types.MsgMint) (*types.MsgMint
 		return nil, sdkerrors.Wrapf(err, "unable to transfer from module to user")
 	}
 
-	k.SetMinter(ctx, msg.Signer, allowance.Sub(msg.Amount))
+	if err := k.SetMinter(ctx, msg.Signer, allowance.Sub(msg.Amount)); err != nil {
+		return nil, err
+	}
 
 	// NOTE: The bank module emits an event for us.
 	return &types.MsgMintResponse{}, nil
@@ -96,7 +100,9 @@ func (k msgServer) Pause(ctx context.Context, msg *types.MsgPause) (*types.MsgPa
 		return nil, errors.New("module is already paused")
 	}
 
-	k.SetPaused(ctx, true)
+	if err := k.SetPaused(ctx, true); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgPauseResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.Paused{
 		Account: msg.Signer,
@@ -116,7 +122,9 @@ func (k msgServer) Unpause(ctx context.Context, msg *types.MsgUnpause) (*types.M
 		return nil, errors.New("module is already unpaused")
 	}
 
-	k.SetPaused(ctx, false)
+	if err := k.SetPaused(ctx, false); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgUnpauseResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.Unpaused{
 		Account: msg.Signer,
@@ -136,7 +144,9 @@ func (k msgServer) TransferOwnership(ctx context.Context, msg *types.MsgTransfer
 		return nil, types.ErrSameOwner
 	}
 
-	k.SetPendingOwner(ctx, msg.NewOwner)
+	if err := k.SetPendingOwner(ctx, msg.NewOwner); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgTransferOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.OwnershipTransferStarted{
 		PreviousOwner: owner,
@@ -155,8 +165,12 @@ func (k msgServer) AcceptOwnership(ctx context.Context, msg *types.MsgAcceptOwne
 
 	owner := k.GetOwner(ctx)
 
-	k.SetOwner(ctx, msg.Signer)
-	k.DeletePendingOwner(ctx)
+	if err := k.SetOwner(ctx, msg.Signer); err != nil {
+		return nil, err
+	}
+	if err := k.DeletePendingOwner(ctx); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgAcceptOwnershipResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.OwnershipTransferred{
 		PreviousOwner: owner,
@@ -181,7 +195,9 @@ func (k msgServer) AddBurner(ctx context.Context, msg *types.MsgAddBurner) (*typ
 		return nil, errors.New("allowance cannot be negative")
 	}
 
-	k.SetBurner(ctx, msg.Burner, msg.Allowance)
+	if err := k.SetBurner(ctx, msg.Burner, msg.Allowance); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgAddBurnerResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerAdded{
 		Address:   msg.Burner,
@@ -202,7 +218,9 @@ func (k msgServer) RemoveBurner(ctx context.Context, msg *types.MsgRemoveBurner)
 		return nil, fmt.Errorf("%s is not a burner", msg.Burner)
 	}
 
-	k.DeleteBurner(ctx, msg.Burner)
+	if err := k.DeleteBurner(ctx, msg.Burner); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgRemoveBurnerResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerRemoved{
 		Address: msg.Burner,
@@ -227,7 +245,9 @@ func (k msgServer) SetBurnerAllowance(ctx context.Context, msg *types.MsgSetBurn
 	}
 
 	allowance := k.GetBurner(ctx, msg.Burner)
-	k.SetBurner(ctx, msg.Burner, msg.Allowance)
+	if err := k.SetBurner(ctx, msg.Burner, msg.Allowance); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgSetBurnerAllowanceResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BurnerUpdated{
 		Address:           msg.Burner,
@@ -253,7 +273,9 @@ func (k msgServer) AddMinter(ctx context.Context, msg *types.MsgAddMinter) (*typ
 		return nil, errors.New("allowance cannot be negative")
 	}
 
-	k.SetMinter(ctx, msg.Minter, msg.Allowance)
+	if err := k.SetMinter(ctx, msg.Minter, msg.Allowance); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgAddMinterResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterAdded{
 		Address:   msg.Minter,
@@ -274,7 +296,9 @@ func (k msgServer) RemoveMinter(ctx context.Context, msg *types.MsgRemoveMinter)
 		return nil, fmt.Errorf("%s is not a minter", msg.Minter)
 	}
 
-	k.DeleteMinter(ctx, msg.Minter)
+	if err := k.DeleteMinter(ctx, msg.Minter); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgRemoveMinterResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterRemoved{
 		Address: msg.Minter,
@@ -299,7 +323,9 @@ func (k msgServer) SetMinterAllowance(ctx context.Context, msg *types.MsgSetMint
 	}
 
 	allowance := k.GetMinter(ctx, msg.Minter)
-	k.SetMinter(ctx, msg.Minter, msg.Allowance)
+	if err := k.SetMinter(ctx, msg.Minter, msg.Allowance); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgSetMinterAllowanceResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.MinterUpdated{
 		Address:           msg.Minter,
@@ -321,7 +347,9 @@ func (k msgServer) AddPauser(ctx context.Context, msg *types.MsgAddPauser) (*typ
 		return nil, fmt.Errorf("%s is already a pauser", msg.Pauser)
 	}
 
-	k.SetPauser(ctx, msg.Pauser)
+	if err := k.SetPauser(ctx, msg.Pauser); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgAddPauserResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.PauserAdded{
 		Address: msg.Pauser,
@@ -341,7 +369,9 @@ func (k msgServer) RemovePauser(ctx context.Context, msg *types.MsgRemovePauser)
 		return nil, fmt.Errorf("%s is not a pauser", msg.Pauser)
 	}
 
-	k.DeletePauser(ctx, msg.Pauser)
+	if err := k.DeletePauser(ctx, msg.Pauser); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgRemovePauserResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.PauserRemoved{
 		Address: msg.Pauser,
@@ -361,7 +391,9 @@ func (k msgServer) AddBlockedChannel(ctx context.Context, msg *types.MsgAddBlock
 		return nil, fmt.Errorf("%s is already blocked", msg.Channel)
 	}
 
-	k.SetBlockedChannel(ctx, msg.Channel)
+	if err := k.SetBlockedChannel(ctx, msg.Channel); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgAddBlockedChannelResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BlockedChannelAdded{
 		Channel: msg.Channel,
@@ -381,7 +413,9 @@ func (k msgServer) RemoveBlockedChannel(ctx context.Context, msg *types.MsgRemov
 		return nil, fmt.Errorf("%s is not blocked", msg.Channel)
 	}
 
-	k.DeleteBlockedChannel(ctx, msg.Channel)
+	if err := k.DeleteBlockedChannel(ctx, msg.Channel); err != nil {
+		return nil, err
+	}
 
 	return &types.MsgRemoveBlockedChannelResponse{}, k.eventService.EventManager(ctx).Emit(ctx, &types.BlockedChannelRemoved{
 		Channel: msg.Channel,
