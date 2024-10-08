@@ -4,10 +4,10 @@ import (
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/ondoprotocol/usdy-noble/v2/keeper"
+	"github.com/ondoprotocol/usdy-noble/v2/types"
 	"github.com/ondoprotocol/usdy-noble/v2/utils"
 	"github.com/ondoprotocol/usdy-noble/v2/utils/mocks"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
-	"github.com/ondoprotocol/usdy-noble/v2/x/aura/types"
 	"github.com/stretchr/testify/require"
 )
 

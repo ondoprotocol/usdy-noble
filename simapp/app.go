@@ -26,7 +26,7 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/x/consensus"
 	_ "github.com/cosmos/cosmos-sdk/x/params"
 	_ "github.com/cosmos/cosmos-sdk/x/staking"
-	_ "github.com/ondoprotocol/usdy-noble/v2/x/aura"
+	_ "github.com/ondoprotocol/usdy-noble/v2"
 
 	// Cosmos Modules
 	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
@@ -43,7 +43,7 @@ import (
 	transferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	// Custom Modules
-	aurakeeper "github.com/ondoprotocol/usdy-noble/v2/x/aura/keeper"
+	aurakeeper "github.com/ondoprotocol/usdy-noble/v2/keeper"
 )
 
 var DefaultNodeHome string

@@ -75,7 +75,7 @@ endif
 
 test-unit:
 	@echo "🤖 Running unit tests..."
-	@go test -cover -coverprofile=coverage.out -race -v ./x/aura/keeper/...
+	@go test -cover -coverprofile=coverage.out -race -v ./keeper/...
 	@echo "✅ Completed unit tests!"
 
 test-e2e:
