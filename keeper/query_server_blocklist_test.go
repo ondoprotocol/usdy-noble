@@ -22,7 +22,7 @@ func TestBlocklistOwnerQuery(t *testing.T) {
 
 	// ARRANGE: Set blocklist owner in state.
 	owner := utils.TestAccount()
-	k.SetBlocklistOwner(ctx, owner.Address)
+	require.NoError(t, k.SetBlocklistOwner(ctx, owner.Address))
 
 	// ACT: Attempt to query blocklist owner with state.
 	res, err := server.Owner(ctx, &blocklist.QueryOwner{})
@@ -33,7 +33,7 @@ func TestBlocklistOwnerQuery(t *testing.T) {
 
 	// ARRANGE: Set blocklist pending owner in state.
 	pendingOwner := utils.TestAccount()
-	k.SetBlocklistPendingOwner(ctx, pendingOwner.Address)
+	require.NoError(t, k.SetBlocklistPendingOwner(ctx, pendingOwner.Address))
 
 	// ACT: Attempt to query blocklist owner with state.
 	res, err = server.Owner(ctx, &blocklist.QueryOwner{})
@@ -62,8 +62,8 @@ func TestBlocklistAddressesQuery(t *testing.T) {
 
 	// ARRANGE: Set blocklist addresses in state.
 	user1, user2 := utils.TestAccount(), utils.TestAccount()
-	k.SetBlockedAddress(ctx, user1.Bytes)
-	k.SetBlockedAddress(ctx, user2.Bytes)
+	require.NoError(t, k.SetBlockedAddress(ctx, user1.Bytes))
+	require.NoError(t, k.SetBlockedAddress(ctx, user2.Bytes))
 
 	// ACT: Attempt to query blocklist addresses with state.
 	res, err = server.Addresses(ctx, &blocklist.QueryAddresses{})
@@ -100,7 +100,7 @@ func TestBlocklistAddressQuery(t *testing.T) {
 
 	// ARRANGE: Set blocklist address in state.
 	user := utils.TestAccount()
-	k.SetBlockedAddress(ctx, user.Bytes)
+	require.NoError(t, k.SetBlockedAddress(ctx, user.Bytes))
 
 	// ACT: Attempt to query blocked state of blocked address.
 	res, err = server.Address(ctx, &blocklist.QueryAddress{

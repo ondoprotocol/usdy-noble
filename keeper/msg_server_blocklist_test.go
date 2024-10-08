@@ -3,7 +3,9 @@ package keeper_test
 import (
 	"testing"
 
+	"cosmossdk.io/collections"
 	"github.com/ondoprotocol/usdy-noble/v2/keeper"
+	"github.com/ondoprotocol/usdy-noble/v2/types"
 	"github.com/ondoprotocol/usdy-noble/v2/types/blocklist"
 	"github.com/ondoprotocol/usdy-noble/v2/utils"
 	"github.com/ondoprotocol/usdy-noble/v2/utils/mocks"
@@ -21,7 +23,7 @@ func TestBlocklistTransferOwnership(t *testing.T) {
 
 	// ARRANGE: Set blocklist owner in state.
 	owner := utils.TestAccount()
-	k.SetBlocklistOwner(ctx, owner.Address)
+	require.NoError(t, k.SetBlocklistOwner(ctx, owner.Address))
 
 	// ACT: Attempt to transfer ownership with invalid signer.
 	_, err = server.TransferOwnership(ctx, &blocklist.MsgTransferOwnership{
@@ -40,6 +42,22 @@ func TestBlocklistTransferOwnership(t *testing.T) {
 
 	// ARRANGE: Generate a pending owner account.
 	pendingOwner := utils.TestAccount()
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.BlocklistPendingOwner
+	k.BlocklistPendingOwner = collections.NewItem(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		blocklist.PendingOwnerKey, "blocklist_pending_owner", collections.StringValue,
+	)
+
+	// ACT: Attempt to transfer ownership with failing BlocklistPendingOwner collection store.
+	_, err = server.TransferOwnership(ctx, &blocklist.MsgTransferOwnership{
+		Signer:   owner.Address,
+		NewOwner: pendingOwner.Address,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.BlocklistPendingOwner = tmp
 
 	// ACT: Attempt to transfer ownership.
 	_, err = server.TransferOwnership(ctx, &blocklist.MsgTransferOwnership{
@@ -62,7 +80,7 @@ func TestBlocklistAcceptOwnership(t *testing.T) {
 
 	// ARRANGE: Set blocklist pending owner in state.
 	pendingOwner := utils.TestAccount()
-	k.SetBlocklistPendingOwner(ctx, pendingOwner.Address)
+	require.NoError(t, k.SetBlocklistPendingOwner(ctx, pendingOwner.Address))
 
 	// ACT: Attempt to accept ownership with invalid signer.
 	_, err = server.AcceptOwnership(ctx, &blocklist.MsgAcceptOwnership{
@@ -70,6 +88,36 @@ func TestBlocklistAcceptOwnership(t *testing.T) {
 	})
 	// ASSERT: The action should've failed due to invalid signer.
 	require.ErrorContains(t, err, blocklist.ErrInvalidPendingOwner.Error())
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.BlocklistOwner
+	k.BlocklistOwner = collections.NewItem(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		blocklist.OwnerKey, "blocklist_owner", collections.StringValue,
+	)
+
+	// ACT: Attempt to accept ownership with failing BlocklistOwner collection store.
+	_, err = server.AcceptOwnership(ctx, &blocklist.MsgAcceptOwnership{
+		Signer: pendingOwner.Address,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.BlocklistOwner = tmp
+
+	// ARRANGE: Set up a failing collection store for the attribute delete.
+	tmp = k.BlocklistPendingOwner
+	k.BlocklistPendingOwner = collections.NewItem(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Delete, utils.GetKVStore(ctx, types.ModuleName))),
+		blocklist.PendingOwnerKey, "blocklist_pending_owner", collections.StringValue,
+	)
+
+	// ACT: Attempt to accept ownership with failing BlocklistPendingOwner collection store.
+	_, err = server.AcceptOwnership(ctx, &blocklist.MsgAcceptOwnership{
+		Signer: pendingOwner.Address,
+	})
+	// ASSERT: The action should've failed due to collection store delete error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.BlocklistPendingOwner = tmp
 
 	// ACT: Attempt to accept ownership.
 	_, err = server.AcceptOwnership(ctx, &blocklist.MsgAcceptOwnership{
@@ -92,7 +140,7 @@ func TestAddToBlocklist(t *testing.T) {
 
 	// ARRANGE: Set blocklist owner in state.
 	owner := utils.TestAccount()
-	k.SetBlocklistOwner(ctx, owner.Address)
+	require.NoError(t, k.SetBlocklistOwner(ctx, owner.Address))
 
 	// ACT: Attempt to add to blocklist with invalid signer.
 	_, err = server.AddToBlocklist(ctx, &blocklist.MsgAddToBlocklist{
@@ -111,6 +159,22 @@ func TestAddToBlocklist(t *testing.T) {
 
 	// ARRANGE: Generate a user account.
 	user := utils.TestAccount()
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.BlockedAddresses
+	k.BlockedAddresses = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		blocklist.BlockedAddressPrefix, "blocked_addresses", collections.BytesKey, collections.BytesValue,
+	)
+
+	// ACT: Attempt to add to blocklist with failing BlockedAddresses collection store.
+	_, err = server.AddToBlocklist(ctx, &blocklist.MsgAddToBlocklist{
+		Signer:   owner.Address,
+		Accounts: []string{user.Address},
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.BlockedAddresses = tmp
 
 	// ACT: Attempt to add to blocklist.
 	_, err = server.AddToBlocklist(ctx, &blocklist.MsgAddToBlocklist{
@@ -133,7 +197,7 @@ func TestRemoveFromBlocklist(t *testing.T) {
 
 	// ARRANGE: Set blocklist owner in state.
 	owner := utils.TestAccount()
-	k.SetBlocklistOwner(ctx, owner.Address)
+	require.NoError(t, k.SetBlocklistOwner(ctx, owner.Address))
 
 	// ACT: Attempt to remove from blocklist with invalid signer.
 	_, err = server.RemoveFromBlocklist(ctx, &blocklist.MsgRemoveFromBlocklist{
@@ -163,8 +227,24 @@ func TestRemoveFromBlocklist(t *testing.T) {
 	require.False(t, k.HasBlockedAddress(ctx, user.Bytes))
 
 	// ARRANGE: Set user as blocked in state.
-	k.SetBlockedAddress(ctx, user.Bytes)
+	require.NoError(t, k.SetBlockedAddress(ctx, user.Bytes))
 	require.True(t, k.HasBlockedAddress(ctx, user.Bytes))
+
+	// ARRANGE: Set up a failing collection store for the attribute delete.
+	tmp := k.BlockedAddresses
+	k.BlockedAddresses = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Delete, utils.GetKVStore(ctx, types.ModuleName))),
+		blocklist.BlockedAddressPrefix, "blocked_addresses", collections.BytesKey, collections.BytesValue,
+	)
+
+	// ACT: Attempt to remove from blocklist with failing BlockedAddresses collection store.
+	_, err = server.RemoveFromBlocklist(ctx, &blocklist.MsgRemoveFromBlocklist{
+		Signer:   owner.Address,
+		Accounts: []string{user.Address},
+	})
+	// ASSERT: The action should've failed due to collection store delete error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.BlockedAddresses = tmp
 
 	// ACT: Attempt to remove from blocklist.
 	_, err = server.RemoveFromBlocklist(ctx, &blocklist.MsgRemoveFromBlocklist{

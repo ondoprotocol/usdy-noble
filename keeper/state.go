@@ -4,211 +4,164 @@ import (
 	"context"
 
 	"cosmossdk.io/math"
-	"cosmossdk.io/store/prefix"
-	"github.com/cosmos/cosmos-sdk/runtime"
 	"github.com/ondoprotocol/usdy-noble/v2/types"
 )
 
 //
 
 func (k *Keeper) GetPaused(ctx context.Context) bool {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bz := store.Get(types.PausedKey)
-	if len(bz) == 1 && bz[0] == 1 {
-		return true
-	} else {
-		return false
-	}
+	paused, _ := k.Paused.Get(ctx)
+	return paused
 }
 
-func (k *Keeper) SetPaused(ctx context.Context, paused bool) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	if paused {
-		store.Set(types.PausedKey, []byte{0x1})
-	} else {
-		store.Set(types.PausedKey, []byte{0x0})
-	}
+func (k *Keeper) SetPaused(ctx context.Context, paused bool) error {
+	return k.Paused.Set(ctx, paused)
 }
 
 //
 
 func (k *Keeper) GetOwner(ctx context.Context) string {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	return string(store.Get(types.OwnerKey))
+	owner, _ := k.Owner.Get(ctx)
+	return owner
 }
 
-func (k *Keeper) SetOwner(ctx context.Context, owner string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Set(types.OwnerKey, []byte(owner))
+func (k *Keeper) SetOwner(ctx context.Context, owner string) error {
+	return k.Owner.Set(ctx, owner)
 }
 
 //
 
-func (k *Keeper) DeletePendingOwner(ctx context.Context) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Delete(types.PendingOwnerKey)
+func (k *Keeper) DeletePendingOwner(ctx context.Context) error {
+	return k.PendingOwner.Remove(ctx)
 }
 
 func (k *Keeper) GetPendingOwner(ctx context.Context) string {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	return string(store.Get(types.PendingOwnerKey))
+	pendingOwner, _ := k.PendingOwner.Get(ctx)
+	return pendingOwner
 }
 
-func (k *Keeper) SetPendingOwner(ctx context.Context, pendingOwner string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Set(types.PendingOwnerKey, []byte(pendingOwner))
+func (k *Keeper) SetPendingOwner(ctx context.Context, pendingOwner string) error {
+	return k.PendingOwner.Set(ctx, pendingOwner)
 }
 
 //
 
-func (k *Keeper) DeleteBurner(ctx context.Context, burner string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Delete(types.BurnerKey(burner))
+func (k *Keeper) DeleteBurner(ctx context.Context, burner string) error {
+	return k.Burners.Remove(ctx, burner)
 }
 
 func (k *Keeper) GetBurner(ctx context.Context, burner string) (allowance math.Int) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bz := store.Get(types.BurnerKey(burner))
+	allowance, err := k.Burners.Get(ctx, burner)
+	if err != nil {
+		return math.ZeroInt()
+	}
 
-	_ = allowance.Unmarshal(bz)
 	return
 }
 
 func (k *Keeper) GetBurners(ctx context.Context) (burners []types.Burner) {
-	adapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store := prefix.NewStore(adapter, types.BurnerPrefix)
-	itr := store.Iterator(nil, nil)
-
-	defer itr.Close()
-
-	for ; itr.Valid(); itr.Next() {
-		var allowance math.Int
-		_ = allowance.Unmarshal(itr.Value())
-
+	_ = k.Burners.Walk(ctx, nil, func(burner string, allowance math.Int) (stop bool, err error) {
 		burners = append(burners, types.Burner{
-			Address:   string(itr.Key()),
+			Address:   burner,
 			Allowance: allowance,
 		})
-	}
+
+		return false, nil
+	})
 
 	return
 }
 
 func (k *Keeper) HasBurner(ctx context.Context, burner string) bool {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	return store.Has(types.BurnerKey(burner))
+	has, _ := k.Burners.Has(ctx, burner)
+	return has
 }
 
-func (k *Keeper) SetBurner(ctx context.Context, burner string, allowance math.Int) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bz, _ := allowance.Marshal()
-	store.Set(types.BurnerKey(burner), bz)
+func (k *Keeper) SetBurner(ctx context.Context, burner string, allowance math.Int) error {
+	return k.Burners.Set(ctx, burner, allowance)
 }
 
 //
 
-func (k *Keeper) DeleteMinter(ctx context.Context, minter string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Delete(types.MinterKey(minter))
+func (k *Keeper) DeleteMinter(ctx context.Context, minter string) error {
+	return k.Minters.Remove(ctx, minter)
 }
 
 func (k *Keeper) GetMinter(ctx context.Context, minter string) (allowance math.Int) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bz := store.Get(types.MinterKey(minter))
+	allowance, err := k.Minters.Get(ctx, minter)
+	if err != nil {
+		return math.ZeroInt()
+	}
 
-	_ = allowance.Unmarshal(bz)
 	return
 }
 
 func (k *Keeper) GetMinters(ctx context.Context) (minters []types.Minter) {
-	adapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store := prefix.NewStore(adapter, types.MinterPrefix)
-	itr := store.Iterator(nil, nil)
-
-	defer itr.Close()
-
-	for ; itr.Valid(); itr.Next() {
-		var allowance math.Int
-		_ = allowance.Unmarshal(itr.Value())
-
+	_ = k.Minters.Walk(ctx, nil, func(minter string, allowance math.Int) (stop bool, err error) {
 		minters = append(minters, types.Minter{
-			Address:   string(itr.Key()),
+			Address:   minter,
 			Allowance: allowance,
 		})
-	}
+
+		return false, nil
+	})
 
 	return
 }
 
 func (k *Keeper) HasMinter(ctx context.Context, minter string) bool {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	return store.Has(types.MinterKey(minter))
+	has, _ := k.Minters.Has(ctx, minter)
+	return has
 }
 
-func (k *Keeper) SetMinter(ctx context.Context, minter string, allowance math.Int) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bz, _ := allowance.Marshal()
-	store.Set(types.MinterKey(minter), bz)
+func (k *Keeper) SetMinter(ctx context.Context, minter string, allowance math.Int) error {
+	return k.Minters.Set(ctx, minter, allowance)
 }
 
 //
 
-func (k *Keeper) DeletePauser(ctx context.Context, pauser string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Delete(types.PauserKey(pauser))
+func (k *Keeper) DeletePauser(ctx context.Context, pauser string) error {
+	return k.Pausers.Remove(ctx, pauser)
 }
 
 func (k *Keeper) GetPausers(ctx context.Context) (pausers []string) {
-	adapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store := prefix.NewStore(adapter, types.PauserPrefix)
-	itr := store.Iterator(nil, nil)
-
-	defer itr.Close()
-
-	for ; itr.Valid(); itr.Next() {
-		pausers = append(pausers, string(itr.Key()))
-	}
+	_ = k.Pausers.Walk(ctx, nil, func(pauser string, _ []byte) (stop bool, err error) {
+		pausers = append(pausers, pauser)
+		return false, nil
+	})
 
 	return
 }
 
 func (k *Keeper) HasPauser(ctx context.Context, pauser string) bool {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	return store.Has(types.PauserKey(pauser))
+	has, _ := k.Pausers.Has(ctx, pauser)
+	return has
 }
 
-func (k *Keeper) SetPauser(ctx context.Context, pauser string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Set(types.PauserKey(pauser), []byte{})
+func (k *Keeper) SetPauser(ctx context.Context, pauser string) error {
+	return k.Pausers.Set(ctx, pauser, []byte{})
 }
 
 //
 
-func (k *Keeper) DeleteBlockedChannel(ctx context.Context, channel string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Delete(types.BlockedChannelKey(channel))
+func (k *Keeper) DeleteBlockedChannel(ctx context.Context, channel string) error {
+	return k.BlockedChannels.Remove(ctx, channel)
 }
 
 func (k *Keeper) GetBlockedChannels(ctx context.Context) (channels []string) {
-	adapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store := prefix.NewStore(adapter, types.BlockedChannelPrefix)
-	itr := store.Iterator(nil, nil)
-
-	defer itr.Close()
-
-	for ; itr.Valid(); itr.Next() {
-		channels = append(channels, string(itr.Key()))
-	}
+	_ = k.BlockedChannels.Walk(ctx, nil, func(channel string, _ []byte) (stop bool, err error) {
+		channels = append(channels, channel)
+		return false, nil
+	})
 
 	return
 }
 
 func (k *Keeper) HasBlockedChannel(ctx context.Context, channel string) bool {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	return store.Has(types.BlockedChannelKey(channel))
+	has, _ := k.BlockedChannels.Has(ctx, channel)
+	return has
 }
 
-func (k *Keeper) SetBlockedChannel(ctx context.Context, channel string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Set(types.BlockedChannelKey(channel), []byte{})
+func (k *Keeper) SetBlockedChannel(ctx context.Context, channel string) error {
+	return k.BlockedChannels.Set(ctx, channel, []byte{})
 }

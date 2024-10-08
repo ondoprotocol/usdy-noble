@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ondoprotocol/usdy-noble/v2/keeper"
@@ -24,7 +25,7 @@ func TestBurn(t *testing.T) {
 
 	// ARRANGE: Set burner in state, with enough allowance for a single burn.
 	burner := utils.TestAccount()
-	k.SetBurner(ctx, burner.Address, ONE)
+	require.NoError(t, k.SetBurner(ctx, burner.Address, ONE))
 
 	// ACT: Attempt to burn with invalid signer.
 	_, err := server.Burn(ctx, &types.MsgBurn{
@@ -66,6 +67,26 @@ func TestBurn(t *testing.T) {
 	// ARRANGE: Give user 1 $USDY.
 	bank.Balances[user.Address] = sdk.NewCoins(sdk.NewCoin(k.Denom, ONE))
 
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Burners
+	k.Burners = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.BurnerPrefix, "burners", collections.StringKey, sdk.IntValue,
+	)
+
+	// ACT: Attempt to burn with failing Burners collection store.
+	_, err = server.Burn(ctx, &types.MsgBurn{
+		Signer: burner.Address,
+		From:   user.Address,
+		Amount: ONE,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Burners = tmp
+
+	// ARRANGE: Give user 1 $USDY.
+	bank.Balances[user.Address] = sdk.NewCoins(sdk.NewCoin(k.Denom, ONE))
+
 	// ACT: Attempt to burn.
 	_, err = server.Burn(ctx, &types.MsgBurn{
 		Signer: burner.Address,
@@ -98,7 +119,7 @@ func TestMint(t *testing.T) {
 
 	// ARRANGE: Set minter in state, with enough allowance for a single mint.
 	minter := utils.TestAccount()
-	k.SetMinter(ctx, minter.Address, ONE)
+	require.NoError(t, k.SetMinter(ctx, minter.Address, ONE))
 
 	// ACT: Attempt to mint with invalid signer.
 	_, err := server.Mint(ctx, &types.MsgMint{
@@ -118,7 +139,7 @@ func TestMint(t *testing.T) {
 
 	// ARRANGE: Generate a user account and add to blocklist.
 	user := utils.TestAccount()
-	k.SetBlockedAddress(ctx, user.Bytes)
+	require.NoError(t, k.SetBlockedAddress(ctx, user.Bytes))
 
 	// ACT: Attempt to mint to blocked address.
 	_, err = server.Mint(ctx, &types.MsgMint{
@@ -130,7 +151,7 @@ func TestMint(t *testing.T) {
 	require.ErrorContains(t, err, "blocked from receiving")
 
 	// ARRANGE: Unblock user account.
-	k.DeleteBlockedAddress(ctx, user.Bytes)
+	require.NoError(t, k.DeleteBlockedAddress(ctx, user.Bytes))
 
 	// ACT: Attempt to mint invalid amount.
 	_, err = server.Mint(ctx, &types.MsgMint{
@@ -141,6 +162,23 @@ func TestMint(t *testing.T) {
 	// ASSERT: The action should've failed due to invalid amount.
 	require.ErrorContains(t, err, "amount must be positive")
 
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Minters
+	k.Minters = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.MinterPrefix, "minters", collections.StringKey, sdk.IntValue,
+	)
+
+	// ACT: Attempt to mint with failing Minters collection store.
+	_, err = server.Mint(ctx, &types.MsgMint{
+		Signer: minter.Address,
+		To:     user.Address,
+		Amount: ONE,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Minters = tmp
+
 	// ACT: Attempt to mint.
 	_, err = server.Mint(ctx, &types.MsgMint{
 		Signer: minter.Address,
@@ -149,7 +187,7 @@ func TestMint(t *testing.T) {
 	})
 	// ASSERT: The action should've succeeded.
 	require.NoError(t, err)
-	require.Equal(t, ONE, bank.Balances[user.Address].AmountOf(k.Denom))
+	require.Equal(t, ONE.MulRaw(2), bank.Balances[user.Address].AmountOf(k.Denom))
 	require.True(t, bank.Balances[types.ModuleName].IsZero())
 	require.True(t, k.GetMinter(ctx, minter.Address).IsZero())
 
@@ -169,7 +207,7 @@ func TestPause(t *testing.T) {
 
 	// ARRANGE: Set pauser in state.
 	pauser := utils.TestAccount()
-	k.SetPauser(ctx, pauser.Address)
+	require.NoError(t, k.SetPauser(ctx, pauser.Address))
 
 	// ACT: Attempt to pause with invalid signer.
 	_, err := server.Pause(ctx, &types.MsgPause{
@@ -178,6 +216,21 @@ func TestPause(t *testing.T) {
 	// ASSERT: The action should've failed due to invalid signer.
 	require.ErrorContains(t, err, types.ErrInvalidPauser.Error())
 	require.False(t, k.GetPaused(ctx))
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Paused
+	k.Paused = collections.NewItem(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.PausedKey, "paused", collections.BoolValue,
+	)
+
+	// ACT: Attempt to pause with failing Paused collection store.
+	_, err = server.Pause(ctx, &types.MsgPause{
+		Signer: pauser.Address,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Paused = tmp
 
 	// ACT: Attempt to pause.
 	_, err = server.Pause(ctx, &types.MsgPause{
@@ -201,7 +254,7 @@ func TestUnpause(t *testing.T) {
 	server := keeper.NewMsgServer(k)
 
 	// ARRANGE: Set paused state to true.
-	k.SetPaused(ctx, true)
+	require.NoError(t, k.SetPaused(ctx, true))
 
 	// ACT: Attempt to unpause with no owner set.
 	_, err := server.Unpause(ctx, &types.MsgUnpause{})
@@ -211,7 +264,7 @@ func TestUnpause(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to unpause with invalid signer.
 	_, err = server.Unpause(ctx, &types.MsgUnpause{
@@ -220,6 +273,21 @@ func TestUnpause(t *testing.T) {
 	// ASSERT: The action should've failed due to invalid signer.
 	require.ErrorContains(t, err, types.ErrInvalidOwner.Error())
 	require.True(t, k.GetPaused(ctx))
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Paused
+	k.Paused = collections.NewItem(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.PausedKey, "paused", collections.BoolValue,
+	)
+
+	// ACT: Attempt to unpause with failing Paused collection store.
+	_, err = server.Unpause(ctx, &types.MsgUnpause{
+		Signer: owner.Address,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Paused = tmp
 
 	// ACT: Attempt to unpause.
 	_, err = server.Unpause(ctx, &types.MsgUnpause{
@@ -249,7 +317,7 @@ func TestTransferOwnership(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to transfer ownership with invalid signer.
 	_, err = server.TransferOwnership(ctx, &types.MsgTransferOwnership{
@@ -268,6 +336,22 @@ func TestTransferOwnership(t *testing.T) {
 
 	// ARRANGE: Generate a pending owner account.
 	pendingOwner := utils.TestAccount()
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.PendingOwner
+	k.PendingOwner = collections.NewItem(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.PendingOwnerKey, "pending_owner", collections.StringValue,
+	)
+
+	// ACT: Attempt to transfer ownership with failing PendingOwner collection store.
+	_, err = server.TransferOwnership(ctx, &types.MsgTransferOwnership{
+		Signer:   owner.Address,
+		NewOwner: pendingOwner.Address,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.PendingOwner = tmp
 
 	// ACT: Attempt to transfer ownership.
 	_, err = server.TransferOwnership(ctx, &types.MsgTransferOwnership{
@@ -290,7 +374,7 @@ func TestAcceptOwnership(t *testing.T) {
 
 	// ARRANGE: Set pending owner in state.
 	pendingOwner := utils.TestAccount()
-	k.SetPendingOwner(ctx, pendingOwner.Address)
+	require.NoError(t, k.SetPendingOwner(ctx, pendingOwner.Address))
 
 	// ACT: Attempt to accept ownership with invalid signer.
 	_, err = server.AcceptOwnership(ctx, &types.MsgAcceptOwnership{
@@ -298,6 +382,36 @@ func TestAcceptOwnership(t *testing.T) {
 	})
 	// ASSERT: The action should've failed due to invalid signer.
 	require.ErrorContains(t, err, types.ErrInvalidPendingOwner.Error())
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Owner
+	k.Owner = collections.NewItem(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.OwnerKey, "owner", collections.StringValue,
+	)
+
+	// ACT: Attempt to accept ownership with failing Owner collection store.
+	_, err = server.AcceptOwnership(ctx, &types.MsgAcceptOwnership{
+		Signer: pendingOwner.Address,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Owner = tmp
+
+	// ARRANGE: Set up a failing collection store for the attribute delete.
+	tmp = k.PendingOwner
+	k.PendingOwner = collections.NewItem(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Delete, utils.GetKVStore(ctx, types.ModuleName))),
+		types.PendingOwnerKey, "pending_owner", collections.StringValue,
+	)
+
+	// ACT: Attempt to accept ownership with failing PendingOwner collection store.
+	_, err = server.AcceptOwnership(ctx, &types.MsgAcceptOwnership{
+		Signer: pendingOwner.Address,
+	})
+	// ASSERT: The action should've failed due to collection store delete error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.PendingOwner = tmp
 
 	// ACT: Attempt to accept ownership.
 	_, err = server.AcceptOwnership(ctx, &types.MsgAcceptOwnership{
@@ -320,7 +434,7 @@ func TestAddBurner(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to add burner with invalid signer.
 	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
@@ -331,7 +445,7 @@ func TestAddBurner(t *testing.T) {
 
 	// ARRANGE: Generate two burner accounts, add one to state.
 	burner1, burner2 := utils.TestAccount(), utils.TestAccount()
-	k.SetBurner(ctx, burner2.Address, ONE)
+	require.NoError(t, k.SetBurner(ctx, burner2.Address, ONE))
 
 	// ACT: Attempt to add burner that already exists.
 	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
@@ -350,6 +464,23 @@ func TestAddBurner(t *testing.T) {
 	})
 	// ASSERT: The action should've failed due to negative allowance.
 	require.ErrorContains(t, err, "allowance cannot be negative")
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Burners
+	k.Burners = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.BurnerPrefix, "burners", collections.StringKey, sdk.IntValue,
+	)
+
+	// ACT: Attempt to add burner with failing Burners collection store.
+	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
+		Signer:    owner.Address,
+		Burner:    burner1.Address,
+		Allowance: ONE,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Burners = tmp
 
 	// ACT: Attempt to add burner.
 	_, err = server.AddBurner(ctx, &types.MsgAddBurner{
@@ -373,7 +504,7 @@ func TestRemoveBurner(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to remove burner with invalid signer.
 	_, err = server.RemoveBurner(ctx, &types.MsgRemoveBurner{
@@ -394,7 +525,23 @@ func TestRemoveBurner(t *testing.T) {
 	require.ErrorContains(t, err, "is not a burner")
 
 	// ARRANGE: Set burner in state.
-	k.SetBurner(ctx, burner.Address, ONE)
+	require.NoError(t, k.SetBurner(ctx, burner.Address, ONE))
+
+	// ARRANGE: Set up a failing collection store for the attribute delete.
+	tmp := k.Burners
+	k.Burners = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Delete, utils.GetKVStore(ctx, types.ModuleName))),
+		types.BurnerPrefix, "burners", collections.StringKey, sdk.IntValue,
+	)
+
+	// ACT: Attempt to remove burner with failing Burners collection store.
+	_, err = server.RemoveBurner(ctx, &types.MsgRemoveBurner{
+		Signer: owner.Address,
+		Burner: burner.Address,
+	})
+	// ASSERT: The action should've failed due to collection store delete error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Burners = tmp
 
 	// ACT: Attempt to remove burner.
 	_, err = server.RemoveBurner(ctx, &types.MsgRemoveBurner{
@@ -417,7 +564,7 @@ func TestSetBurnerAllowance(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to set burner allowance with invalid signer.
 	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
@@ -439,7 +586,7 @@ func TestSetBurnerAllowance(t *testing.T) {
 	require.ErrorContains(t, err, "is not a burner")
 
 	// ARRANGE: Set burner in state.
-	k.SetBurner(ctx, burner.Address, math.ZeroInt())
+	require.NoError(t, k.SetBurner(ctx, burner.Address, math.ZeroInt()))
 
 	// ACT: Attempt to set burner allowance with invalid allowance.
 	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
@@ -449,6 +596,27 @@ func TestSetBurnerAllowance(t *testing.T) {
 	})
 	// ASSERT: The action should've failed due to negative allowance.
 	require.ErrorContains(t, err, "allowance cannot be negative")
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Burners
+	k.Burners = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.BurnerPrefix, "burners", collections.StringKey, sdk.IntValue,
+	)
+
+	// ACT: Attempt to set burner allowance with failing Burners collection store.
+	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
+		Signer:    owner.Address,
+		Burner:    burner.Address,
+		Allowance: ONE,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Burners = tmp
+
+	// ARRANGE: Set invalid un-decodable burn allowance in state.
+	key, _ := collections.EncodeKeyWithPrefix(types.BurnerPrefix, collections.StringKey, burner.Address)
+	utils.GetKVStore(ctx, types.ModuleName).Set(key, []byte("invalid"))
 
 	// ACT: Attempt to set burner allowance.
 	_, err = server.SetBurnerAllowance(ctx, &types.MsgSetBurnerAllowance{
@@ -472,7 +640,7 @@ func TestAddMinter(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to add minter with invalid signer.
 	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
@@ -483,7 +651,7 @@ func TestAddMinter(t *testing.T) {
 
 	// ARRANGE: Generate two minter accounts, add one to state.
 	minter1, minter2 := utils.TestAccount(), utils.TestAccount()
-	k.SetMinter(ctx, minter2.Address, ONE)
+	require.NoError(t, k.SetMinter(ctx, minter2.Address, ONE))
 
 	// ACT: Attempt to add minter that already exists.
 	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
@@ -502,6 +670,23 @@ func TestAddMinter(t *testing.T) {
 	})
 	// ASSERT: The action should've failed due to negative allowance.
 	require.ErrorContains(t, err, "allowance cannot be negative")
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Minters
+	k.Minters = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.MinterPrefix, "minters", collections.StringKey, sdk.IntValue,
+	)
+
+	// ACT: Attempt to add minter with failing Minters collection store.
+	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
+		Signer:    owner.Address,
+		Minter:    minter1.Address,
+		Allowance: ONE,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Minters = tmp
 
 	// ACT: Attempt to add minter.
 	_, err = server.AddMinter(ctx, &types.MsgAddMinter{
@@ -525,7 +710,7 @@ func TestRemoveMinter(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to remove minter with invalid signer.
 	_, err = server.RemoveMinter(ctx, &types.MsgRemoveMinter{
@@ -546,7 +731,23 @@ func TestRemoveMinter(t *testing.T) {
 	require.ErrorContains(t, err, "is not a minter")
 
 	// ARRANGE: Set minter in state.
-	k.SetMinter(ctx, minter.Address, ONE)
+	require.NoError(t, k.SetMinter(ctx, minter.Address, ONE))
+
+	// ARRANGE: Set up a failing collection store for the attribute delete.
+	tmp := k.Minters
+	k.Minters = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Delete, utils.GetKVStore(ctx, types.ModuleName))),
+		types.MinterPrefix, "minters", collections.StringKey, sdk.IntValue,
+	)
+
+	// ACT: Attempt to remove minter with failing Minters collection store.
+	_, err = server.RemoveMinter(ctx, &types.MsgRemoveMinter{
+		Signer: owner.Address,
+		Minter: minter.Address,
+	})
+	// ASSERT: The action should've failed due to collection store delete error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Minters = tmp
 
 	// ACT: Attempt to remove minter.
 	_, err = server.RemoveMinter(ctx, &types.MsgRemoveMinter{
@@ -569,7 +770,7 @@ func TestSetMinterAllowance(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to set minter allowance with invalid signer.
 	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{
@@ -591,7 +792,7 @@ func TestSetMinterAllowance(t *testing.T) {
 	require.ErrorContains(t, err, "is not a minter")
 
 	// ARRANGE: Set minters in state.
-	k.SetMinter(ctx, minter.Address, math.ZeroInt())
+	require.NoError(t, k.SetMinter(ctx, minter.Address, math.ZeroInt()))
 
 	// ACT: Attempt to set minter allowance with invalid allowance.
 	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{
@@ -601,6 +802,27 @@ func TestSetMinterAllowance(t *testing.T) {
 	})
 	// ASSERT: The action should've failed due to negative allowance.
 	require.ErrorContains(t, err, "allowance cannot be negative")
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Minters
+	k.Minters = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.MinterPrefix, "minters", collections.StringKey, sdk.IntValue,
+	)
+
+	// ACT: Attempt to set minter allowance with failing Minters collection store.
+	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{
+		Signer:    owner.Address,
+		Minter:    minter.Address,
+		Allowance: ONE,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Minters = tmp
+
+	// ARRANGE: Set invalid un-decodable mint allowance in state.
+	key, _ := collections.EncodeKeyWithPrefix(types.MinterPrefix, collections.StringKey, minter.Address)
+	utils.GetKVStore(ctx, types.ModuleName).Set(key, []byte("invalid"))
 
 	// ACT: Attempt to set minter allowance.
 	_, err = server.SetMinterAllowance(ctx, &types.MsgSetMinterAllowance{
@@ -624,7 +846,7 @@ func TestAddPauser(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to add pauser with invalid signer.
 	_, err = server.AddPauser(ctx, &types.MsgAddPauser{
@@ -635,7 +857,7 @@ func TestAddPauser(t *testing.T) {
 
 	// ARRANGE: Generate two pauser accounts, add one to state.
 	pauser1, pauser2 := utils.TestAccount(), utils.TestAccount()
-	k.SetPauser(ctx, pauser2.Address)
+	require.NoError(t, k.SetPauser(ctx, pauser2.Address))
 
 	// ACT: Attempt to add pauser that already exists.
 	_, err = server.AddPauser(ctx, &types.MsgAddPauser{
@@ -644,6 +866,22 @@ func TestAddPauser(t *testing.T) {
 	})
 	// ASSERT: The action should've failed due to existing pauser.
 	require.ErrorContains(t, err, "is already a pauser")
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.Pausers
+	k.Pausers = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.PauserPrefix, "pausers", collections.StringKey, collections.BytesValue,
+	)
+
+	// ACT: Attempt to add pauser with failing Pausers collection store.
+	_, err = server.AddPauser(ctx, &types.MsgAddPauser{
+		Signer: owner.Address,
+		Pauser: pauser1.Address,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Pausers = tmp
 
 	// ACT: Attempt to add pauser.
 	_, err = server.AddPauser(ctx, &types.MsgAddPauser{
@@ -666,7 +904,7 @@ func TestRemovePauser(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to remove pauser with invalid signer.
 	_, err = server.RemovePauser(ctx, &types.MsgRemovePauser{
@@ -687,7 +925,23 @@ func TestRemovePauser(t *testing.T) {
 	require.ErrorContains(t, err, "is not a pauser")
 
 	// ARRANGE: Set pauser in state.
-	k.SetPauser(ctx, pauser.Address)
+	require.NoError(t, k.SetPauser(ctx, pauser.Address))
+
+	// ARRANGE: Set up a failing collection store for the attribute delete.
+	tmp := k.Pausers
+	k.Pausers = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Delete, utils.GetKVStore(ctx, types.ModuleName))),
+		types.PauserPrefix, "pausers", collections.StringKey, collections.BytesValue,
+	)
+
+	// ACT: Attempt to remove pauser with failing Pausers collection store.
+	_, err = server.RemovePauser(ctx, &types.MsgRemovePauser{
+		Signer: owner.Address,
+		Pauser: pauser.Address,
+	})
+	// ASSERT: The action should've failed due to collection store delete error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.Pausers = tmp
 
 	// ACT: Attempt to remove pauser.
 	_, err = server.RemovePauser(ctx, &types.MsgRemovePauser{
@@ -710,7 +964,7 @@ func TestAddBlockedChannel(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to add blocked channel with invalid signer.
 	_, err = server.AddBlockedChannel(ctx, &types.MsgAddBlockedChannel{
@@ -721,7 +975,7 @@ func TestAddBlockedChannel(t *testing.T) {
 
 	// ARRANGE: Generate two channel, add one to state.
 	channel1, channel2 := "channel-0", "channel-1"
-	k.SetBlockedChannel(ctx, channel2)
+	require.NoError(t, k.SetBlockedChannel(ctx, channel2))
 
 	// ACT: Attempt to add blocked channel that is blocked.
 	_, err = server.AddBlockedChannel(ctx, &types.MsgAddBlockedChannel{
@@ -730,6 +984,22 @@ func TestAddBlockedChannel(t *testing.T) {
 	})
 	// ASSERT: The action should've failed due to blocked channel.
 	require.ErrorContains(t, err, "is already blocked")
+
+	// ARRANGE: Set up a failing collection store for the attribute setter.
+	tmp := k.BlockedChannels
+	k.BlockedChannels = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Set, utils.GetKVStore(ctx, types.ModuleName))),
+		types.BlockedChannelPrefix, "blocked_channels", collections.StringKey, collections.BytesValue,
+	)
+
+	// ACT: Attempt to add blocked channel with failing BlockedChannels collection store.
+	_, err = server.AddBlockedChannel(ctx, &types.MsgAddBlockedChannel{
+		Signer:  owner.Address,
+		Channel: channel1,
+	})
+	// ASSERT: The action should've failed due to collection store setter error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.BlockedChannels = tmp
 
 	// ACT: Attempt to add blocked channel.
 	_, err = server.AddBlockedChannel(ctx, &types.MsgAddBlockedChannel{
@@ -752,7 +1022,7 @@ func TestRemoveBlockedChannel(t *testing.T) {
 
 	// ARRANGE: Set owner in state.
 	owner := utils.TestAccount()
-	k.SetOwner(ctx, owner.Address)
+	require.NoError(t, k.SetOwner(ctx, owner.Address))
 
 	// ACT: Attempt to remove blocked channel with invalid signer.
 	_, err = server.RemoveBlockedChannel(ctx, &types.MsgRemoveBlockedChannel{
@@ -773,7 +1043,23 @@ func TestRemoveBlockedChannel(t *testing.T) {
 	require.ErrorContains(t, err, "is not blocked")
 
 	// ARRANGE: Set channel in state.
-	k.SetBlockedChannel(ctx, channel)
+	require.NoError(t, k.SetBlockedChannel(ctx, channel))
+
+	// ARRANGE: Set up a failing collection store for the attribute delete.
+	tmp := k.BlockedChannels
+	k.BlockedChannels = collections.NewMap(
+		collections.NewSchemaBuilder(mocks.FailingStore(mocks.Delete, utils.GetKVStore(ctx, types.ModuleName))),
+		types.BlockedChannelPrefix, "blocked_channels", collections.StringKey, collections.BytesValue,
+	)
+
+	// ACT: Attempt to remove blocked channel with failing BlockedChannels collection store.
+	_, err = server.RemoveBlockedChannel(ctx, &types.MsgRemoveBlockedChannel{
+		Signer:  owner.Address,
+		Channel: channel,
+	})
+	// ASSERT: The action should've failed due to collection store delete error.
+	require.Error(t, err, mocks.ErrorStoreAccess)
+	k.BlockedChannels = tmp
 
 	// ACT: Attempt to remove blocked channel.
 	_, err = server.RemoveBlockedChannel(ctx, &types.MsgRemoveBlockedChannel{

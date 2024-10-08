@@ -15,19 +15,3 @@ var (
 	PauserPrefix         = []byte("pauser/")
 	BlockedChannelPrefix = []byte("blocked_channel/")
 )
-
-func BurnerKey(address string) []byte {
-	return append(BurnerPrefix, []byte(address)...)
-}
-
-func MinterKey(address string) []byte {
-	return append(MinterPrefix, []byte(address)...)
-}
-
-func PauserKey(address string) []byte {
-	return append(PauserPrefix, []byte(address)...)
-}
-
-func BlockedChannelKey(channel string) []byte {
-	return append(BlockedChannelPrefix, []byte(channel)...)
-}

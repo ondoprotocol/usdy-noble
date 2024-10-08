@@ -18,8 +18,8 @@ func TestGetBlockedAddresses(t *testing.T) {
 
 	// ARRANGE: Set blocklist addresses in state.
 	user1, user2 := utils.TestAccount(), utils.TestAccount()
-	keeper.SetBlockedAddress(ctx, user1.Bytes)
-	keeper.SetBlockedAddress(ctx, user2.Bytes)
+	require.NoError(t, keeper.SetBlockedAddress(ctx, user1.Bytes))
+	require.NoError(t, keeper.SetBlockedAddress(ctx, user2.Bytes))
 
 	// ACT: Retrieve all blocked addresses.
 	addresses = keeper.GetBlockedAddresses(ctx)

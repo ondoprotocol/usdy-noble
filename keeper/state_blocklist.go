@@ -2,69 +2,56 @@ package keeper
 
 import (
 	"context"
-
-	"cosmossdk.io/store/prefix"
-	"github.com/cosmos/cosmos-sdk/runtime"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ondoprotocol/usdy-noble/v2/types/blocklist"
 )
 
 //
 
 func (k *Keeper) GetBlocklistOwner(ctx context.Context) string {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	return string(store.Get(blocklist.OwnerKey))
+	owner, _ := k.BlocklistOwner.Get(ctx)
+	return owner
 }
 
-func (k *Keeper) SetBlocklistOwner(ctx context.Context, owner string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Set(blocklist.OwnerKey, []byte(owner))
+func (k *Keeper) SetBlocklistOwner(ctx context.Context, owner string) error {
+	return k.BlocklistOwner.Set(ctx, owner)
 }
 
 //
 
-func (k *Keeper) DeleteBlocklistPendingOwner(ctx context.Context) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Delete(blocklist.PendingOwnerKey)
+func (k *Keeper) DeleteBlocklistPendingOwner(ctx context.Context) error {
+	return k.BlocklistPendingOwner.Remove(ctx)
 }
 
 func (k *Keeper) GetBlocklistPendingOwner(ctx context.Context) string {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	return string(store.Get(blocklist.PendingOwnerKey))
+	pendingOwner, _ := k.BlocklistPendingOwner.Get(ctx)
+	return pendingOwner
 }
 
-func (k *Keeper) SetBlocklistPendingOwner(ctx context.Context, pendingOwner string) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Set(blocklist.PendingOwnerKey, []byte(pendingOwner))
+func (k *Keeper) SetBlocklistPendingOwner(ctx context.Context, pendingOwner string) error {
+	return k.BlocklistPendingOwner.Set(ctx, pendingOwner)
 }
 
 //
 
-func (k *Keeper) DeleteBlockedAddress(ctx context.Context, address []byte) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Delete(blocklist.BlockedAddressKey(address))
+func (k *Keeper) DeleteBlockedAddress(ctx context.Context, address []byte) error {
+	return k.BlockedAddresses.Remove(ctx, address)
 }
 
 func (k *Keeper) GetBlockedAddresses(ctx context.Context) (addresses []string) {
-	adapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store := prefix.NewStore(adapter, blocklist.BlockedAddressPrefix)
-	itr := store.Iterator(nil, nil)
+	_ = k.BlockedAddresses.Walk(ctx, nil, func(rawAddress []byte, _ []byte) (stop bool, err error) {
+		address, _ := k.addressCodec.BytesToString(rawAddress)
+		addresses = append(addresses, address)
 
-	defer itr.Close()
-
-	for ; itr.Valid(); itr.Next() {
-		addresses = append(addresses, sdk.AccAddress(itr.Key()).String())
-	}
+		return false, nil
+	})
 
 	return
 }
 
 func (k *Keeper) HasBlockedAddress(ctx context.Context, address []byte) bool {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	return store.Has(blocklist.BlockedAddressKey(address))
+	has, _ := k.BlockedAddresses.Has(ctx, address)
+	return has
 }
 
-func (k *Keeper) SetBlockedAddress(ctx context.Context, address []byte) {
-	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	store.Set(blocklist.BlockedAddressKey(address), []byte{})
+func (k *Keeper) SetBlockedAddress(ctx context.Context, address []byte) error {
+	return k.BlockedAddresses.Set(ctx, address, []byte{})
 }
